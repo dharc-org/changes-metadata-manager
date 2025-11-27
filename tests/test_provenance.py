@@ -71,8 +71,8 @@ def test_provenance_generation(test_environment):
         URIRef('http://example.org/item1/prov/'),
         URIRef('http://example.org/item2/prov/')
     ]
-    actual_graphs = [g.identifier for g in dataset.contexts()]
-    
+    actual_graphs = [g.identifier for g in dataset.graphs()]
+
     for graph in expected_graphs:
         assert graph in actual_graphs, f"Expected graph {graph} not found"
     
@@ -125,7 +125,7 @@ ex:item3 a crm:E22_Human-Made_Object ;
     
     # Check that we have the expected named graph for item3
     item3_graph = URIRef('http://example.org/item3/prov/')
-    actual_graphs = [g.identifier for g in dataset.contexts()]
+    actual_graphs = [g.identifier for g in dataset.graphs()]
     assert item3_graph in actual_graphs, f"Expected graph {item3_graph} not found"
     
     # Check that snapshot is typed as prov:Entity
