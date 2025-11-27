@@ -4,3 +4,9 @@ htmlcov
 .vscode
 .coverage
 coverage.xml
+
+PLAN.md
+data/aldrovandi_obj.csv
+data/aldrovandi_pro.csv
+docs/naming_convention.md
+docs/media

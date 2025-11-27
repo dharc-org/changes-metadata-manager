@@ -1,23 +1,26 @@
 [project]
 name = "aldrovandi-provenance"
 version = "1.0.0"
-description = "This repository contains tools for managing provenance information for cultural heritage data using the CHAD-AP (Cultural Heritage Acquisition and Digitisation Application Profile) model."
-authors = [
-    {name = "arcangelo7",email = "info@arcangelomassari.com"}
-]
-license = {text = "ISC License"}
+description = "Tools for managing provenance information for cultural heritage data using the CHAD-AP model"
 readme = "README.md"
-requires-python = ">=3.10,<4.0.0"
+requires-python = ">=3.10"
 dependencies = [
-    "rdflib (>=7.1.3,<8.0.0)"
+    "rdflib>=7.4.0",
 ]
 
-[tool.poetry]
+[dependency-groups]
+dev = [
+    "pytest>=9.0.1",
+    "pytest-cov>=7.0.0",
+]
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.5"
-pytest-cov = "^6.1.0"
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+branch = "master"
+commit_message = "chore(release): {version}"
 
-[build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.semantic_release.changelog]
+changelog_file = "CHANGELOG.md"
+
+[tool.semantic_release.remote]
+type = "github"

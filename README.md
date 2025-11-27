@@ -2,7 +2,7 @@
 
 [![Tests](https://github.com/dharc-org/aldrovandi-provenance/actions/workflows/run-tests.yml/badge.svg)](https://github.com/dharc-org/aldrovandi-provenance/actions/workflows/run-tests.yml)
 [![Coverage](https://byob.yarr.is/arcangelo7/badges/dharc-org-aldrovandi-provenance-coverage-master)](https://dharc-org.github.io/aldrovandi-provenance/)
-[![Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Repo Size](https://img.shields.io/github/repo-size/dharc-org/aldrovandi-provenance)](https://github.com/dharc-org/aldrovandi-provenance)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/License-ISC-blue.svg)](LICENSE)
@@ -27,19 +27,19 @@ The primary feature is generating provenance snapshots from RDF data in various 
 
 Requirements:
 - Python 3.10+
-- Poetry (recommended for development)
+- uv (recommended for development)
 
-### Using Poetry
+### Using uv
 
-If Poetry is not already installed, please follow the installation instructions at [https://python-poetry.org/docs/#installation](https://python-poetry.org/docs/#installation)
+If uv is not already installed, please follow the installation instructions at [https://docs.astral.sh/uv/getting-started/installation/](https://docs.astral.sh/uv/getting-started/installation/)
 
 ```bash
 # Clone the repository
 git clone https://github.com/dharc-org/aldrovandi-provenance.git
 cd aldrovandi-provenance
 
-# Install dependencies with Poetry
-poetry install
+# Install dependencies with uv
+uv sync
 ```
 
 ## Usage
