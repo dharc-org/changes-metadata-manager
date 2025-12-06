@@ -68,6 +68,29 @@ The script automatically detects RDF file formats based on extensions:
 - `.nq` - N-Quads
 - `.trig` - TriG
 
+### Extracting SharePoint structure
+
+The `sharepoint_extractor.py` script extracts the folder structure from a SharePoint site.
+
+Configuration:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` with your SharePoint credentials:
+- `SHAREPOINT_SITE_URL`: SharePoint site URL
+- `SHAREPOINT_FEDAUTH`: FedAuth cookie (from browser DevTools)
+- `SHAREPOINT_RTFA`: rtFa cookie (from browser DevTools)
+
+Usage:
+
+```bash
+python -m aldrovandi_provenance.sharepoint_extractor [-o OUTPUT_FILE]
+```
+
+The script outputs a JSON file (default: `data/sharepoint_structure.json`) containing the site URL, extraction timestamp, and folder hierarchy.
+
 ## Example
 
 Input directory contains cultural heritage data in Turtle format:

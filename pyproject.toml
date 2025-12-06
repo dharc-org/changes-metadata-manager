@@ -5,6 +5,8 @@ description = "Tools for managing provenance information for cultural heritage d
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "httpx>=0.28.1",
+    "python-dotenv>=1.2.1",
     "rdflib>=7.4.0",
 ]
 
