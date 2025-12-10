@@ -1,7 +1,7 @@
 [project]
-name = "aldrovandi-provenance"
+name = "changes-metadata-manager"
 version = "1.0.0"
-description = "Tools for managing provenance information for cultural heritage data using the CHAD-AP model"
+description = "Map RDF knowledge graph triples to Aldrovandi digitization folder stages"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

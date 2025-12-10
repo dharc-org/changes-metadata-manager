@@ -6,7 +6,7 @@ import pytest
 from pathlib import Path
 from rdflib import Graph
 
-from aldrovandi_provenance.folder_metadata_builder import (
+from changes_metadata_manager.folder_metadata_builder import (
     extract_metadata_for_stage,
     extract_nr_from_folder_name,
     load_kg,

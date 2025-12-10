@@ -5,7 +5,7 @@ from pathlib import Path
 
 from rdflib import Graph, URIRef
 
-from aldrovandi_provenance.generate_provenance import generate_provenance_snapshots
+from changes_metadata_manager.generate_provenance import generate_provenance_snapshots
 
 
 BASE_URI = "https://w3id.org/changes/4/aldrovandi"

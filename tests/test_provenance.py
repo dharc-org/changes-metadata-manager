@@ -13,7 +13,7 @@ from rdflib.namespace import RDF
 
 # Add the src directory to the path so we can import the module
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from aldrovandi_provenance.generate_provenance import generate_provenance_snapshots
+from changes_metadata_manager.generate_provenance import generate_provenance_snapshots
 
 @pytest.fixture
 def test_environment():

@@ -41,7 +41,7 @@ jobs:
 
     - name: Run tests with coverage
       run: |
-        uv run pytest --cov=aldrovandi_provenance --cov-report=xml --cov-report=term
+        uv run pytest --cov=changes_metadata_manager --cov-report=xml --cov-report=term
         echo "=== Coverage Report ==="
         uv run coverage report
         echo "COVERAGE=$(uv run coverage report | grep TOTAL | awk '{print $4}')" >> $GITHUB_ENV
