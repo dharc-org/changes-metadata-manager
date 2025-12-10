@@ -7,12 +7,12 @@ from pathlib import Path
 from rdflib import Graph
 
 from aldrovandi_provenance.folder_metadata_builder import (
-    STAGE_STEPS,
     extract_metadata_for_stage,
     extract_nr_from_folder_name,
     load_kg,
     load_sharepoint_structure,
     process_all_folders,
+    scan_folder_structure,
 )
 
 
@@ -56,21 +56,27 @@ def real_kg():
 
 
 @pytest.fixture
-def subset_structure():
+def test_folder_structure():
     full_structure = load_sharepoint_structure(REAL_SHAREPOINT_PATH)
     subset = {"structure": {}}
+
+    tmpdir = tempfile.mkdtemp()
+    tmpdir_path = Path(tmpdir)
+    root_path = tmpdir_path / "root"
+
     for sala, folder, _ in TEST_ITEMS:
         if sala not in subset["structure"]:
             subset["structure"][sala] = {}
         subset["structure"][sala][folder] = full_structure["structure"][sala][folder]
+        for stage in full_structure["structure"][sala][folder]:
+            stage_dir = root_path / sala / folder / stage
+            stage_dir.mkdir(parents=True)
 
-    tmpdir = tempfile.mkdtemp()
-    tmpdir_path = Path(tmpdir)
     structure_path = tmpdir_path / "structure_subset.json"
     with open(structure_path, "w") as f:
         json.dump(subset, f)
 
-    yield tmpdir_path, structure_path
+    yield root_path, structure_path
 
     shutil.rmtree(tmpdir)
 
@@ -107,26 +113,68 @@ class TestExtractNrFromFolderName:
             extract_nr_from_folder_name(folder_name)
 
 
-class TestProcessAllFoldersExact:
-    def test_creates_correct_structure(self, subset_structure):
-        tmpdir, structure_path = subset_structure
-        output_dir = tmpdir / "output"
+class TestProcessAllFolders:
+    def test_creates_files_in_place_with_structure_json(self, test_folder_structure):
+        root, structure_path = test_folder_structure
         process_all_folders(
-            output_dir=output_dir,
-            structure_path=structure_path,
+            root=root,
             kg_path=REAL_KG_PATH,
+            structure_path=structure_path,
         )
 
         for sala, folder, _ in TEST_ITEMS:
-            sala_dir = output_dir / sala / folder
-            assert sala_dir.exists(), f"Folder directory not created for {folder}"
-
-            stage_dirs = [d for d in sala_dir.iterdir() if d.is_dir()]
+            folder_dir = root / sala / folder
+            stage_dirs = [d for d in folder_dir.iterdir() if d.is_dir()]
             assert len(stage_dirs) == 4, f"Expected 4 stages for {folder}, got {len(stage_dirs)}"
 
             for stage_dir in stage_dirs:
                 meta_file = stage_dir / "meta.ttl"
                 prov_file = stage_dir / "prov.nq"
-
                 assert meta_file.exists(), f"meta.ttl not created for {folder}/{stage_dir.name}"
                 assert prov_file.exists(), f"prov.nq not created for {folder}/{stage_dir.name}"
+
+    def test_creates_files_in_place_without_structure_json(self, test_folder_structure):
+        root, _ = test_folder_structure
+        process_all_folders(
+            root=root,
+            kg_path=REAL_KG_PATH,
+        )
+
+        for sala, folder, _ in TEST_ITEMS:
+            folder_dir = root / sala / folder
+            stage_dirs = [d for d in folder_dir.iterdir() if d.is_dir()]
+            assert len(stage_dirs) == 4, f"Expected 4 stages for {folder}, got {len(stage_dirs)}"
+
+            for stage_dir in stage_dirs:
+                meta_file = stage_dir / "meta.ttl"
+                prov_file = stage_dir / "prov.nq"
+                assert meta_file.exists(), f"meta.ttl not created for {folder}/{stage_dir.name}"
+                assert prov_file.exists(), f"prov.nq not created for {folder}/{stage_dir.name}"
+
+
+class TestScanFolderStructure:
+    def test_scans_folder_structure(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            sala_dir = root / "Sala1"
+            folder_dir = sala_dir / "S1-01-TestFolder"
+            raw_dir = folder_dir / "raw"
+            dcho_dir = folder_dir / "dcho"
+            raw_dir.mkdir(parents=True)
+            dcho_dir.mkdir(parents=True)
+            (raw_dir / "file1.jpg").touch()
+            (raw_dir / "file2.jpg").touch()
+            (dcho_dir / "model.obj").touch()
+
+            result = scan_folder_structure(root)
+
+            assert "structure" in result
+            assert "Sala1" in result["structure"]
+            assert "S1-01-TestFolder" in result["structure"]["Sala1"]
+            folder_data = result["structure"]["Sala1"]["S1-01-TestFolder"]
+            assert "raw" in folder_data
+            assert "dcho" in folder_data
+            assert set(folder_data["raw"]["_files"]) == {"file1.jpg", "file2.jpg"}
+            assert folder_data["dcho"]["_files"] == ["model.obj"]
+
+

@@ -1,27 +1,14 @@
-#!/usr/bin/env python3
 """
-Script to generate provenance snapshots from RDF data.
-This script loads RDF data in various formats from all files in a directory, 
-extracts all subjects, and creates provenance snapshots as named graphs 
+Module to generate provenance snapshots from RDF data.
+Loads RDF data in various formats from all files in a directory,
+extracts all subjects, and creates provenance snapshots as named graphs
 with type prov:Entity.
 """
 
 import os
-import argparse
 import datetime
 from rdflib import Dataset, URIRef, Namespace, Literal
 from rdflib.namespace import RDF, XSD, DCTERMS
-
-def parse_arguments(): # pragma: no cover
-    """Parse command line arguments."""
-    parser = argparse.ArgumentParser(description='Generate provenance snapshots from RDF data.')
-    parser.add_argument('input_directory', help='Directory containing RDF files to process')
-    parser.add_argument('output_file', help='Output file for provenance snapshots (N-Quads format)')
-    parser.add_argument('--format', help='Force specific input format instead of auto-detection')
-    parser.add_argument('--output-format', help='Output format (default: nquads)', default='nquads')
-    parser.add_argument('--agent', help='ORCID of the responsible agent', required=True)
-    parser.add_argument('--primary-source', help='URI of the primary source for the data', required=True)
-    return parser.parse_args()
 
 def generate_provenance_snapshots(input_directory, output_file, input_format=None, output_format='nquads', agent_orcid=None, primary_source=None):
     """
@@ -112,12 +99,3 @@ def generate_provenance_snapshots(input_directory, output_file, input_format=Non
     
     dataset.serialize(destination=output_file, format=output_format)
     print(f"Provenance snapshots saved to {output_file} in {output_format} format")
-    
-
-def main(): # pragma: no cover
-    """Main function."""
-    args = parse_arguments()
-    generate_provenance_snapshots(args.input_directory, args.output_file, args.format, args.output_format, args.agent, args.primary_source)
-
-if __name__ == "__main__": # pragma: no cover
-    main() 

@@ -69,38 +69,46 @@ def load_sharepoint_structure(structure_path: Path) -> dict:
         return json.load(f)
 
 
+def scan_folder_structure(root_path: Path) -> dict:
+    structure = {}
+    for sala_dir in root_path.iterdir():
+        sala_name = sala_dir.name
+        structure[sala_name] = {}
+        for folder_dir in sala_dir.iterdir():
+            folder_name = folder_dir.name
+            structure[sala_name][folder_name] = {}
+            for stage_dir in folder_dir.iterdir():
+                stage_name = stage_dir.name
+                files = [f.name for f in stage_dir.iterdir() if f.is_file()]
+                structure[sala_name][folder_name][stage_name] = {"_files": files}
+    return {"structure": structure}
+
+
 def process_all_folders(
-    output_dir: Path,
-    structure_path: Path = STRUCTURE_PATH,
+    root: Path,
     kg_path: Path = KG_PATH,
-) -> dict:
-    structure = load_sharepoint_structure(structure_path)
+    structure_path: Path | None = None,
+) -> None:
+    if structure_path is not None:
+        structure = load_sharepoint_structure(structure_path)
+    else:
+        structure = scan_folder_structure(root)
     kg = load_kg(kg_path)
 
     for sala_name, sala_items in structure["structure"].items():
-        sala_dir = output_dir / sala_name
-        sala_dir.mkdir(parents=True, exist_ok=True)
-
         for folder_name, subfolders in sala_items.items():
             nr = extract_nr_from_folder_name(folder_name)
-            folder_dir = sala_dir / folder_name
 
             existing_stages = [
                 s for s in subfolders.keys()
                 if s.lower() in STAGE_STEPS
             ]
 
-            if not existing_stages:
-                raise ValueError(f"No valid stage subfolders in {folder_name}")
-
             for stage_name in existing_stages:
                 stage_key = stage_name.lower()
-                stage_dir = folder_dir / stage_name
-                stage_dir.mkdir(parents=True, exist_ok=True)
+                stage_dir = root / sala_name / folder_name / stage_name
 
                 metadata = extract_metadata_for_stage(kg, nr, stage_key)
-                if len(metadata) == 0:
-                    raise ValueError(f"No metadata for {folder_name}/{stage_name} (NR={nr})")
 
                 meta_path = stage_dir / "meta.ttl"
                 metadata.serialize(destination=str(meta_path), format="turtle")
@@ -117,24 +125,30 @@ def process_all_folders(
             print(f"Processed {folder_name} (NR={nr}): {len(existing_stages)} stages")
 
 
-def parse_arguments():
+def parse_arguments():  # pragma: no cover
     parser = argparse.ArgumentParser(
-        description="Process SharePoint structure and generate metadata/provenance files"
+        description="Generate metadata and provenance files for folder structure"
     )
     parser.add_argument(
-        "--output",
-        "-o",
-        default="data/output",
-        help="Output directory for generated files",
+        "root",
+        type=Path,
+        help="Root directory containing Sala/Folder/Stage structure",
+    )
+    parser.add_argument(
+        "--structure",
+        "-s",
+        type=Path,
+        default=None,
+        help="SharePoint JSON structure file (optional, for development)",
     )
     return parser.parse_args()
 
 
-def main():
+def main():  # pragma: no cover
     args = parse_arguments()
-    process_all_folders(output_dir=Path(args.output))
-    print(f"\nProcessing complete:")
+    process_all_folders(root=args.root, structure_path=args.structure)
+    print("\nProcessing complete")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()
