@@ -10,3 +10,5 @@ data/aldrovandi_pro.csv
 docs/naming_convention.md
 docs/media
 .env
+data/output
+data/cache
