@@ -12,3 +12,4 @@ docs/media
 .env
 data/output
 data/cache
+sharepoint_config.yaml

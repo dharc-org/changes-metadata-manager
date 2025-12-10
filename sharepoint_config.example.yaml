@@ -1,0 +1,10 @@
+site_url: https://liveunibo.sharepoint.com/sites/PE5-Spoke4-CaseStudyAldrovandi
+fedauth: <FedAuth_cookie_value>
+rtfa: <rtFa_cookie_value>
+folders:
+  - /Shared Documents/Sala1
+  - /Shared Documents/Sala2
+  - /Shared Documents/Sala3
+  - /Shared Documents/Sala4
+  - /Shared Documents/Sala5
+  - /Shared Documents/Sala6

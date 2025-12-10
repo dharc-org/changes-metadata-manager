@@ -54,7 +54,7 @@ Prerequisites:
 Usage:
 
 ```bash
-python -m changes_metadata_manager.folder_metadata_builder <root_directory>
+uv run python -m changes_metadata_manager.folder_metadata_builder <root_directory>
 ```
 
 The script scans the folder structure and generates for each stage:
@@ -65,33 +65,43 @@ Supported stages: raw, rawp, dcho, dchoo.
 
 ## Development
 
-### SharePoint structure extraction
+### SharePoint sync
 
-During development, when the local folder structure is not available, you can use SharePoint as the source of the folder structure.
+When the local folder structure is not available, you can sync files from SharePoint.
 
-Configuration:
+Create a YAML configuration file (see `sharepoint_config.example.yaml`):
 
-```bash
-cp .env.example .env
+```yaml
+site_url: https://liveunibo.sharepoint.com/sites/PE5-Spoke4-CaseStudyAldrovandi
+fedauth: <FedAuth_cookie_value>
+rtfa: <rtFa_cookie_value>
+folders:
+  - /Shared Documents/Sala1
+  - /Shared Documents/Sala2
 ```
 
-Edit `.env` with your SharePoint credentials:
-- `SHAREPOINT_SITE_URL`: SharePoint site URL
-- `SHAREPOINT_FEDAUTH`: FedAuth cookie (from browser DevTools)
-- `SHAREPOINT_RTFA`: rtFa cookie (from browser DevTools)
+Cookie values can be extracted from browser developer tools after authenticating to SharePoint.
 
-Extract the structure:
+Sync structure and files:
 
 ```bash
-python -m changes_metadata_manager.sharepoint_extractor [-o OUTPUT_FILE]
+uv run python -m changes_metadata_manager.sharepoint_sync config.yaml /output/dir
 ```
 
-This outputs a JSON file (default: `data/sharepoint_structure.json`) containing the folder hierarchy.
+Sync structure only (no file download):
+
+```bash
+uv run python -m changes_metadata_manager.sharepoint_sync config.yaml /output/dir --structure-only
+```
+
+The sync outputs:
+- `structure.json`: folder hierarchy
+- All files from SharePoint (unless `--structure-only` is used)
 
 Then run the metadata builder with the `--structure` flag:
 
 ```bash
-python -m changes_metadata_manager.folder_metadata_builder <root_directory> --structure data/sharepoint_structure.json
+uv run python -m changes_metadata_manager.folder_metadata_builder <root_directory> --structure /output/dir/structure.json
 ```
 
 When using `--structure`, the script uses the JSON file to determine the folder hierarchy instead of scanning the filesystem.
