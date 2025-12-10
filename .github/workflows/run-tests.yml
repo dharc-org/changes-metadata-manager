@@ -84,7 +84,7 @@ jobs:
       if: matrix.python-version == '3.10'
       uses: RubbaBoy/BYOB@v1.3.0
       with:
-        name: dharc-org-aldrovandi-provenance-coverage-${{ github.ref_name }}
+        name: dharc-org-changes-metadata-manager-coverage-${{ github.ref_name }}
         label: "Coverage"
         status: "${{ env.COVERAGE }}"
         color: ${{ env.BADGE_COLOR }}

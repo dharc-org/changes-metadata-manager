@@ -26,7 +26,7 @@ The provenance model is based on the OpenCitations Data Model:
 
 Requirements:
 - Python 3.10+
-- uv (recommended for development)
+- uv
 
 ### Using uv
 
@@ -63,7 +63,9 @@ The script scans the folder structure and generates for each stage:
 
 Supported stages: raw, rawp, dcho, dchoo.
 
-### Development: SharePoint structure extraction
+## Development
+
+### SharePoint structure extraction
 
 During development, when the local folder structure is not available, you can use SharePoint as the source of the folder structure.
 
@@ -94,10 +96,9 @@ python -m changes_metadata_manager.folder_metadata_builder <root_directory> --st
 
 When using `--structure`, the script uses the JSON file to determine the folder hierarchy instead of scanning the filesystem.
 
-## Development
 
-### Running Tests
+### Running tests
 
 ```bash
-pytest -xvs tests/
+uv run pytest
 ```

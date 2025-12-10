@@ -1,0 +1,186 @@
+{
+  "site_url": "https://liveunibo.sharepoint.com/sites/PE5-Spoke4-CaseStudyAldrovandi",
+  "site_relative_url": "/sites/PE5-Spoke4-CaseStudyAldrovandi",
+  "docs_folder": "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents",
+  "responses": {
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/Folders": {
+      "d": {
+        "results": [
+          {
+            "Name": "S1-01-CNR_CartaNautica",
+            "ServerRelativeUrl": "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica"
+          }
+        ]
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/Files": {
+      "d": {
+        "results": []
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/Folders": {
+      "d": {
+        "results": [
+          {
+            "Name": "dcho",
+            "ServerRelativeUrl": "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/dcho"
+          },
+          {
+            "Name": "dchoo",
+            "ServerRelativeUrl": "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/dchoo"
+          },
+          {
+            "Name": "raw",
+            "ServerRelativeUrl": "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/raw"
+          },
+          {
+            "Name": "rawp",
+            "ServerRelativeUrl": "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/rawp"
+          }
+        ]
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/Files": {
+      "d": {
+        "results": []
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/dcho/Folders": {
+      "d": {
+        "results": []
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/dcho/Files": {
+      "d": {
+        "results": [
+          {"Name": "CartaNautica.mtl"},
+          {"Name": "CartaNautica.obj"},
+          {"Name": "NewUVGIMP3.png"}
+        ]
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/dchoo/Folders": {
+      "d": {
+        "results": []
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/dchoo/Files": {
+      "d": {
+        "results": [
+          {"Name": "NewUVGIMP3.jpg"},
+          {"Name": "carta_nautica.bin"},
+          {"Name": "carta_nautica.gltf"}
+        ]
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/raw/Folders": {
+      "d": {
+        "results": []
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/raw/Files": {
+      "d": {
+        "results": [
+          {"Name": "DSC_8820.JPG"},
+          {"Name": "DSC_8821.JPG"},
+          {"Name": "DSC_8822.JPG"},
+          {"Name": "DSC_8823.JPG"},
+          {"Name": "DSC_8825.JPG"}
+        ]
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/rawp/Folders": {
+      "d": {
+        "results": [
+          {
+            "Name": "materials",
+            "ServerRelativeUrl": "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/rawp/materials"
+          }
+        ]
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/rawp/Files": {
+      "d": {
+        "results": [
+          {"Name": "CartaNautica.mtl"},
+          {"Name": "CartaNautica.obj"},
+          {"Name": "CartaNautica_tex0.png"},
+          {"Name": "CartaNautica_tex1.png"}
+        ]
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/rawp/materials/Folders": {
+      "d": {
+        "results": [
+          {
+            "Name": "CartaNautica2_files",
+            "ServerRelativeUrl": "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/rawp/materials/CartaNautica2_files"
+          }
+        ]
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/rawp/materials/Files": {
+      "d": {
+        "results": [
+          {"Name": "CartaNautica2.zep"}
+        ]
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/rawp/materials/CartaNautica2_files/Folders": {
+      "d": {
+        "results": []
+      }
+    },
+    "/sites/PE5-Spoke4-CaseStudyAldrovandi/Shared Documents/Sala1/S1-01-CNR_CartaNautica/rawp/materials/CartaNautica2_files/Files": {
+      "d": {
+        "results": [
+          {"Name": "Buona.3db"},
+          {"Name": "CartaTexturing.obj (2).3db"},
+          {"Name": "CartaTexturing.obj (3).3db"}
+        ]
+      }
+    }
+  },
+  "expected_sala1_structure": {
+    "S1-01-CNR_CartaNautica": {
+      "dcho": {
+        "_files": ["CartaNautica.mtl", "CartaNautica.obj", "NewUVGIMP3.png"]
+      },
+      "dchoo": {
+        "_files": ["NewUVGIMP3.jpg", "carta_nautica.bin", "carta_nautica.gltf"]
+      },
+      "raw": {
+        "_files": ["DSC_8820.JPG", "DSC_8821.JPG", "DSC_8822.JPG", "DSC_8823.JPG", "DSC_8825.JPG"]
+      },
+      "rawp": {
+        "materials": {
+          "CartaNautica2_files": {
+            "_files": ["Buona.3db", "CartaTexturing.obj (2).3db", "CartaTexturing.obj (3).3db"]
+          },
+          "_files": ["CartaNautica2.zep"]
+        },
+        "_files": ["CartaNautica.mtl", "CartaNautica.obj", "CartaNautica_tex0.png", "CartaNautica_tex1.png"]
+      }
+    }
+  },
+  "expected_item_structure": {
+    "dcho": {
+      "_files": ["CartaNautica.mtl", "CartaNautica.obj", "NewUVGIMP3.png"]
+    },
+    "dchoo": {
+      "_files": ["NewUVGIMP3.jpg", "carta_nautica.bin", "carta_nautica.gltf"]
+    },
+    "raw": {
+      "_files": ["DSC_8820.JPG", "DSC_8821.JPG", "DSC_8822.JPG", "DSC_8823.JPG", "DSC_8825.JPG"]
+    },
+    "rawp": {
+      "materials": {
+        "CartaNautica2_files": {
+          "_files": ["Buona.3db", "CartaTexturing.obj (2).3db", "CartaTexturing.obj (3).3db"]
+        },
+        "_files": ["CartaNautica2.zep"]
+      },
+      "_files": ["CartaNautica.mtl", "CartaNautica.obj", "CartaNautica_tex0.png", "CartaNautica_tex1.png"]
+    }
+  }
+}

@@ -19,7 +19,7 @@ def sort_structure(obj):
     return obj
 
 
-def request_with_retry(client, url, max_retries=5):
+def request_with_retry(client, url, max_retries=5):  # pragma: no cover
     for attempt in range(max_retries):
         resp = client.get(url)
         if resp.status_code == 429:
@@ -74,13 +74,24 @@ def process_sala(client, sala_name, site_url, docs_folder):
     return sala_name, structure
 
 
-def main():
+def extract_all_sale(client, site_url, sale_names):
+    site_relative_url = "/" + "/".join(site_url.split("/")[3:])
+    docs_folder = f"{site_relative_url}/Shared Documents"
+
+    print(f"Extracting {len(sale_names)} sale sequentially...")
+
+    results = []
+    for sala in sale_names:
+        result = process_sala(client, sala, site_url, docs_folder)
+        results.append(result)
+
+    structure = {sala_name: sala_structure for sala_name, sala_structure in results}
+    return sort_structure(structure)
+
+
+def main():  # pragma: no cover
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--output",
-        "-o",
-        default="data/sharepoint_structure.json",
-    )
+    parser.add_argument("--output", "-o", default="data/sharepoint_structure.json")
     args = parser.parse_args()
 
     load_dotenv()
@@ -94,26 +105,15 @@ def main():
     if not fedauth or not rtfa:
         raise ValueError("SHAREPOINT_FEDAUTH and SHAREPOINT_RTFA must be set in .env")
 
-    site_relative_url = "/" + "/".join(site_url.split("/")[3:])
-    docs_folder = f"{site_relative_url}/Shared Documents"
-
-    sale = ["Sala1", "Sala2", "Sala3", "Sala4", "Sala5", "Sala6"]
-
-    print(f"Extracting {len(sale)} sale sequentially...")
-
     headers = {
         "Cookie": f"FedAuth={fedauth}; rtFa={rtfa}",
         "Accept": "application/json;odata=verbose",
     }
 
-    results = []
-    with httpx.Client(headers=headers) as client:
-        for sala in sale:
-            result = process_sala(client, sala, site_url, docs_folder)
-            results.append(result)
+    sale = ["Sala1", "Sala2", "Sala3", "Sala4", "Sala5", "Sala6"]
 
-    structure = {sala_name: sala_structure for sala_name, sala_structure in results}
-    structure = sort_structure(structure)
+    with httpx.Client(headers=headers) as client:
+        structure = extract_all_sale(client, site_url, sale)
 
     output = {
         "site_url": site_url,
@@ -128,5 +128,5 @@ def main():
     print(f"\nStructure saved to {args.output}")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
     main()
