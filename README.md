@@ -67,9 +67,9 @@ Supported stages: raw, rawp, dcho, dchoo.
 
 ### SharePoint sync
 
-When the local folder structure is not available, you can sync files from SharePoint.
+When the local folder structure is not available, you can sync files from SharePoint using [piccione](https://github.com/opencitations/piccione).
 
-Create a YAML configuration file (see `sharepoint_config.example.yaml`):
+Create a YAML configuration file:
 
 ```yaml
 site_url: https://liveunibo.sharepoint.com/sites/PE5-Spoke4-CaseStudyAldrovandi
@@ -82,21 +82,17 @@ folders:
 
 Cookie values can be extracted from browser developer tools after authenticating to SharePoint.
 
-Sync structure and files:
-
-```bash
-uv run python -m changes_metadata_manager.sharepoint_sync config.yaml /output/dir
-```
-
 Sync structure only (no file download):
 
 ```bash
-uv run python -m changes_metadata_manager.sharepoint_sync config.yaml /output/dir --structure-only
+uv run python -m piccione.download.from_sharepoint config.yaml /output/dir --structure-only
 ```
 
-The sync outputs:
-- `structure.json`: folder hierarchy
-- All files from SharePoint (unless `--structure-only` is used)
+Sync structure and files:
+
+```bash
+uv run python -m piccione.download.from_sharepoint config.yaml /output/dir
+```
 
 Then run the metadata builder with the `--structure` flag:
 

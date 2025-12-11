@@ -5,11 +5,8 @@ description = "Map RDF knowledge graph triples to Aldrovandi digitization folder
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "httpx>=0.28.1",
-    "python-dotenv>=1.2.1",
-    "pyyaml>=6.0.3",
+    "piccione>=1.0.0",
     "rdflib>=7.4.0",
-    "rich>=14.2.0",
 ]
 
 [dependency-groups]
