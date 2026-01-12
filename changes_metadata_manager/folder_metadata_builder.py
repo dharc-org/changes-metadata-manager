@@ -11,14 +11,18 @@ from changes_metadata_manager.generate_provenance import generate_provenance_sna
 BASE_URI = "https://w3id.org/changes/4/aldrovandi"
 STRUCTURE_PATH = Path("data/sharepoint_structure.json")
 KG_PATH = Path("data/kg.ttl")
-RESP_AGENT = "https://orcid.org/0000-0000-0000-0000"  # TODO: replace with actual URI
-PRIMARY_SOURCE = "https://example.org/primary-source"  # TODO: replace with actual URI
+RESP_AGENT = "https://w3id.org/changes/4/agent/morph-kgc-changes-metadata/1.0.1"
+PRIMARY_SOURCE = "https://doi.org/10.5281/zenodo.18190642"
 
 STAGE_STEPS = {
     "raw": ["00"],
     "rawp": ["00", "01"],
     "dcho": ["00", "01", "02"],
     "dchoo": ["00", "01", "02", "03", "04", "05", "06"],
+}
+
+SKIP_FOLDERS = {
+    "S1-CNR_SoffittoSala1",
 }
 
 
@@ -29,7 +33,7 @@ def load_kg(path: Path) -> Graph:
 
 
 def extract_nr_from_folder_name(folder_name: str) -> int:
-    match = re.match(r"S\d+-(\d+)-", folder_name)
+    match = re.match(r"S\d+-(\d+)[a-z]? ?[-_]", folder_name)
     if not match:
         raise ValueError(f"Cannot extract NR from folder name: {folder_name}")
     return int(match.group(1))
@@ -97,6 +101,8 @@ def process_all_folders(
 
     for sala_name, sala_items in structure["structure"].items():
         for folder_name, subfolders in sala_items.items():
+            if folder_name in SKIP_FOLDERS:
+                continue
             nr = extract_nr_from_folder_name(folder_name)
 
             existing_stages = [
@@ -107,6 +113,7 @@ def process_all_folders(
             for stage_name in existing_stages:
                 stage_key = stage_name.lower()
                 stage_dir = root / sala_name / folder_name / stage_name
+                stage_dir.mkdir(parents=True, exist_ok=True)
 
                 metadata = extract_metadata_for_stage(kg, nr, stage_key)
 

@@ -1,6 +1,6 @@
 {
   "site_url": "https://liveunibo.sharepoint.com/sites/PE5-Spoke4-CaseStudyAldrovandi",
-  "extracted_at": "2025-12-10T15:12:56.832748+00:00",
+  "extracted_at": "2026-01-12T13:55:36.715282+00:00",
   "structure": {
     "Sala1": {
       "S1-01-CNR_CartaNautica": {
@@ -452,7 +452,6 @@
       },
       "S1-02-DA-Diorama 3 leoni": {
         "dcho": {
-          "materials": {},
           "_files": [
             "Bamboo_AO.png",
             "Bamboo_C.png",
@@ -2629,7 +2628,13 @@
             "_files": [
               "Workspace_tacchino.zep"
             ]
-          }
+          },
+          "_files": [
+            "Tacchino_tassidermizzato_rawp.mtl",
+            "Tacchino_tassidermizzato_rawp.obj",
+            "Tacchino_tassidermizzato_rawp_tex0.png",
+            "Tacchino_tassidermizzato_rawp_tex1.png"
+          ]
         }
       },
       "S1-19-DA-Armadillo tassidermizzato": {
@@ -3889,7 +3894,6 @@
         },
         "rawp": {
           "_files": [
-            "girasole.mtl",
             "girasole.obj"
           ]
         }
@@ -6162,9 +6166,13 @@
             "Narvalo 2 21.05.2023.a3d"
           ]
         },
-        "rawp": {}
+        "rawp": {
+          "_files": [
+            "UnicornoRawP.obj"
+          ]
+        }
       },
-      "S2-41-DA-TERIACA": {
+      "S2-41-DA-Teriaca": {
         "dcho": {
           "_files": [
             "Teriaca_Colore_1001.png",
@@ -7183,6 +7191,11 @@
           "_files": [
             "Matrice Peonia 15.05.23.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "MatriceFioreRawP.obj"
+          ]
         }
       },
       "S3-PT-DICAM_Matrice Xilografica Pianta": {
@@ -7237,6 +7250,11 @@
           },
           "_files": [
             "Matrice Finocchio 15.05.23.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "MatricePiantaRawP.obj"
           ]
         }
       },
@@ -7295,11 +7313,21 @@
           "_files": [
             "Matrice Serpente.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "MatriceSerpenteRawP.obj"
+          ]
         }
       },
       "S3-PT-DICAM_VetrinaMatriciXilografiche": {
         "dcho": {
           "materials": {
+            "ripiani_scuri": {
+              "_files": [
+                "ombre_ripiani2k.png"
+              ]
+            },
             "_files": [
               "parete_tavolette_final.mtl",
               "parete_tavolette_final.obj",
@@ -7317,20 +7345,21 @@
         "dchoo": {
           "materials": {
             "placeholder": {
-              "versioneconombre": {
-                "_files": [
-                  "ombre_ripiani2k.png",
-                  "paretematrici_texture8k.png",
-                  "paretetavolette_PH_GIUSTA.bin",
-                  "paretetavolette_PH_GIUSTA.gltf"
-                ]
-              },
               "_files": [
-                "PareteTavolette.bin",
-                "PareteTavolette.gltf",
-                "paretematrici_normal_tangent1.jpg",
-                "paretematrici_texture4k.jpg",
-                "paretematrici_texture8k.png"
+                "ombre_ripiani2k.png",
+                "paretematrici_texture8k.png",
+                "paretetavolette_PH_GIUSTA.bin",
+                "paretetavolette_PH_GIUSTA.gltf"
+              ]
+            },
+            "texture_ripiani_chiari_non_compressa": {
+              "_files": [
+                "ombre_ripiani2k.png"
+              ]
+            },
+            "texture_ripiani_scuri_non_compressa": {
+              "_files": [
+                "ombre_ripiani2k.png"
               ]
             },
             "versionektx": {
@@ -7347,7 +7376,7 @@
             "ombre_ripiani2k.jpg",
             "parete_tavolette_final.bin",
             "parete_tavolette_final.gltf",
-            "paretematrici_diffuse_paint8k.jpg",
+            "paretematrici_diffuse_AO_4k.jpg",
             "paretematrici_normal2k.jpg"
           ]
         },
@@ -7595,6 +7624,11 @@
           },
           "_files": [
             "VetrinaMatrici 19 - 15.05.23.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "Vetrina matrici rawp.obj"
           ]
         }
       },
@@ -9040,7 +9074,7 @@
       },
       "S5-B alto centro 2-DBC_Harpactocarcinus sp": {
         "dcho": {
-          "DCHO_texture 16K": {
+          "materials": {
             "_files": [
               "DCHO.mtl",
               "DCHO.obj",
@@ -9496,7 +9530,6 @@
         },
         "rawp": {
           "_files": [
-            "Miocene_modello0.mtl",
             "Miocene_modello0.obj"
           ]
         }
@@ -9591,6 +9624,11 @@
             "fanonealto_diffuse.jpg",
             "fanonealto_norm.jpg",
             "fanonealto_rough.jpg"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "FanoneAlto_rawp.obj"
           ]
         }
       },
@@ -9700,6 +9738,11 @@
           },
           "_files": [
             "Fanone basso fronte.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "FanoneBasso_rawp.obj"
           ]
         }
       },
@@ -9889,7 +9932,21 @@
         }
       },
       "S5-Manoscritto-FICLIT_DiscorsoNaturaleAldrovandi": {
-        "RAW": {
+        "dcho": {
+          "_files": [
+            "discorsonaturale.mtl",
+            "discorsonaturale.obj",
+            "discorsonaturale_8k.png"
+          ]
+        },
+        "dchoo": {
+          "_files": [
+            "discorsonaturale_def.bin",
+            "discorsonaturale_def.gltf",
+            "discorsonaturale_texture_4K.jpg"
+          ]
+        },
+        "raw": {
           "_files": [
             "P1120241.JPG",
             "P1120242.JPG",
@@ -9919,20 +9976,6 @@
             "P1120269.JPG"
           ]
         },
-        "dcho": {
-          "_files": [
-            "discorsonaturale.mtl",
-            "discorsonaturale.obj",
-            "discorsonaturale_8k.png"
-          ]
-        },
-        "dchoo": {
-          "_files": [
-            "discorsonaturale_def.bin",
-            "discorsonaturale_def.gltf",
-            "discorsonaturale_texture_4K.jpg"
-          ]
-        },
         "rawp": {
           "_files": [
             "discorsonaturale_original.mtl",
@@ -9941,7 +9984,21 @@
         }
       },
       "S5-Manoscritto-FICLIT_LexiconRerumInanimatarum": {
-        "RAW": {
+        "dcho": {
+          "_files": [
+            "LexiconRerumInanimatarum.mtl",
+            "LexiconRerumInanimatarum.obj",
+            "LexiconRerumInanimatarum_text8k.jpg"
+          ]
+        },
+        "dchoo": {
+          "_files": [
+            "LexiconRerumInanimatarum_def.bin",
+            "LexiconRerumInanimatarum_def.gltf",
+            "LexiconRerumInanimatarum_text_def.jpg"
+          ]
+        },
+        "raw": {
           "_files": [
             "P1120201.JPG",
             "P1120202.JPG",
@@ -9985,20 +10042,6 @@
             "P1120240.JPG"
           ]
         },
-        "dcho": {
-          "_files": [
-            "LexiconRerumInanimatarum.mtl",
-            "LexiconRerumInanimatarum.obj",
-            "LexiconRerumInanimatarum_text8k.jpg"
-          ]
-        },
-        "dchoo": {
-          "_files": [
-            "LexiconRerumInanimatarum_def.bin",
-            "LexiconRerumInanimatarum_def.gltf",
-            "LexiconRerumInanimatarum_text_def.jpg"
-          ]
-        },
         "rawp": {
           "_files": [
             "LexiconRerumInanimatarum_original.obj"
@@ -10006,7 +10049,21 @@
         }
       },
       "S5-Manoscritto-FICLIT_LibroDeiVisitatori": {
-        "RAW": {
+        "dcho": {
+          "_files": [
+            "LibroVisitatori.mtl",
+            "LibroVisitatori.obj",
+            "LibroVisitatori_texture8k.jpg"
+          ]
+        },
+        "dchoo": {
+          "_files": [
+            "LibroVisitatori.02.bin",
+            "LibroVisitatori.02.gltf",
+            "LibroVisitatori_diffuse.jpg"
+          ]
+        },
+        "raw": {
           "_files": [
             "DSC_0231.JPG",
             "DSC_0233.JPG",
@@ -10048,20 +10105,6 @@
             "DSC_0273.JPG",
             "DSC_0274.JPG",
             "DSC_0275.JPG"
-          ]
-        },
-        "dcho": {
-          "_files": [
-            "LibroVisitatori.mtl",
-            "LibroVisitatori.obj",
-            "LibroVisitatori_texture8k.jpg"
-          ]
-        },
-        "dchoo": {
-          "_files": [
-            "LibroVisitatori.02.bin",
-            "LibroVisitatori.02.gltf",
-            "LibroVisitatori_diffuse.jpg"
           ]
         },
         "rawp": {
@@ -10263,12 +10306,19 @@
           ]
         },
         "dchoo": {
+          "materials": {
+            "_files": [
+              "piano_ombre.png",
+              "semi.png",
+              "semi_thevetia_v2.png"
+            ]
+          },
           "_files": [
+            "fili.jpg",
             "red_plaster_weathered_nor_gl_4k.jpg",
-            "semi.jpg",
+            "semi_thevetia_v2.jpg",
             "sonaglio_thevetia.bin",
             "sonaglio_thevetia.gltf",
-            "struttura.jpg",
             "wood_table_worn_nor_gl_4k.jpg"
           ]
         },
@@ -11208,6 +11258,11 @@
           "_files": [
             "GemmeArchLuceStrutturata.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "GemmaConCinecefaloRawP.obj"
+          ]
         }
       },
       "S5-Vetrina 1 alto S-11-DICAM_GemmaInDiasproConScorpione": {
@@ -11329,6 +11384,11 @@
           "_files": [
             "GemmeArchLuceStrutturata.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "GemmaConScorpioneRawP.obj"
+          ]
         }
       },
       "S5-Vetrina 1 alto S-12-DICAM_GemmaInDiasproNeroConIscrizioneAraba": {
@@ -11449,6 +11509,11 @@
           },
           "_files": [
             "GemmeArchLuceStrutturata.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "GemmaIscrizioneAraba.obj"
           ]
         }
       },
@@ -11664,6 +11729,11 @@
             "20240703104634_1.tif",
             "GemmeArchLuceStrutturata.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "GemmaScarabeoRawP.obj"
+          ]
         }
       },
       "S5-Vetrina 1 alto S-4-DICAM_GemmaInAgataConCapraPressoAlbero": {
@@ -11784,6 +11854,11 @@
           },
           "_files": [
             "GemmeArchLuceStrutturata.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "GemmaConCapra.obj"
           ]
         }
       },
@@ -11906,6 +11981,11 @@
           "_files": [
             "GemmeArchLuceStrutturata.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "GemmaCommediaArte.obj"
+          ]
         }
       },
       "S5-Vetrina 1 alto S-6-DICAM_GemmaInAgataConSerapideInTrono": {
@@ -12026,6 +12106,11 @@
           },
           "_files": [
             "GemmeArchLuceStrutturata.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "GemmaSerapide.obj"
           ]
         }
       },
@@ -12148,6 +12233,11 @@
           "_files": [
             "GemmeArchLuceStrutturata.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "GemmaUccello.obj"
+          ]
         }
       },
       "S5-Vetrina 1 alto S-8-DICAM_GemmaInAgataConMercurioeFontana": {
@@ -12269,6 +12359,11 @@
           "_files": [
             "GemmeArchLuceStrutturata.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "GemmaMercurioeFontana.obj"
+          ]
         }
       },
       "S5-Vetrina 1 alto S-9-DICAM_GemmainPastaVitreaStratificataconFiguraAppoggiataAunBastone": {
@@ -12389,6 +12484,11 @@
           },
           "_files": [
             "GemmeArchLuceStrutturata.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "GemmaFiguraAppoggiataBastone.obj"
           ]
         }
       },
@@ -12689,6 +12789,23 @@
               "Carapace piccolo 31.05.2023.a3d"
             ]
           }
+        },
+        "rawp": {
+          "object1": {
+            "_files": [
+              "carapaceGrandeDx_rawp.obj"
+            ]
+          },
+          "object2": {
+            "_files": [
+              "CarapaceGrandeSx_rawp.obj"
+            ]
+          },
+          "object3": {
+            "_files": [
+              "carapacepiccolo3_rawp.obj"
+            ]
+          }
         }
       },
       "S5-Vetrina 2 ALTO N 3-FICLIT_SezioneDenteDiElefante": {
@@ -12953,15 +13070,147 @@
             ]
           },
           "object3": {
-            "data": {},
+            "data": {
+              "_files": [
+                "000199.sst",
+                "000202.sst",
+                "000237.sst",
+                "000238.sst",
+                "000262.sst",
+                "000263.sst",
+                "000308.sst",
+                "000309.sst",
+                "000355.sst",
+                "000356.sst",
+                "000358.sst",
+                "000359.sst",
+                "000360.sst",
+                "000361.sst",
+                "000362.sst",
+                "000363.sst",
+                "000364.sst",
+                "000365.sst",
+                "000366.sst",
+                "000367.sst",
+                "000368.sst",
+                "000369.sst",
+                "000370.sst",
+                "000371.sst",
+                "000372.sst",
+                "000373.sst",
+                "000374.sst",
+                "000375.sst",
+                "000376.sst",
+                "000377.sst",
+                "000378.sst",
+                "000379.sst",
+                "000380.sst",
+                "000381.sst",
+                "000382.sst",
+                "000383.sst",
+                "000384.sst",
+                "000385.sst",
+                "000386.sst",
+                "000387.sst",
+                "000392.log",
+                "000395.sst",
+                "000396.sst",
+                "000397.sst",
+                "CURRENT",
+                "IDENTITY",
+                "LOCK",
+                "LOG",
+                "MANIFEST-000391",
+                "OPTIONS-000352",
+                "OPTIONS-000394",
+                "recoveryData"
+              ]
+            },
             "_files": [
               "CoppiadiSfereEMatrice.a3d"
             ]
           },
           "object4": {
-            "data": {},
+            "data": {
+              "_files": [
+                "000199.sst",
+                "000202.sst",
+                "000237.sst",
+                "000238.sst",
+                "000262.sst",
+                "000263.sst",
+                "000308.sst",
+                "000309.sst",
+                "000355.sst",
+                "000356.sst",
+                "000358.sst",
+                "000359.sst",
+                "000360.sst",
+                "000361.sst",
+                "000362.sst",
+                "000363.sst",
+                "000364.sst",
+                "000365.sst",
+                "000366.sst",
+                "000367.sst",
+                "000368.sst",
+                "000369.sst",
+                "000370.sst",
+                "000371.sst",
+                "000372.sst",
+                "000373.sst",
+                "000374.sst",
+                "000375.sst",
+                "000376.sst",
+                "000377.sst",
+                "000378.sst",
+                "000379.sst",
+                "000380.sst",
+                "000381.sst",
+                "000382.sst",
+                "000383.sst",
+                "000384.sst",
+                "000385.sst",
+                "000386.sst",
+                "000387.sst",
+                "000392.log",
+                "000395.sst",
+                "000396.sst",
+                "000397.sst",
+                "CURRENT",
+                "IDENTITY",
+                "LOCK",
+                "LOG",
+                "MANIFEST-000391",
+                "OPTIONS-000352",
+                "OPTIONS-000394",
+                "recoveryData"
+              ]
+            },
             "_files": [
               "CoppiadiSfereEMatrice.a3d"
+            ]
+          }
+        },
+        "rawp": {
+          "object1": {
+            "_files": [
+              "Calcoli1_rawp.obj"
+            ]
+          },
+          "object2": {
+            "_files": [
+              "Calcoli2_rawp.obj"
+            ]
+          },
+          "object3": {
+            "_files": [
+              "calcoli3_rawp.obj"
+            ]
+          },
+          "object4": {
+            "_files": [
+              "calcoli4_rawp.obj"
             ]
           }
         }
@@ -13030,6 +13279,11 @@
           },
           "_files": [
             "Matrice Elefante.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "MatriceElefante.obj"
           ]
         }
       },
@@ -13282,6 +13536,11 @@
           },
           "_files": [
             "matrice zanna.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "matricezanna_rawp.obj"
           ]
         }
       },
@@ -13569,6 +13828,18 @@
               "Zanna Piccola 31.05.2023.a3d"
             ]
           }
+        },
+        "rawp": {
+          "object1": {
+            "_files": [
+              "Zannagrande1_rawp.obj"
+            ]
+          },
+          "object2": {
+            "_files": [
+              "Zannapiccola2_rawp.obj"
+            ]
+          }
         }
       },
       "S5-Vetrina 2 alto S - 2-DICAM_CornaDiBovidiECervidi": {
@@ -13684,15 +13955,191 @@
         },
         "raw": {
           "object1": {
-            "data": {},
+            "data": {
+              "_files": [
+                "000011.sst",
+                "000012.sst",
+                "000030.sst",
+                "000031.sst",
+                "000051.sst",
+                "000052.sst",
+                "000078.sst",
+                "000079.sst",
+                "000099.sst",
+                "000100.sst",
+                "000143.sst",
+                "000144.sst",
+                "000188.sst",
+                "000189.sst",
+                "000248.sst",
+                "000249.sst",
+                "000257.sst",
+                "000258.sst",
+                "000259.sst",
+                "000260.sst",
+                "000261.sst",
+                "000262.sst",
+                "000263.sst",
+                "000264.sst",
+                "000265.sst",
+                "000266.sst",
+                "000267.sst",
+                "000268.sst",
+                "000269.sst",
+                "000270.sst",
+                "000271.sst",
+                "000272.sst",
+                "000273.sst",
+                "000274.sst",
+                "000275.sst",
+                "000276.sst",
+                "000277.sst",
+                "000278.sst",
+                "000279.sst",
+                "000280.sst",
+                "000281.sst",
+                "000282.sst",
+                "000283.sst",
+                "000284.sst",
+                "000285.sst",
+                "000286.sst",
+                "000287.sst",
+                "000288.sst",
+                "000289.sst",
+                "000290.sst",
+                "000291.sst",
+                "000292.sst",
+                "000293.sst",
+                "000294.sst",
+                "000295.sst",
+                "000296.sst",
+                "000301.log",
+                "000304.sst",
+                "000305.sst",
+                "000306.sst",
+                "CURRENT",
+                "IDENTITY",
+                "LOCK",
+                "LOG",
+                "MANIFEST-000300",
+                "OPTIONS-000233",
+                "OPTIONS-000303",
+                "recoveryData"
+              ]
+            },
             "_files": [
               "Corno grande.a3d"
             ]
           },
           "object2": {
-            "data": {},
+            "data": {
+              "_files": [
+                "000393.log",
+                "000905.sst",
+                "000919.sst",
+                "000987.sst",
+                "000988.sst",
+                "000989.sst",
+                "000990.sst",
+                "000991.sst",
+                "000992.sst",
+                "000993.sst",
+                "000994.sst",
+                "000995.sst",
+                "000996.sst",
+                "000997.sst",
+                "000998.sst",
+                "000999.sst",
+                "001000.sst",
+                "001001.sst",
+                "001002.sst",
+                "001003.sst",
+                "001004.sst",
+                "001005.sst",
+                "001006.sst",
+                "001007.sst",
+                "001008.sst",
+                "001009.sst",
+                "001010.sst",
+                "001011.sst",
+                "001012.sst",
+                "001013.sst",
+                "001014.sst",
+                "001015.sst",
+                "001016.sst",
+                "001017.sst",
+                "001022.sst",
+                "001024.sst",
+                "001025.sst",
+                "001026.sst",
+                "001027.sst",
+                "001028.sst",
+                "001029.sst",
+                "001030.sst",
+                "001031.sst",
+                "001032.sst",
+                "001033.sst",
+                "001034.sst",
+                "001035.sst",
+                "001036.sst",
+                "001037.sst",
+                "001038.sst",
+                "001039.sst",
+                "001040.sst",
+                "001041.sst",
+                "001042.sst",
+                "001043.sst",
+                "001044.sst",
+                "001048.sst",
+                "001050.sst",
+                "001052.sst",
+                "001053.sst",
+                "001056.sst",
+                "001057.sst",
+                "001059.sst",
+                "001060.sst",
+                "001061.sst",
+                "001062.sst",
+                "001063.sst",
+                "001064.sst",
+                "001065.sst",
+                "001066.sst",
+                "001067.sst",
+                "001071.sst",
+                "001072.sst",
+                "001073.sst",
+                "001074.sst",
+                "001075.sst",
+                "001076.sst",
+                "001077.sst",
+                "001078.sst",
+                "001079.sst",
+                "001080.sst",
+                "001081.sst",
+                "CURRENT",
+                "IDENTITY",
+                "LOCK",
+                "LOG",
+                "MANIFEST-000392",
+                "OPTIONS-000401",
+                "OPTIONS-000403",
+                "recoveryData"
+              ]
+            },
             "_files": [
               "Corno piccolo.a3d"
+            ]
+          }
+        },
+        "rawp": {
+          "object1": {
+            "_files": [
+              "cornogrande1_rawp.obj"
+            ]
+          },
+          "object2": {
+            "_files": [
+              "cornopiccolo2_rawp.obj"
             ]
           }
         }
@@ -13807,6 +14254,11 @@
           "_files": [
             "Matrice Rinoceronte 31.05.2023.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "matricerinoceronte_rawp.obj"
+          ]
         }
       },
       "S5-Vetrina 2 basso-DICAM_Alce": {
@@ -13827,9 +14279,231 @@
           ]
         },
         "raw": {
-          "data": {},
+          "data": {
+            "_files": [
+              "000377.log",
+              "000895.sst",
+              "001086.sst",
+              "001089.sst",
+              "001094.sst",
+              "001095.sst",
+              "001097.sst",
+              "001098.sst",
+              "001101.sst",
+              "001102.sst",
+              "001110.sst",
+              "001111.sst",
+              "001112.sst",
+              "001113.sst",
+              "001114.sst",
+              "001115.sst",
+              "001116.sst",
+              "001117.sst",
+              "001118.sst",
+              "001119.sst",
+              "001120.sst",
+              "001121.sst",
+              "001122.sst",
+              "001123.sst",
+              "001124.sst",
+              "001125.sst",
+              "001126.sst",
+              "001127.sst",
+              "001128.sst",
+              "001129.sst",
+              "001130.sst",
+              "001131.sst",
+              "001132.sst",
+              "001133.sst",
+              "001134.sst",
+              "001135.sst",
+              "001136.sst",
+              "001137.sst",
+              "001146.sst",
+              "001147.sst",
+              "001148.sst",
+              "001149.sst",
+              "001150.sst",
+              "001151.sst",
+              "001152.sst",
+              "001153.sst",
+              "001154.sst",
+              "001155.sst",
+              "001156.sst",
+              "001157.sst",
+              "001158.sst",
+              "001159.sst",
+              "001160.sst",
+              "001161.sst",
+              "001162.sst",
+              "001163.sst",
+              "001164.sst",
+              "001165.sst",
+              "001166.sst",
+              "001167.sst",
+              "001168.sst",
+              "001172.sst",
+              "001178.sst",
+              "001179.sst",
+              "001180.sst",
+              "001181.sst",
+              "001182.sst",
+              "001191.sst",
+              "001192.sst",
+              "001193.sst",
+              "001202.sst",
+              "001211.sst",
+              "001212.sst",
+              "001213.sst",
+              "001214.sst",
+              "001215.sst",
+              "001216.sst",
+              "001217.sst",
+              "001218.sst",
+              "001219.sst",
+              "001220.sst",
+              "001221.sst",
+              "001222.sst",
+              "001223.sst",
+              "001224.sst",
+              "001225.sst",
+              "001226.sst",
+              "001227.sst",
+              "001228.sst",
+              "001229.sst",
+              "001230.sst",
+              "001231.sst",
+              "001244.sst",
+              "001249.sst",
+              "001250.sst",
+              "001251.sst",
+              "001252.sst",
+              "001253.sst",
+              "001254.sst",
+              "001255.sst",
+              "001256.sst",
+              "001257.sst",
+              "001274.sst",
+              "001275.sst",
+              "001276.sst",
+              "001277.sst",
+              "001278.sst",
+              "001279.sst",
+              "001280.sst",
+              "001281.sst",
+              "001282.sst",
+              "001283.sst",
+              "001284.sst",
+              "001285.sst",
+              "001286.sst",
+              "001295.sst",
+              "001296.sst",
+              "001305.sst",
+              "001306.sst",
+              "001307.sst",
+              "001308.sst",
+              "001309.sst",
+              "001310.sst",
+              "001311.sst",
+              "001312.sst",
+              "001313.sst",
+              "001314.sst",
+              "001315.sst",
+              "001316.sst",
+              "001317.sst",
+              "001318.sst",
+              "001319.sst",
+              "001320.sst",
+              "001321.sst",
+              "001326.sst",
+              "001331.sst",
+              "001332.sst",
+              "001333.sst",
+              "001334.sst",
+              "001335.sst",
+              "001336.sst",
+              "001337.sst",
+              "001338.sst",
+              "001339.sst",
+              "001340.sst",
+              "001341.sst",
+              "001342.sst",
+              "001343.sst",
+              "001344.sst",
+              "001345.sst",
+              "001346.sst",
+              "001347.sst",
+              "001348.sst",
+              "001349.sst",
+              "001350.sst",
+              "001351.sst",
+              "001352.sst",
+              "001353.sst",
+              "001354.sst",
+              "001355.sst",
+              "001356.sst",
+              "001357.sst",
+              "001358.sst",
+              "001359.sst",
+              "001360.sst",
+              "001361.sst",
+              "001362.sst",
+              "001363.sst",
+              "001364.sst",
+              "001365.sst",
+              "001366.sst",
+              "001367.sst",
+              "001368.sst",
+              "001369.sst",
+              "001370.sst",
+              "001371.sst",
+              "001372.sst",
+              "001373.sst",
+              "001374.sst",
+              "001375.sst",
+              "001376.sst",
+              "001377.sst",
+              "001378.sst",
+              "001379.sst",
+              "001380.sst",
+              "001381.sst",
+              "001382.sst",
+              "001383.sst",
+              "001384.sst",
+              "001385.sst",
+              "001386.sst",
+              "001387.sst",
+              "001388.sst",
+              "001389.sst",
+              "001390.sst",
+              "001391.sst",
+              "001392.sst",
+              "001393.sst",
+              "001394.sst",
+              "001395.sst",
+              "001396.sst",
+              "001397.sst",
+              "001398.sst",
+              "001400.sst",
+              "001402.sst",
+              "001403.sst",
+              "CURRENT",
+              "IDENTITY",
+              "LOCK",
+              "LOG",
+              "MANIFEST-000376",
+              "OPTIONS-001328",
+              "OPTIONS-001330",
+              "recoveryData"
+            ]
+          },
           "_files": [
             "Alce 050623.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "alce_rawp.obj"
           ]
         }
       },
@@ -13918,6 +14592,11 @@
           "_files": [
             "Uova struzzo.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "UovaStruzzo_rawp.obj"
+          ]
         }
       },
       "S5-Vetrina 3 alto N - 3-DA_Graminacea Subfossile": {
@@ -13965,8 +14644,74 @@
         "raw": {
           "_files": [
             "DSC05137.png",
+            "DSC05138.png",
+            "DSC05139.png",
+            "DSC05140.png",
+            "DSC05141.png",
+            "DSC05142.png",
+            "DSC05143.png",
+            "DSC05144.png",
+            "DSC05145.png",
+            "DSC05146.png",
+            "DSC05147.png",
+            "DSC05148.png",
+            "DSC05149.png",
+            "DSC05150.png",
+            "DSC05151.png",
+            "DSC05152.png",
+            "DSC05153.png",
+            "DSC05154.png",
+            "DSC05155.png",
+            "DSC05156.png",
+            "DSC05157.png",
+            "DSC05158.png",
+            "DSC05159.png",
+            "DSC05160.png",
+            "DSC05161.png",
+            "DSC05162.png",
+            "DSC05163.png",
+            "DSC05164.png",
+            "DSC05165.png",
+            "DSC05166.png",
+            "DSC05167.png",
+            "DSC05168.png",
+            "DSC05169.png",
+            "DSC05170.png",
+            "DSC05171.png",
+            "DSC05172.png",
+            "DSC05173.png",
+            "DSC05174.png",
+            "DSC05175.png",
+            "DSC05176.png",
+            "DSC05177.png",
+            "DSC05178.png",
+            "DSC05179.png",
+            "DSC05180.png",
+            "DSC05181.png",
+            "DSC05182.png",
+            "DSC05183.png",
+            "DSC05184.png",
+            "DSC05185.png",
+            "DSC05186.png",
+            "DSC05187.png",
+            "DSC05188.png",
+            "DSC05189.png",
+            "DSC05190.png",
+            "DSC05191.png",
+            "DSC05192.png",
+            "DSC05193.png",
+            "DSC05194.png",
+            "DSC05195.png",
+            "DSC05196.png",
+            "DSC05197.png",
+            "DSC05198.png",
+            "DSC05199.png",
+            "DSC05200.png",
+            "DSC05201.png",
+            "DSC05202.png",
             "DSC05203.png",
             "DSC05204.png",
+            "DSC05205.png",
             "DSC05206.png",
             "DSC05207.png",
             "DSC05208.png",
@@ -14704,6 +15449,23 @@
               "Terra compressa serie 2.a3d"
             ]
           }
+        },
+        "rawp": {
+          "object1": {
+            "_files": [
+              "Preparatiditerra_Rawp.obj"
+            ]
+          },
+          "object2": {
+            "_files": [
+              "TerraCompressa1_rawp.obj"
+            ]
+          },
+          "object3": {
+            "_files": [
+              "TerraCompressa2_rawp.obj"
+            ]
+          }
         }
       },
       "S5-Vetrina 4 alto N - 10-DICAM_Echinoidifossilin.10": {
@@ -14727,6 +15489,11 @@
           "data": {},
           "_files": [
             "Echinoidi fossili n. 7 e n. 10.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "Echinoidi10_rawp.obj"
           ]
         }
       },
@@ -14752,6 +15519,11 @@
           "_files": [
             "Echinoidi fossili n. 9 e n. 11.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "Echionidi11_rawp.obj"
+          ]
         }
       },
       "S5-Vetrina 4 alto N - 7-DICAM_EchinoidiFossilin.7": {
@@ -14776,6 +15548,11 @@
           "_files": [
             "Echinoidi fossili n. 7 e n. 10.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "Echinoidi7_rawp.obj"
+          ]
         }
       },
       "S5-Vetrina 4 alto N - 8-DICAM_EchinoidiFossilin.8": {
@@ -14799,6 +15576,11 @@
           "data": {},
           "_files": [
             "Echinoidi fossili n. 8.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "Echinoidi8_rawp.obj"
           ]
         }
       },
@@ -15096,10 +15878,16 @@
           ]
         },
         "rawp": {
-          "_files": [
-            "discoidea 1.obj",
-            "discoidea 2.obj"
-          ]
+          "object1": {
+            "_files": [
+              "discoidea 1.obj"
+            ]
+          },
+          "object2": {
+            "_files": [
+              "discoidea 2.obj"
+            ]
+          }
         }
       },
       "S5-Vetrina 4 alto N-6-DBC_Macropneustes_sp": {
@@ -15133,42 +15921,42 @@
       },
       "S5-Vetrina 4 alto S-1-DBC_Calcare a coralli lavorati": {
         "dcho": {
-          "oggetto 1": {
+          "object1": {
             "_files": [
               "calcare a coralli lavorati 1.mtl",
               "calcare a coralli lavorati 1.obj",
               "calcare a coralli lavorati 1_1.jpg"
             ]
           },
-          "oggetto 2": {
+          "object2": {
             "_files": [
               "calcare a coralli lavorati 2.mtl",
               "calcare a coralli lavorati 2.obj",
               "calcare a coralli lavorati 2_1.jpg"
             ]
           },
-          "oggetto 3": {
+          "object3": {
             "_files": [
               "calcare a coralli lavorati 3.mtl",
               "calcare a coralli lavorati 3.obj",
               "calcare a coralli lavorati 3_1.jpg"
             ]
           },
-          "oggetto 4": {
+          "object4": {
             "_files": [
               "calcare a coralli lavorati 4.mtl",
               "calcare a coralli lavorati 4.obj",
               "calcare a coralli lavorati 4_1.jpg"
             ]
           },
-          "oggetto 5": {
+          "object5": {
             "_files": [
               "calcare a coralli lavorati 5.mtl",
               "calcare a coralli lavorati 5.obj",
               "calcare a coralli lavorati 5_1.jpg"
             ]
           },
-          "oggetto 6": {
+          "object6": {
             "_files": [
               "calcare a coralli lavorati 6.mtl",
               "calcare a coralli lavorati 6.obj",
@@ -15219,14 +16007,36 @@
           ]
         },
         "rawp": {
-          "_files": [
-            "RAWp_1.obj",
-            "RAWp_2.obj",
-            "RAWp_3.obj",
-            "RAWp_4.obj",
-            "RAWp_5.obj",
-            "RAWp_6.obj"
-          ]
+          "object1": {
+            "_files": [
+              "RAWp_1.obj"
+            ]
+          },
+          "object2": {
+            "_files": [
+              "RAWp_2.obj"
+            ]
+          },
+          "object3": {
+            "_files": [
+              "RAWp_3.obj"
+            ]
+          },
+          "object4": {
+            "_files": [
+              "RAWp_4.obj"
+            ]
+          },
+          "object5": {
+            "_files": [
+              "RAWp_5.obj"
+            ]
+          },
+          "object6": {
+            "_files": [
+              "RAWp_6.obj"
+            ]
+          }
         }
       },
       "S5-Vetrina 4 alto S-10-DBC_Productus_geinitzianus": {
@@ -15357,21 +16167,21 @@
       },
       "S5-Vetrina 4 alto S-2-DBC_Coralli": {
         "dcho": {
-          "dcho-coralli 1": {
+          "object1": {
             "_files": [
               "coralli 1.mtl",
               "coralli 1.obj",
               "coralli 1_1.jpg"
             ]
           },
-          "dcho-coralli 2": {
+          "object2": {
             "_files": [
               "coralli 2.mtl",
               "coralli 2.obj",
               "coralli 2_1.jpg"
             ]
           },
-          "dcho-coralli 3": {
+          "object3": {
             "_files": [
               "coralli 3.mtl",
               "coralli 3.obj",
@@ -15404,11 +16214,21 @@
           ]
         },
         "rawp": {
-          "_files": [
-            "RAWp_1.obj",
-            "RAWp_2.obj",
-            "RAWp_3.obj"
-          ]
+          "object1": {
+            "_files": [
+              "RAWp_1.obj"
+            ]
+          },
+          "object2": {
+            "_files": [
+              "RAWp_2.obj"
+            ]
+          },
+          "object3": {
+            "_files": [
+              "RAWp_3.obj"
+            ]
+          }
         }
       },
       "S5-Vetrina 4 alto S-3-DBC_Lumachella_a_Helicidi": {
@@ -15761,6 +16581,11 @@
           "_files": [
             "Matrice botroide 1.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "matricebotroide1_rawp.obj"
+          ]
         }
       },
       "S5-Vetrina 5 alto N-DICAM_Botroide1": {
@@ -15785,6 +16610,11 @@
           "_files": [
             "Botroide 22.05.2023.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "botroide1_rawp.obj"
+          ]
         }
       },
       "S5-Vetrina 5 alto S - 1-DICAM_Botroide2": {
@@ -15808,6 +16638,11 @@
           "data": {},
           "_files": [
             "Botroide 2.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "botroide2_rawp.obj"
           ]
         }
       },
@@ -15862,6 +16697,11 @@
           "_files": [
             "matrice Botroide 2.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "matricebotroide2_rawp.obj"
+          ]
         }
       },
       "S5-Vetrina 5 alto S-2-DICAM_Botroide_triorchites": {
@@ -15889,6 +16729,11 @@
             "Botroide 1 Eva Scan 4.scan",
             "Botroide 1 Eva Scan 5.scan",
             "Botroide 1 Eva Scan 6.scan"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "RAWp.obj"
           ]
         }
       },
@@ -15944,6 +16789,11 @@
           "_files": [
             "Matrice botroide 3 SOTTO.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "matricebotroide3_rawp.obj"
+          ]
         }
       },
       "S5-Vetrina 5 basso-DICAM_Botroide3": {
@@ -15966,6 +16816,11 @@
           "data": {},
           "_files": [
             "Botroide 3 SOTTO.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "Botroide3_rawp.obj"
           ]
         }
       },
@@ -16032,6 +16887,13 @@
             "TavolettaBufo_5.scan",
             "TavolettaBufo_6.scan",
             "TavolettaBufo_7.scan"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "TavolettaConBufo.mtl",
+            "TavolettaConBufo.obj",
+            "TavolettaConBufo_1.jpg"
           ]
         }
       },
@@ -16171,6 +17033,11 @@
           "_files": [
             "Matrice pesce 12.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "matricepesce12_rawp.obj"
+          ]
         }
       },
       "S5-Vetrina 6 basso 2-ScheletroDiDelfino": {
@@ -16272,6 +17139,13 @@
             "TavolettaConDelfino_4.scan",
             "TavolettaConDelfino_5.scan"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "TavolettaConDelfino.mtl",
+            "TavolettaConDelfino.obj",
+            "TavolettaConDelfino_1.jpg"
+          ]
         }
       },
       "S5-Vetrina 6 basso-DBC_Scapola di balena": {
@@ -16313,7 +17187,23 @@
         }
       },
       "S5-Vetrina 7 alto N - 1 - t-DICAM_MatricePesce6_PesceForca": {
-        "RAW": {
+        "dcho": {
+          "_files": [
+            "MatricePesce6_0.3mm_texture.mtl",
+            "MatricePesce6_0.3mm_texture.obj",
+            "MatricePesce6_0.3mm_texture_1.jpg"
+          ]
+        },
+        "dchoo": {
+          "_files": [
+            "diffuse.jpg",
+            "matrice_pesceforca.bin",
+            "matrice_pesceforca.gltf",
+            "normal.jpg",
+            "roughness.jpg"
+          ]
+        },
+        "raw": {
           "data": {
             "_files": [
               "000011.sst",
@@ -16349,20 +17239,9 @@
             "MatricePesce6.a3d"
           ]
         },
-        "dcho": {
+        "rawp": {
           "_files": [
-            "MatricePesce6_0.3mm_texture.mtl",
-            "MatricePesce6_0.3mm_texture.obj",
-            "MatricePesce6_0.3mm_texture_1.jpg"
-          ]
-        },
-        "dchoo": {
-          "_files": [
-            "diffuse.jpg",
-            "matrice_pesceforca.bin",
-            "matrice_pesceforca.gltf",
-            "normal.jpg",
-            "roughness.jpg"
+            "matricepesce6_rawp.obj"
           ]
         }
       },
@@ -16584,6 +17463,11 @@
           "_files": [
             "Matrice Pesce 11 - seconda vetrina.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "matricepesce11_rawp.obj"
+          ]
         }
       },
       "S5-Vetrina 7 alto S - 3 - t-DICAM_MatricePesce10_PesceVolante": {
@@ -16638,6 +17522,11 @@
           },
           "_files": [
             "Matrice Pesce 10 - seconda vetrina.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "matricepesce10_rawp.obj"
           ]
         }
       },
@@ -16946,7 +17835,7 @@
       },
       "S5-Vetrina 7 alto S-1-DA-Xiphias sp., Pesci spada": {
         "dcho": {
-          "oggetto1": {
+          "object1": {
             "_files": [
               "pescespada_piccolo.mtl.mtl",
               "pescespada_piccolo.mtl.obj",
@@ -16954,7 +17843,7 @@
               "pescespada_piccolo_texture8k.jpg"
             ]
           },
-          "oggetto2": {
+          "object2": {
             "_files": [
               "Cartiglio.png",
               "Cartiglio_T.png",
@@ -16966,7 +17855,7 @@
         },
         "dchoo": {
           "Materials": {
-            "oggetto1": {
+            "object1": {
               "_files": [
                 "pescespada_piccolo02.bin",
                 "pescespada_piccolo02.gltf",
@@ -16974,7 +17863,7 @@
                 "pescespada_piccolo_metal-pescespada_piccolo_rough.jpg"
               ]
             },
-            "oggetto2": {
+            "object2": {
               "_files": [
                 "Cartiglio.png",
                 "Cartiglio_A.png",
@@ -16996,7 +17885,7 @@
           ]
         },
         "raw": {
-          "oggetto1": {
+          "object1": {
             "_files": [
               "DSC03739.ARW",
               "DSC03740.ARW",
@@ -17063,7 +17952,7 @@
               "DSC03801.ARW"
             ]
           },
-          "oggetto2": {
+          "object2": {
             "_files": [
               "DSC04030.ARW",
               "DSC04031.ARW",
@@ -17165,14 +18054,14 @@
           }
         },
         "rawp": {
-          "oggetto1": {
+          "object1": {
             "_files": [
               "pescespada_piccolo.jpg",
               "pescespada_piccolo00.mtl",
               "pescespada_piccolo00.obj"
             ]
           },
-          "oggetto2": {
+          "object2": {
             "_files": [
               "Pescespadona.fbx",
               "Pescespadona.jpg"
@@ -17232,6 +18121,11 @@
           "_files": [
             "Matrice Pesce 13 - seconda vetrina.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "matricepesce13_rawp.obj"
+          ]
         }
       },
       "S5-Vetrina 7 basso  - t-DICAM_MatricePesce9_PescePalla1": {
@@ -17280,6 +18174,11 @@
           },
           "_files": [
             "Matrice Pesce 9 - seconda vetrina - pesce istrice.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "matricepesce9_rawp.obj"
           ]
         }
       },
@@ -17352,6 +18251,11 @@
           },
           "_files": [
             "PESCE PALLA.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "Pescepalla_rawp.obj"
           ]
         }
       },
@@ -17480,6 +18384,11 @@
           "_files": [
             "MatricePesce4.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "matricepesce4_rawp.obj"
+          ]
         }
       },
       "S5-Vetrina 8 alto N - 3 - t-DICAM_MatricePesce8_Bocca2": {
@@ -17528,6 +18437,11 @@
           },
           "_files": [
             "MatricePesce8.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "matricepesce8_rawp.obj"
           ]
         }
       },
@@ -17594,7 +18508,7 @@
         }
       },
       "S5-Vetrina 8 alto N-2-DA-Lophius piscatorius (Linnaeus, 1758), rana pescatrice": {
-        "DCHO": {
+        "dcho": {
           "_files": [
             "Etichetta.png",
             "Etichetta_T.png",
@@ -17602,7 +18516,7 @@
             "RanaPescatrice_DCHO.fbx"
           ]
         },
-        "DCHOo": {
+        "dchoo": {
           "Materials": {
             "_files": [
               "Etichetta.png",
@@ -17624,7 +18538,7 @@
             "RanaPescatrice_N.jpg"
           ]
         },
-        "RAW": {
+        "raw": {
           "_files": [
             "DSC03528.ARW",
             "DSC03529.ARW",
@@ -17661,7 +18575,7 @@
             "DSC03560.ARW"
           ]
         },
-        "RAWp": {
+        "rawp": {
           "_files": [
             "RanaPescatrice_RAWp.fbx"
           ]
@@ -17721,6 +18635,11 @@
           },
           "_files": [
             "MatricePesce1 - 14.06.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "MatricePesce1rawp.obj"
           ]
         }
       },
@@ -17887,10 +18806,42 @@
           "_files": [
             "MatricePesce2_14.06.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "matricepesce2_rawp.obj"
+          ]
         }
       },
       "S5-Vetrina 8 alto S - 2-DA-Lamna nasus (Bonnaterre, 1788), smeriglio": {
-        "RAW": {
+        "dcho": {
+          "_files": [
+            "Modello 1.fbx",
+            "Texture 1.png"
+          ]
+        },
+        "dchoo": {
+          "Materials": {
+            "_files": [
+              "Etichetta.jpg",
+              "Etichetta.png",
+              "Smeriglio.bin",
+              "Smeriglio.gltf",
+              "Smeriglio_COLOR.jpg",
+              "Smeriglio_NORMAL_INV.jpg",
+              "Smeriglio_ROUGHNESS.jpg"
+            ]
+          },
+          "_files": [
+            "Etichetta.jpg",
+            "Smeriglio.bin",
+            "Smeriglio.gltf",
+            "Smeriglio_COLOR.jpg",
+            "Smeriglio_NORMAL_INV.jpg",
+            "Smeriglio_ROUGHNESS.jpg"
+          ]
+        },
+        "raw": {
           "_files": [
             "DSC03247.ARW",
             "DSC03248.ARW",
@@ -17977,42 +18928,6 @@
             "DSC03330.ARW"
           ]
         },
-        "dcho": {
-          "_files": [
-            "Modello 1.fbx",
-            "Texture 1.png"
-          ]
-        },
-        "dchoo": {
-          "Materials": {
-            "_files": [
-              "Etichetta.png",
-              "Smeriglio.bin",
-              "Smeriglio.gltf",
-              "Smeriglio_COLOR.png",
-              "Smeriglio_NORMAL_INV.png",
-              "Smeriglio_ROUGHNESS.png"
-            ]
-          },
-          "VersioneOttimizzataeLeggibile_Aton": {
-            "_files": [
-              "Etichetta.jpg",
-              "Smeriglio.bin",
-              "Smeriglio.gltf",
-              "Smeriglio_COLOR.jpg",
-              "Smeriglio_NORMAL_INV.jpg",
-              "Smeriglio_ROUGHNESS.jpg"
-            ]
-          },
-          "_files": [
-            "Etichetta.jpg",
-            "Smeriglio.bin",
-            "Smeriglio.gltf",
-            "Smeriglio_COLOR.jpg",
-            "Smeriglio_NORMAL_INV.jpg",
-            "Smeriglio_ROUGHNESS.jpg"
-          ]
-        },
         "rawp": {
           "_files": [
             "Modello 0.fbx",
@@ -18077,6 +18992,11 @@
           },
           "_files": [
             "Pesce3_14.06.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "matricepesce3_rawp.obj"
           ]
         }
       },
@@ -18336,6 +19256,11 @@
           "_files": [
             "MatricePesce7.a3d"
           ]
+        },
+        "rawp": {
+          "_files": [
+            "matricepesce7_rawp.obj"
+          ]
         }
       },
       "S5-Vetrina 8 basso  - t2-DICAM_MatricePesce5_PesceSega": {
@@ -18391,6 +19316,11 @@
           },
           "_files": [
             "MatricePesce5.a3d"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "matricepesce5_rawp.obj"
           ]
         }
       },
@@ -18740,7 +19670,31 @@
         }
       },
       "S5-Vetrina 8 basso-DA-Preparati zoologici, pesce sega": {
-        "RAW": {
+        "dcho": {
+          "_files": [
+            "PesceSega_metal.jpg",
+            "PesceSega_texture8k.jpg",
+            "pescesega.mtl",
+            "pescesega.obj"
+          ]
+        },
+        "dchoo": {
+          "Materials": {
+            "_files": [
+              "PesceSega_diffuse.jpg",
+              "PesceSega_metal.jpg",
+              "pescesega02.bin",
+              "pescesega02.gltf"
+            ]
+          },
+          "_files": [
+            "PesceSega_diffuse.jpg",
+            "PesceSega_metal.jpg",
+            "pescesega02.bin",
+            "pescesega02.gltf"
+          ]
+        },
+        "raw": {
           "_files": [
             "DSC03934.ARW",
             "DSC03935.ARW",
@@ -18838,30 +19792,6 @@
             "DSC04027.ARW",
             "DSC04028.ARW",
             "DSC04029.ARW"
-          ]
-        },
-        "dcho": {
-          "_files": [
-            "PesceSega_metal.jpg",
-            "PesceSega_texture8k.jpg",
-            "pescesega.mtl",
-            "pescesega.obj"
-          ]
-        },
-        "dchoo": {
-          "Materials": {
-            "_files": [
-              "PesceSega_diffuse.jpg",
-              "PesceSega_metal.jpg",
-              "pescesega02.bin",
-              "pescesega02.gltf"
-            ]
-          },
-          "_files": [
-            "PesceSega_diffuse.jpg",
-            "PesceSega_metal.jpg",
-            "pescesega02.bin",
-            "pescesega02.gltf"
           ]
         },
         "rawp": {
@@ -19283,13 +20213,15 @@
           "materials": {
             "_files": [
               "SferuleAvorio_DCHOo_1.png",
-              "sferule_diffuse.png"
+              "piano_ombre.png",
+              "sferule_diffuse.png",
+              "sferule_diffuse_v2.png"
             ]
           },
           "_files": [
-            "sferuleAvorio.bin",
-            "sferuleAvorio.gltf",
-            "sferule_diffuse.jpg"
+            "sferule_diffuse_v2.jpg",
+            "vetrina_1_alto_s_13_sferule_dchoo.bin",
+            "vetrina_1_alto_s_13_sferule_dchoo.gltf"
           ]
         },
         "raw": {
@@ -19720,7 +20652,84 @@
           ]
         }
       },
-      "materials": {},
+      "materials": {
+        "ExportVoltafilm": {
+          "_files": [
+            "08_VoltaFilm_A.png",
+            "VideoProiettato_loop.mp4",
+            "VideoProiettato_loop_HD.mp4",
+            "VideoProiettato_loop_NTSC.mp4",
+            "Voltafilm.bin",
+            "Voltafilm.blend",
+            "Voltafilm.gltf"
+          ]
+        },
+        "ExportVoltafilm_v2": {
+          "_files": [
+            "03_PavimentiVolta_v2.png",
+            "08_VoltaFilm_A.png",
+            "08_VoltaFilm_A_v2.png",
+            "Guidafolder.docx",
+            "VideoProiettato_loop.mp4",
+            "VideoProiettato_loop_MINI_v2.mp4",
+            "VideoProiettato_loop_v2.mp4",
+            "Voltafilm.bin",
+            "Voltafilm.blend",
+            "Voltafilm.blend1",
+            "Voltafilm.gltf",
+            "Voltafilm_v2.bin",
+            "Voltafilm_v2.blend",
+            "Voltafilm_v2.blend1",
+            "Voltafilm_v2.gltf"
+          ]
+        },
+        "ExportVoltafilm_v3": {
+          "_files": [
+            "08_VoltaFilm_A_v2.png",
+            "08_VoltaFilm_A_v2.png.png",
+            "Export.fbx",
+            "VideoProiettato_loop_MINI_v2.mp4",
+            "VideoProiettato_loop_v2.mp4",
+            "Voltafilm_v3.bin",
+            "Voltafilm_v3.blend",
+            "Voltafilm_v3.gltf"
+          ]
+        },
+        "sala5_backup": {
+          "room": {
+            "lite": {
+              "_files": [
+                "01_Pareti.ktx2",
+                "02_Portali.ktx2",
+                "03_PavimentiVolta.ktx2",
+                "04_Decorazioni.ktx2",
+                "05_TecheCentrali.ktx2",
+                "06_TechePerimetrali.ktx2",
+                "08_VoltaFilm.ktx2",
+                "Clemente XI.ktx2",
+                "Clemente XII.ktx2",
+                "libri_finti_alpha2k_corretta.ktx2",
+                "sala5_v_ottobre.bin",
+                "sala5_v_ottobre.gltf"
+              ]
+            },
+            "_files": [
+              "01_Pareti.jpg",
+              "02_Portali.jpg",
+              "03_PavimentiVolta.jpg",
+              "04_Decorazioni.jpg",
+              "05_TecheCentral_v2.jpg",
+              "06_TechePerimetrali_v2.jpg",
+              "08_VoltaFilm.jpg",
+              "Clemente XII_retopo_Color_0_66974784.jpg",
+              "libri_finti_alpha2k_corretta.png",
+              "nicchione_diffuse_lp.jpg",
+              "sala5_v_novembre2025.bin",
+              "sala5_v_novembre2025.gltf"
+            ]
+          }
+        }
+      },
       "_files": [
         "SALA 5 P4 mappa bologna.pdf",
         "SALA 5 lightbox 3 casa museo sala 5 + FRASE SALA 5.pdf"
@@ -19792,8 +20801,8 @@
           "_files": [
             "Sardo.bin",
             "Sardo.gltf",
-            "Sardo_color.png",
-            "Sardo_normal.png"
+            "Sardo_color.jpg",
+            "Sardo_normal.jpg"
           ]
         },
         "rawp": {
@@ -20660,7 +21669,30 @@
         }
       },
       "S6-107-ISPC_Modello in cera, encefalo di un africano": {
-        "RAW": {
+        "dcho": {
+          "_files": [
+            "cervello_normal.jpg",
+            "cervello_texture.png",
+            "encefalo_dcho.mtl",
+            "encefalo_dcho.obj",
+            "wood_table_001_diff_4k.jpg",
+            "wood_table_001_disp_4k.png",
+            "wood_table_001_nor_gl_4k.jpg",
+            "wood_table_001_rough_4k.jpg"
+          ]
+        },
+        "dchoo": {
+          "_files": [
+            "cervello_normal.jpg",
+            "cervello_texture.jpg",
+            "encefalo.bin",
+            "encefalo.gltf",
+            "wood_table_001_diff_4k.jpg",
+            "wood_table_001_nor.jpg",
+            "wood_table_001_rough.jpg"
+          ]
+        },
+        "raw": {
           "_files": [
             "IMG_9654.CR2",
             "IMG_9654.JPG",
@@ -20728,29 +21760,6 @@
             "IMG_9687.JPG"
           ]
         },
-        "dcho": {
-          "_files": [
-            "cervello_normal.jpg",
-            "cervello_texture.png",
-            "encefalo_dcho.mtl",
-            "encefalo_dcho.obj",
-            "wood_table_001_diff_4k.jpg",
-            "wood_table_001_disp_4k.png",
-            "wood_table_001_nor_gl_4k.jpg",
-            "wood_table_001_rough_4k.jpg"
-          ]
-        },
-        "dchoo": {
-          "_files": [
-            "cervello_normal.jpg",
-            "cervello_texture.jpg",
-            "encefalo.bin",
-            "encefalo.gltf",
-            "wood_table_001_diff_4k.jpg",
-            "wood_table_001_nor.jpg",
-            "wood_table_001_rough.jpg"
-          ]
-        },
         "rawp": {
           "_files": [
             "encefalo_rawp.jpg",
@@ -20769,7 +21778,29 @@
             ]
           }
         },
-        "RAW": {
+        "dcho": {
+          "_files": [
+            "fossile_squalo.mtl",
+            "fossile_squalo.obj",
+            "squalo02_textured.jpg",
+            "wood_table_001_diff_4k.jpg",
+            "wood_table_001_disp_4k.png",
+            "wood_table_001_nor_gl_4k.jpg",
+            "wood_table_001_rough_4k.jpg"
+          ]
+        },
+        "dchoo": {
+          "_files": [
+            "diffuse.jpg",
+            "normal.jpg",
+            "squalo.bin",
+            "squalo.gltf",
+            "wood_table_001_diff_4k.jpg",
+            "wood_table_001_nor_gl_4k.jpg",
+            "wood_table_001_rough_4k.jpg"
+          ]
+        },
+        "raw": {
           "_files": [
             "DSC_0361.NEF",
             "DSC_0362.NEF",
@@ -20797,28 +21828,6 @@
             "DSC_0384.NEF",
             "DSC_0385.NEF",
             "DSC_0386.NEF"
-          ]
-        },
-        "dcho": {
-          "_files": [
-            "fossile_squalo.mtl",
-            "fossile_squalo.obj",
-            "squalo02_textured.jpg",
-            "wood_table_001_diff_4k.jpg",
-            "wood_table_001_disp_4k.png",
-            "wood_table_001_nor_gl_4k.jpg",
-            "wood_table_001_rough_4k.jpg"
-          ]
-        },
-        "dchoo": {
-          "_files": [
-            "diffuse.jpg",
-            "normal.jpg",
-            "squalo.bin",
-            "squalo.gltf",
-            "wood_table_001_diff_4k.jpg",
-            "wood_table_001_nor_gl_4k.jpg",
-            "wood_table_001_rough_4k.jpg"
           ]
         },
         "rawp": {
@@ -21521,37 +22530,23 @@
           ]
         }
       },
-      "S6-114_115_116-DA-Tavolino-con_Bottiglia-Leida_Arco-scaricatore_Macchina-elettrostatica": {
-        "DCHOo": {
-          "Arco": {
-            "_files": [
-              "Arco.bin",
-              "Arco.gltf",
-              "Arco_COLOR.jpg"
-            ]
-          },
-          "Bottiglia": {
-            "_files": [
-              "Bottiglia.bin",
-              "Bottiglia.gltf",
-              "Bottiglia_COLOR.jpg",
-              "Bottiglia_DEPTH.jpg",
-              "Bottiglia_GoldFoil_N.jpg",
-              "Bottiglia_MR.jpg",
-              "Bottiglia_TRANSP.png"
-            ]
-          },
-          "Caricatore": {
-            "_files": [
-              "CaricatoreCHIARO_COLOR.jpg",
-              "Caricatore_AO.jpg",
-              "Caricatore_COLOR.jpg",
-              "Macchina elettrostatica.bin",
-              "Macchina elettrostatica.gltf"
-            ]
-          }
+      "S6-114_DA-Tavolino-con_Bottiglia-Leida": {
+        "dcho": {
+          "_files": [
+            "Bottiglia.fbx",
+            "Bottiglia_C.png"
+          ]
         },
-        "RAW": {
+        "dchoo": {
+          "_files": [
+            "Bottiglia.bin",
+            "Bottiglia.gltf",
+            "Bottiglia_COLOR.jpg",
+            "Bottiglia_DEPTH.jpg",
+            "Bottiglia_MR.jpg"
+          ]
+        },
+        "raw": {
           "_files": [
             "DSC_0001.NEF",
             "DSC_0002.NEF",
@@ -21779,10 +22774,513 @@
             "DSC_0224.NEF"
           ]
         },
-        "RAWp e DCHO": {
+        "rawp": {
+          "_files": [
+            "Strumenti.fbx",
+            "Strumenti_C.png"
+          ]
+        }
+      },
+      "S6-115_DA-Tavolino-con_Arco-scaricatore": {
+        "dcho": {
+          "_files": [
+            "Arco.fbx",
+            "Arco_C.png"
+          ]
+        },
+        "dchoo": {
+          "_files": [
+            "Arco.bin",
+            "Arco.gltf",
+            "Arco_COLOR.jpg"
+          ]
+        },
+        "raw": {
+          "_files": [
+            "DSC_0001.NEF",
+            "DSC_0002.NEF",
+            "DSC_0003.NEF",
+            "DSC_0004.NEF",
+            "DSC_0005.NEF",
+            "DSC_0006.NEF",
+            "DSC_0007.NEF",
+            "DSC_0008.NEF",
+            "DSC_0009.NEF",
+            "DSC_0010.NEF",
+            "DSC_0011.NEF",
+            "DSC_0012.NEF",
+            "DSC_0013.NEF",
+            "DSC_0014.NEF",
+            "DSC_0015.NEF",
+            "DSC_0016.NEF",
+            "DSC_0017.NEF",
+            "DSC_0018.NEF",
+            "DSC_0019.NEF",
+            "DSC_0020.NEF",
+            "DSC_0021.NEF",
+            "DSC_0022.NEF",
+            "DSC_0023.NEF",
+            "DSC_0024.NEF",
+            "DSC_0025.NEF",
+            "DSC_0026.NEF",
+            "DSC_0027.NEF",
+            "DSC_0028.NEF",
+            "DSC_0029.NEF",
+            "DSC_0030.NEF",
+            "DSC_0031.NEF",
+            "DSC_0032.NEF",
+            "DSC_0033.NEF",
+            "DSC_0034.NEF",
+            "DSC_0035.NEF",
+            "DSC_0036.NEF",
+            "DSC_0037.NEF",
+            "DSC_0038.NEF",
+            "DSC_0039.NEF",
+            "DSC_0040.NEF",
+            "DSC_0041.NEF",
+            "DSC_0042.NEF",
+            "DSC_0043.NEF",
+            "DSC_0044.NEF",
+            "DSC_0045.NEF",
+            "DSC_0046.NEF",
+            "DSC_0047.NEF",
+            "DSC_0048.NEF",
+            "DSC_0049.NEF",
+            "DSC_0050.NEF",
+            "DSC_0051.NEF",
+            "DSC_0052.NEF",
+            "DSC_0053.NEF",
+            "DSC_0054.NEF",
+            "DSC_0055.NEF",
+            "DSC_0056.NEF",
+            "DSC_0057.NEF",
+            "DSC_0058.NEF",
+            "DSC_0059.NEF",
+            "DSC_0060.NEF",
+            "DSC_0061.NEF",
+            "DSC_0062.NEF",
+            "DSC_0063.NEF",
+            "DSC_0064.NEF",
+            "DSC_0065.NEF",
+            "DSC_0066.NEF",
+            "DSC_0067.NEF",
+            "DSC_0068.NEF",
+            "DSC_0069.NEF",
+            "DSC_0070.NEF",
+            "DSC_0071.NEF",
+            "DSC_0072.NEF",
+            "DSC_0073.NEF",
+            "DSC_0074.NEF",
+            "DSC_0075.NEF",
+            "DSC_0076.NEF",
+            "DSC_0077.NEF",
+            "DSC_0078.NEF",
+            "DSC_0079.NEF",
+            "DSC_0080.NEF",
+            "DSC_0081.NEF",
+            "DSC_0082.NEF",
+            "DSC_0083.NEF",
+            "DSC_0084.NEF",
+            "DSC_0085.NEF",
+            "DSC_0086.NEF",
+            "DSC_0087.NEF",
+            "DSC_0088.NEF",
+            "DSC_0089.NEF",
+            "DSC_0090.NEF",
+            "DSC_0091.NEF",
+            "DSC_0092.NEF",
+            "DSC_0093.NEF",
+            "DSC_0094.NEF",
+            "DSC_0095.NEF",
+            "DSC_0096.NEF",
+            "DSC_0097.NEF",
+            "DSC_0098.NEF",
+            "DSC_0099.NEF",
+            "DSC_0100.NEF",
+            "DSC_0101.NEF",
+            "DSC_0102.NEF",
+            "DSC_0103.NEF",
+            "DSC_0104.NEF",
+            "DSC_0105.NEF",
+            "DSC_0106.NEF",
+            "DSC_0107.NEF",
+            "DSC_0108.NEF",
+            "DSC_0109.NEF",
+            "DSC_0110.NEF",
+            "DSC_0111.NEF",
+            "DSC_0112.NEF",
+            "DSC_0113.NEF",
+            "DSC_0114.NEF",
+            "DSC_0115.NEF",
+            "DSC_0116.NEF",
+            "DSC_0117.NEF",
+            "DSC_0118.NEF",
+            "DSC_0119.NEF",
+            "DSC_0120.NEF",
+            "DSC_0121.NEF",
+            "DSC_0122.NEF",
+            "DSC_0123.NEF",
+            "DSC_0124.NEF",
+            "DSC_0125.NEF",
+            "DSC_0126.NEF",
+            "DSC_0127.NEF",
+            "DSC_0128.NEF",
+            "DSC_0129.NEF",
+            "DSC_0130.NEF",
+            "DSC_0131.NEF",
+            "DSC_0132.NEF",
+            "DSC_0133.NEF",
+            "DSC_0134.NEF",
+            "DSC_0135.NEF",
+            "DSC_0136.NEF",
+            "DSC_0137.NEF",
+            "DSC_0138.NEF",
+            "DSC_0139.NEF",
+            "DSC_0140.NEF",
+            "DSC_0141.NEF",
+            "DSC_0142.NEF",
+            "DSC_0143.NEF",
+            "DSC_0144.NEF",
+            "DSC_0145.NEF",
+            "DSC_0146.NEF",
+            "DSC_0147.NEF",
+            "DSC_0148.NEF",
+            "DSC_0149.NEF",
+            "DSC_0150.NEF",
+            "DSC_0151.NEF",
+            "DSC_0152.NEF",
+            "DSC_0153.NEF",
+            "DSC_0154.NEF",
+            "DSC_0155.NEF",
+            "DSC_0156.NEF",
+            "DSC_0157.NEF",
+            "DSC_0158.NEF",
+            "DSC_0159.NEF",
+            "DSC_0160.NEF",
+            "DSC_0161.NEF",
+            "DSC_0162.NEF",
+            "DSC_0163.NEF",
+            "DSC_0164.NEF",
+            "DSC_0165.NEF",
+            "DSC_0166.NEF",
+            "DSC_0167.NEF",
+            "DSC_0168.NEF",
+            "DSC_0169.NEF",
+            "DSC_0170.NEF",
+            "DSC_0171.NEF",
+            "DSC_0172.NEF",
+            "DSC_0173.NEF",
+            "DSC_0174.NEF",
+            "DSC_0175.NEF",
+            "DSC_0176.NEF",
+            "DSC_0177.NEF",
+            "DSC_0178.NEF",
+            "DSC_0179.NEF",
+            "DSC_0180.NEF",
+            "DSC_0181.NEF",
+            "DSC_0182.NEF",
+            "DSC_0183.NEF",
+            "DSC_0184.NEF",
+            "DSC_0185.NEF",
+            "DSC_0186.NEF",
+            "DSC_0187.NEF",
+            "DSC_0188.NEF",
+            "DSC_0189.NEF",
+            "DSC_0190.NEF",
+            "DSC_0191.NEF",
+            "DSC_0192.NEF",
+            "DSC_0193.NEF",
+            "DSC_0194.NEF",
+            "DSC_0195.NEF",
+            "DSC_0196.NEF",
+            "DSC_0197.NEF",
+            "DSC_0198.NEF",
+            "DSC_0199.NEF",
+            "DSC_0200.NEF",
+            "DSC_0201.NEF",
+            "DSC_0202.NEF",
+            "DSC_0203.NEF",
+            "DSC_0204.NEF",
+            "DSC_0205.NEF",
+            "DSC_0206.NEF",
+            "DSC_0207.NEF",
+            "DSC_0208.NEF",
+            "DSC_0209.NEF",
+            "DSC_0210.NEF",
+            "DSC_0211.NEF",
+            "DSC_0212.NEF",
+            "DSC_0213.NEF",
+            "DSC_0214.NEF",
+            "DSC_0215.NEF",
+            "DSC_0216.NEF",
+            "DSC_0217.NEF",
+            "DSC_0218.NEF",
+            "DSC_0219.NEF",
+            "DSC_0220.NEF",
+            "DSC_0221.NEF",
+            "DSC_0222.NEF",
+            "DSC_0223.NEF",
+            "DSC_0224.NEF"
+          ]
+        },
+        "rawp": {
           "_files": [
             "Metashape.png",
-            "Strument.fbx"
+            "Strument.fbx",
+            "Strumenti.fbx",
+            "Strumenti_C.png"
+          ]
+        }
+      },
+      "S6-116-DA-Tavolino-con_Macchina-elettrostatica": {
+        "dcho": {
+          "_files": [
+            "Caricatore_C.png",
+            "Macchina elettrostatica.fbx"
+          ]
+        },
+        "dchoo": {
+          "_files": [
+            "Caricatore_AO.jpg",
+            "Caricatore_C.jpg",
+            "Macchina elettrostatica.bin",
+            "Macchina elettrostatica.gltf"
+          ]
+        },
+        "raw": {
+          "_files": [
+            "DSC_0001.NEF",
+            "DSC_0002.NEF",
+            "DSC_0003.NEF",
+            "DSC_0004.NEF",
+            "DSC_0005.NEF",
+            "DSC_0006.NEF",
+            "DSC_0007.NEF",
+            "DSC_0008.NEF",
+            "DSC_0009.NEF",
+            "DSC_0010.NEF",
+            "DSC_0011.NEF",
+            "DSC_0012.NEF",
+            "DSC_0013.NEF",
+            "DSC_0014.NEF",
+            "DSC_0015.NEF",
+            "DSC_0016.NEF",
+            "DSC_0017.NEF",
+            "DSC_0018.NEF",
+            "DSC_0019.NEF",
+            "DSC_0020.NEF",
+            "DSC_0021.NEF",
+            "DSC_0022.NEF",
+            "DSC_0023.NEF",
+            "DSC_0024.NEF",
+            "DSC_0025.NEF",
+            "DSC_0026.NEF",
+            "DSC_0027.NEF",
+            "DSC_0028.NEF",
+            "DSC_0029.NEF",
+            "DSC_0030.NEF",
+            "DSC_0031.NEF",
+            "DSC_0032.NEF",
+            "DSC_0033.NEF",
+            "DSC_0034.NEF",
+            "DSC_0035.NEF",
+            "DSC_0036.NEF",
+            "DSC_0037.NEF",
+            "DSC_0038.NEF",
+            "DSC_0039.NEF",
+            "DSC_0040.NEF",
+            "DSC_0041.NEF",
+            "DSC_0042.NEF",
+            "DSC_0043.NEF",
+            "DSC_0044.NEF",
+            "DSC_0045.NEF",
+            "DSC_0046.NEF",
+            "DSC_0047.NEF",
+            "DSC_0048.NEF",
+            "DSC_0049.NEF",
+            "DSC_0050.NEF",
+            "DSC_0051.NEF",
+            "DSC_0052.NEF",
+            "DSC_0053.NEF",
+            "DSC_0054.NEF",
+            "DSC_0055.NEF",
+            "DSC_0056.NEF",
+            "DSC_0057.NEF",
+            "DSC_0058.NEF",
+            "DSC_0059.NEF",
+            "DSC_0060.NEF",
+            "DSC_0061.NEF",
+            "DSC_0062.NEF",
+            "DSC_0063.NEF",
+            "DSC_0064.NEF",
+            "DSC_0065.NEF",
+            "DSC_0066.NEF",
+            "DSC_0067.NEF",
+            "DSC_0068.NEF",
+            "DSC_0069.NEF",
+            "DSC_0070.NEF",
+            "DSC_0071.NEF",
+            "DSC_0072.NEF",
+            "DSC_0073.NEF",
+            "DSC_0074.NEF",
+            "DSC_0075.NEF",
+            "DSC_0076.NEF",
+            "DSC_0077.NEF",
+            "DSC_0078.NEF",
+            "DSC_0079.NEF",
+            "DSC_0080.NEF",
+            "DSC_0081.NEF",
+            "DSC_0082.NEF",
+            "DSC_0083.NEF",
+            "DSC_0084.NEF",
+            "DSC_0085.NEF",
+            "DSC_0086.NEF",
+            "DSC_0087.NEF",
+            "DSC_0088.NEF",
+            "DSC_0089.NEF",
+            "DSC_0090.NEF",
+            "DSC_0091.NEF",
+            "DSC_0092.NEF",
+            "DSC_0093.NEF",
+            "DSC_0094.NEF",
+            "DSC_0095.NEF",
+            "DSC_0096.NEF",
+            "DSC_0097.NEF",
+            "DSC_0098.NEF",
+            "DSC_0099.NEF",
+            "DSC_0100.NEF",
+            "DSC_0101.NEF",
+            "DSC_0102.NEF",
+            "DSC_0103.NEF",
+            "DSC_0104.NEF",
+            "DSC_0105.NEF",
+            "DSC_0106.NEF",
+            "DSC_0107.NEF",
+            "DSC_0108.NEF",
+            "DSC_0109.NEF",
+            "DSC_0110.NEF",
+            "DSC_0111.NEF",
+            "DSC_0112.NEF",
+            "DSC_0113.NEF",
+            "DSC_0114.NEF",
+            "DSC_0115.NEF",
+            "DSC_0116.NEF",
+            "DSC_0117.NEF",
+            "DSC_0118.NEF",
+            "DSC_0119.NEF",
+            "DSC_0120.NEF",
+            "DSC_0121.NEF",
+            "DSC_0122.NEF",
+            "DSC_0123.NEF",
+            "DSC_0124.NEF",
+            "DSC_0125.NEF",
+            "DSC_0126.NEF",
+            "DSC_0127.NEF",
+            "DSC_0128.NEF",
+            "DSC_0129.NEF",
+            "DSC_0130.NEF",
+            "DSC_0131.NEF",
+            "DSC_0132.NEF",
+            "DSC_0133.NEF",
+            "DSC_0134.NEF",
+            "DSC_0135.NEF",
+            "DSC_0136.NEF",
+            "DSC_0137.NEF",
+            "DSC_0138.NEF",
+            "DSC_0139.NEF",
+            "DSC_0140.NEF",
+            "DSC_0141.NEF",
+            "DSC_0142.NEF",
+            "DSC_0143.NEF",
+            "DSC_0144.NEF",
+            "DSC_0145.NEF",
+            "DSC_0146.NEF",
+            "DSC_0147.NEF",
+            "DSC_0148.NEF",
+            "DSC_0149.NEF",
+            "DSC_0150.NEF",
+            "DSC_0151.NEF",
+            "DSC_0152.NEF",
+            "DSC_0153.NEF",
+            "DSC_0154.NEF",
+            "DSC_0155.NEF",
+            "DSC_0156.NEF",
+            "DSC_0157.NEF",
+            "DSC_0158.NEF",
+            "DSC_0159.NEF",
+            "DSC_0160.NEF",
+            "DSC_0161.NEF",
+            "DSC_0162.NEF",
+            "DSC_0163.NEF",
+            "DSC_0164.NEF",
+            "DSC_0165.NEF",
+            "DSC_0166.NEF",
+            "DSC_0167.NEF",
+            "DSC_0168.NEF",
+            "DSC_0169.NEF",
+            "DSC_0170.NEF",
+            "DSC_0171.NEF",
+            "DSC_0172.NEF",
+            "DSC_0173.NEF",
+            "DSC_0174.NEF",
+            "DSC_0175.NEF",
+            "DSC_0176.NEF",
+            "DSC_0177.NEF",
+            "DSC_0178.NEF",
+            "DSC_0179.NEF",
+            "DSC_0180.NEF",
+            "DSC_0181.NEF",
+            "DSC_0182.NEF",
+            "DSC_0183.NEF",
+            "DSC_0184.NEF",
+            "DSC_0185.NEF",
+            "DSC_0186.NEF",
+            "DSC_0187.NEF",
+            "DSC_0188.NEF",
+            "DSC_0189.NEF",
+            "DSC_0190.NEF",
+            "DSC_0191.NEF",
+            "DSC_0192.NEF",
+            "DSC_0193.NEF",
+            "DSC_0194.NEF",
+            "DSC_0195.NEF",
+            "DSC_0196.NEF",
+            "DSC_0197.NEF",
+            "DSC_0198.NEF",
+            "DSC_0199.NEF",
+            "DSC_0200.NEF",
+            "DSC_0201.NEF",
+            "DSC_0202.NEF",
+            "DSC_0203.NEF",
+            "DSC_0204.NEF",
+            "DSC_0205.NEF",
+            "DSC_0206.NEF",
+            "DSC_0207.NEF",
+            "DSC_0208.NEF",
+            "DSC_0209.NEF",
+            "DSC_0210.NEF",
+            "DSC_0211.NEF",
+            "DSC_0212.NEF",
+            "DSC_0213.NEF",
+            "DSC_0214.NEF",
+            "DSC_0215.NEF",
+            "DSC_0216.NEF",
+            "DSC_0217.NEF",
+            "DSC_0218.NEF",
+            "DSC_0219.NEF",
+            "DSC_0220.NEF",
+            "DSC_0221.NEF",
+            "DSC_0222.NEF",
+            "DSC_0223.NEF",
+            "DSC_0224.NEF"
+          ]
+        },
+        "rawp": {
+          "_files": [
+            "Metashape.png",
+            "Strument.fbx",
+            "Strumenti.fbx",
+            "Strumenti_C.png"
           ]
         }
       },
@@ -23405,9 +24903,9 @@
         },
         "dcho": {
           "_files": [
-            "AnatomePlantarum_1.jpg",
             "AnatomePlantarum_1.mtl",
-            "AnatomePlantarum_1.obj"
+            "AnatomePlantarum_1.obj",
+            "AnatomePlantarum_texture8k.jpg"
           ]
         },
         "dchoo": {
@@ -23511,8 +25009,8 @@
         },
         "dchoo": {
           "_files": [
-            "assitra01.bin",
-            "assitra01.gltf",
+            "assitra.bin",
+            "assitra.gltf",
             "assitra_diffuse.jpg"
           ]
         },
@@ -23795,7 +25293,7 @@
           ]
         },
         "dchoo": {
-          "MAPPE": {
+          "Materials": {
             "_files": [
               "Base_C.png",
               "DCHOo_semplificato_A.png",
@@ -23806,13 +25304,13 @@
             ]
           },
           "_files": [
-            "Base_C.png",
+            "Base_C.jpg",
             "DCHOo_semplificato.bin",
             "DCHOo_semplificato.gltf",
+            "DCHOo_semplificato_A.jpg",
+            "DCHOo_semplificato_C.jpg",
             "DCHOo_semplificato_C.png",
-            "DCHOo_semplificato_LACUNE.png",
-            "DCHOo_semplificato_MRO.png",
-            "DCHOo_semplificato_N.png"
+            "DCHOo_semplificato_N.jpg"
           ]
         },
         "rawp": {
@@ -24562,9 +26060,9 @@
         "dchoo": {
           "_files": [
             "Balena_COLOR.jpg",
-            "balena.bin",
-            "balena.gltf",
-            "balena_NORMAL.jpg"
+            "balena_NORMAL.jpg",
+            "balena_v3.bin",
+            "balena_v3.gltf"
           ]
         },
         "rawp": {
@@ -24611,7 +26109,21 @@
         }
       },
       "S6-86-DA-teste di cavallo": {
-        "RAW": {
+        "dcho": {
+          "_files": [
+            "TesteCavallo01.mtl",
+            "TesteCavallo01.obj",
+            "TesteCavallo_texture8k.jpg"
+          ]
+        },
+        "dchoo": {
+          "_files": [
+            "TesteCavallo02.bin",
+            "TesteCavallo02.gltf",
+            "TesteCavallo_diffuse.jpg"
+          ]
+        },
+        "raw": {
           "_files": [
             "DSC01777.ARW",
             "DSC01778.ARW",
@@ -24675,20 +26187,6 @@
             "DSC01837.ARW",
             "DSC01838.ARW",
             "DSC01839.ARW"
-          ]
-        },
-        "dcho": {
-          "_files": [
-            "TesteCavallo01.bin",
-            "TesteCavallo01.gltf",
-            "TesteCavallo_texture8k.jpg"
-          ]
-        },
-        "dchoo": {
-          "_files": [
-            "TesteCavallo02.bin",
-            "TesteCavallo02.gltf",
-            "TesteCavallo_diffuse.jpg"
           ]
         },
         "rawp": {
@@ -25112,7 +26610,21 @@
         }
       },
       "S6-93-DA_Busto Pellagra": {
-        "RAW": {
+        "dcho": {
+          "_files": [
+            "Modello 1.fbx",
+            "Texture_1.png"
+          ]
+        },
+        "dchoo": {
+          "_files": [
+            "Pellagra.bin",
+            "Pellagra.gltf",
+            "Pellagra_C.jpg",
+            "Pellagra_N.jpg"
+          ]
+        },
+        "raw": {
           "_files": [
             "DSC02419.ARW",
             "DSC02420.ARW",
@@ -25236,21 +26748,6 @@
             "DSC02540.ARW",
             "DSC02541.ARW",
             "DSC02542.ARW"
-          ]
-        },
-        "dcho": {
-          "_files": [
-            "Modello 1.fbx",
-            "Texture_1.png"
-          ]
-        },
-        "dchoo": {
-          "_files": [
-            "Pellagra.bin",
-            "Pellagra.gltf",
-            "Pellagra_COLOR.png",
-            "Pellagra_NORMAL.png",
-            "Pellagra_ROUGHNESS.png"
           ]
         },
         "rawp": {
@@ -25500,7 +26997,23 @@
         }
       },
       "S6-98a-DA-Calchi facciali colorati, boscimani": {
-        "RAW": {
+        "dcho": {
+          "_files": [
+            "calco_boscimano(a)_1.mtl",
+            "calco_boscimano(a)_1.obj",
+            "calco_boscimanoa_1.jpg"
+          ]
+        },
+        "dchoo": {
+          "_files": [
+            "calco_boscimano(a)_02.bin",
+            "calco_boscimano(a)_02.gltf",
+            "calco_boscimanoa_diffuse.jpg",
+            "calco_boscimanoa_normal.jpg",
+            "calco_boscimanoa_roughness.jpg"
+          ]
+        },
+        "raw": {
           "_files": [
             "DSC02322.ARW",
             "DSC02323.ARW",
@@ -25553,22 +27066,6 @@
             "DSC02370.ARW"
           ]
         },
-        "dcho": {
-          "_files": [
-            "calco_boscimano(a)_1.mtl",
-            "calco_boscimano(a)_1.obj",
-            "calco_boscimanoa_1.jpg"
-          ]
-        },
-        "dchoo": {
-          "_files": [
-            "calco_boscimano(a)_02.bin",
-            "calco_boscimano(a)_02.gltf",
-            "calco_boscimanoa_diffuse.jpg",
-            "calco_boscimanoa_normal.jpg",
-            "calco_boscimanoa_roughness.jpg"
-          ]
-        },
         "rawp": {
           "_files": [
             "calco_boscimano(a).jpg",
@@ -25578,7 +27075,23 @@
         }
       },
       "S6-98b-DA-Calchi facciali colorati, boscimani": {
-        "RAW": {
+        "dcho": {
+          "_files": [
+            "calco_boscimano(b)_1.mtl",
+            "calco_boscimano(b)_1.obj",
+            "calcofacciale_boscimano(b)_1.jpg"
+          ]
+        },
+        "dchoo": {
+          "_files": [
+            "calco_boscimano(b)_02.bin",
+            "calco_boscimano(b)_02.gltf",
+            "calcofacciale_boscimanob_diffuse.jpg",
+            "calcofacciale_boscimanob_normal.jpg",
+            "calcofacciale_boscimanob_roughness.jpg"
+          ]
+        },
+        "raw": {
           "_files": [
             "DSC02225.ARW",
             "DSC02227.ARW",
@@ -25632,22 +27145,6 @@
             "DSC02275.ARW"
           ]
         },
-        "dcho": {
-          "_files": [
-            "calco_boscimano(b)_1.mtl",
-            "calco_boscimano(b)_1.obj",
-            "calcofacciale_boscimano(b)_1.jpg"
-          ]
-        },
-        "dchoo": {
-          "_files": [
-            "calco_boscimano(b)_02.bin",
-            "calco_boscimano(b)_02.gltf",
-            "calcofacciale_boscimanob_diffuse.jpg",
-            "calcofacciale_boscimanob_normal.jpg",
-            "calcofacciale_boscimanob_roughness.jpg"
-          ]
-        },
         "rawp": {
           "_files": [
             "calcofacciale_boscimano(b).jpg",
@@ -25657,7 +27154,23 @@
         }
       },
       "S6-98c-DA-Calchi facciali colorati, boscimani": {
-        "RAW": {
+        "dcho": {
+          "_files": [
+            "calco_boscimano(b)_1.mtl",
+            "calco_boscimano(b)_1.obj",
+            "calcofacciale_boscimano(b)_1.jpg"
+          ]
+        },
+        "dchoo": {
+          "_files": [
+            "calco_boscimano(c)_02.bin",
+            "calco_boscimano(c)_02.gltf",
+            "calcofacciale_boscimanoc_diffuse.jpg",
+            "calcofacciale_boscimanoc_normal.jpg",
+            "calcofacciale_boscimanoc_roughness.jpg"
+          ]
+        },
+        "raw": {
           "_files": [
             "DSC02276.ARW",
             "DSC02277.ARW",
@@ -25707,22 +27220,6 @@
             "DSC02321.ARW"
           ]
         },
-        "dcho": {
-          "_files": [
-            "calco_boscimano(b)_1.mtl",
-            "calco_boscimano(b)_1.obj",
-            "calcofacciale_boscimano(b)_1.jpg"
-          ]
-        },
-        "dchoo": {
-          "_files": [
-            "calco_boscimano(c)_02.bin",
-            "calco_boscimano(c)_02.gltf",
-            "calcofacciale_boscimanoc_diffuse.jpg",
-            "calcofacciale_boscimanoc_normal.jpg",
-            "calcofacciale_boscimanoc_roughness.jpg"
-          ]
-        },
         "rawp": {
           "_files": [
             "calcofacciale_boscimano(c).jpg",
@@ -25732,7 +27229,23 @@
         }
       },
       "S6-99-DA-Calchi facciali colorati, cinese": {
-        "RAW": {
+        "dcho": {
+          "_files": [
+            "calcofacciale_cinese1.mtl",
+            "calcofacciale_cinese1.obj",
+            "calcofacciale_texture.jpg"
+          ]
+        },
+        "dchoo": {
+          "_files": [
+            "calco_cinese_02.bin",
+            "calco_cinese_02.gltf",
+            "calcofacciale_cinese_diffuse.jpg",
+            "calcofacciale_cinese_normal.jpg",
+            "calcofacciale_cinese_roughness02.jpg"
+          ]
+        },
+        "raw": {
           "_files": [
             "DSC02371.ARW",
             "DSC02372.ARW",
@@ -25782,22 +27295,6 @@
             "DSC02416.ARW",
             "DSC02417.ARW",
             "DSC02418.ARW"
-          ]
-        },
-        "dcho": {
-          "_files": [
-            "calcofacciale_cinese1.mtl",
-            "calcofacciale_cinese1.obj",
-            "calcofacciale_texture.jpg"
-          ]
-        },
-        "dchoo": {
-          "_files": [
-            "calco_cinese_02.bin",
-            "calco_cinese_02.gltf",
-            "calcofacciale_cinese_diffuse.jpg",
-            "calcofacciale_cinese_normal.jpg",
-            "calcofacciale_cinese_roughness02.jpg"
           ]
         },
         "rawp": {
