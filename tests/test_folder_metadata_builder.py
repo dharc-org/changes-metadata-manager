@@ -8,7 +8,7 @@ from rdflib import Graph
 
 from changes_metadata_manager.folder_metadata_builder import (
     extract_metadata_for_stage,
-    extract_nr_from_folder_name,
+    extract_id_from_folder_name,
     load_kg,
     load_sharepoint_structure,
     process_all_folders,
@@ -93,7 +93,7 @@ class TestExtractMetadataForStageExact:
         assert_graphs_equal(result, expected)
 
 
-class TestExtractNrFromFolderName:
+class TestExtractIdFromFolderName:
     @pytest.mark.parametrize("folder_name,expected", [
         ("S1-5-nome_oggetto", 5),
         ("S2-42-altro_nome", 42),
@@ -101,7 +101,7 @@ class TestExtractNrFromFolderName:
         ("S1-7-nome con spazi", 7),
     ])
     def test_valid_folder_names(self, folder_name, expected):
-        assert extract_nr_from_folder_name(folder_name) == expected
+        assert extract_id_from_folder_name(folder_name) == expected
 
     @pytest.mark.parametrize("folder_name", [
         "1-5-nome",
@@ -109,8 +109,8 @@ class TestExtractNrFromFolderName:
         "S1_5_nome",
     ])
     def test_invalid_folder_names(self, folder_name):
-        with pytest.raises(ValueError, match="Cannot extract NR"):
-            extract_nr_from_folder_name(folder_name)
+        with pytest.raises(ValueError, match="Cannot extract ID"):
+            extract_id_from_folder_name(folder_name)
 
 
 class TestProcessAllFolders:

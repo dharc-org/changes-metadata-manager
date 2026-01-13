@@ -25,6 +25,19 @@ SKIP_FOLDERS = {
     "S1-CNR_SoffittoSala1",
 }
 
+FOLDER_TO_ID = {
+    "S3-PT-DICAM_VetrinaMatriciXilografiche": "ptb",
+    "S3-PT-DICAM_Matrice Xilografica Fiore": "ptb_1",
+    "S3-PT-DICAM_Matrice Xilografica Pianta": "ptb_2",
+    "S3-PT-DICAM_Matrice Xilografica Serpente": "ptb_3",
+    "S3-VS6-DBC_Matrice 1 egizia": "ptb_4",
+    "S5-s.n.-DBC_Busto di Ulisse Aldrovandi": "s_n",
+    "S4-ManicoColtelloZoomorfo": 50,
+    "S5-CNR-AAltoCentro_TestamentoUlisseAldrovandi": "a_alto_centro",
+    "S5-B alto destra 1-FICLIT_Mammuthus1": "b_alto_destra_1",
+    "S5-B alto destra 1-FICLIT_Mammuthus2": "b_alto_destra_2",
+}
+
 
 def load_kg(path: Path) -> Graph:
     graph = Graph()
@@ -32,14 +45,16 @@ def load_kg(path: Path) -> Graph:
     return graph
 
 
-def extract_nr_from_folder_name(folder_name: str) -> int:
+def extract_id_from_folder_name(folder_name: str) -> int | str:
+    if folder_name in FOLDER_TO_ID:
+        return FOLDER_TO_ID[folder_name]
     match = re.match(r"S\d+-(\d+)[a-z]? ?[-_]", folder_name)
     if not match:
-        raise ValueError(f"Cannot extract NR from folder name: {folder_name}")
+        raise ValueError(f"Cannot extract ID from folder name: {folder_name}")
     return int(match.group(1))
 
 
-def extract_metadata_for_stage(graph: Graph, nr: int, stage: str) -> Graph:
+def extract_metadata_for_stage(graph: Graph, nr: int | str, stage: str) -> Graph:
     result = Graph()
     for prefix, namespace in graph.namespace_manager.namespaces():
         result.namespace_manager.bind(prefix, namespace)
@@ -103,7 +118,7 @@ def process_all_folders(
         for folder_name, subfolders in sala_items.items():
             if folder_name in SKIP_FOLDERS:
                 continue
-            nr = extract_nr_from_folder_name(folder_name)
+            nr = extract_id_from_folder_name(folder_name)
 
             existing_stages = [
                 s for s in subfolders.keys()
