@@ -23,6 +23,9 @@ STAGE_STEPS = {
 
 SKIP_FOLDERS = {
     "S1-CNR_SoffittoSala1",
+    "S5-B basso-DICAM_FanoneBalenaAlto",
+    "materials",
+    "sala 4",
 }
 
 FOLDER_TO_ID = {
@@ -32,10 +35,157 @@ FOLDER_TO_ID = {
     "S3-PT-DICAM_Matrice Xilografica Serpente": "ptb_3",
     "S3-VS6-DBC_Matrice 1 egizia": "ptb_4",
     "S5-s.n.-DBC_Busto di Ulisse Aldrovandi": "s_n",
-    "S4-ManicoColtelloZoomorfo": 50,
+    "S4-ManicoColtelloZoomorfo": "50",
     "S5-CNR-AAltoCentro_TestamentoUlisseAldrovandi": "a_alto_centro",
     "S5-B alto destra 1-FICLIT_Mammuthus1": "b_alto_destra_1",
     "S5-B alto destra 1-FICLIT_Mammuthus2": "b_alto_destra_2",
+    "S5-B basso-DICAM_FanoneBalenaBasso": "b_basso",
+    "S5-A_alto_sinistra_1-FICLIT_Medaglia-Archeologico": "a_alto_sinistra_1",
+    "S5-A alto sinistra\xa0- 2-FICLIT_MedagliaCommemorativa": "a_alto_sinistra_2",
+    "S5-A alto sinistra 3- DBC_Calchi in gesso": "a_alto_sinistra_3",
+    "S5-B alto centro 1-FICLIT_HarpactocarcinusPunctulatus": "b_alto_centro_1",
+    "S5-B alto centro 2-DBC_Harpactocarcinus sp": "b_alto_centro_2",
+    "S5-B alto centro - 3-FICLIT_LophoraninaAldrovandi": "b_alto_centro_3",
+    "S5-B alto sinistra - 1-FICLIT_Carbonifero": "b_alto_sinistra_1",
+    "S5-B alto sinistra 2-CNR_Miocene": "b_alto_sinistra_2",
+    "S5-B alto sinistra 3-FICLIT_DentiDiPesci": "b_alto_sinistra_3",
+    "S5-B alto destra 3-FICLIT_Hippopotamus": "b_alto_destra_3",
+    # Vetrina 1
+    "S5-Vetrina 1 alto N - 3-FICLIT_SonaglioThevetiaPeruviana": "vetrina_1_alto_n_3",
+    "S5-Vetrina 1 alto N 1-FICLIT_CollanaMesoamericana": "vetrina_1_alto_n_1",
+    "S5-Vetrina 1 alto N-2-DBC_Bambù_lavorato": "vetrina_1_alto_n_2",
+    "S5-Vetrina 1 alto N-2-t-TavolettaConBambù": "vetrina_1_alto_n_2_t",
+    "S5-Vetrina 1 alto S-1-FICLIT-Statuetta ushabti in faïence": "vetrina_1_alto_s_1",
+    "S5-Vetrina 1 alto S-10-DICAM_GemmaInDiasproGialloConCinocefaloeIscrizione": "vetrina_1_alto_s_10",
+    "S5-Vetrina 1 alto S-11-DICAM_GemmaInDiasproConScorpione": "vetrina_1_alto_s_11",
+    "S5-Vetrina 1 alto S-12-DICAM_GemmaInDiasproNeroConIscrizioneAraba": "vetrina_1_alto_s_12",
+    "S5-Vetrina 1 alto S-14-FICLIT_PuntaFrecciaNeolitico": "vetrina_1_alto_s_14",
+    "S5-Vetrina 1 alto S-15-DBC_Corno_lavorato": "vetrina_1_alto_s_15",
+    "S5-Vetrina 1 alto S-16-DBC_Ascia_di_giadeite": "vetrina_1_alto_s_16",
+    "S5-Vetrina 1 alto S-3-DICAM_ScarabeoInStileEgizio": "vetrina_1_alto_s_3",
+    "S5-Vetrina 1 alto S-4-DICAM_GemmaInAgataConCapraPressoAlbero": "vetrina_1_alto_s_4",
+    "S5-Vetrina 1 alto S-5-DICAM_GemmaInAgataconMascheraDellaCommediaDell’Arte": "vetrina_1_alto_s_5",
+    "S5-Vetrina 1 alto S-6-DICAM_GemmaInAgataConSerapideInTrono": "vetrina_1_alto_s_6",
+    "S5-Vetrina 1 alto S-7-DICAM_GemmaInAgataConUccello": "vetrina_1_alto_s_7",
+    "S5-Vetrina 1 alto S-8-DICAM_GemmaInAgataConMercurioeFontana": "vetrina_1_alto_s_8",
+    "S5-Vetrina 1 alto S-9-DICAM_GemmainPastaVitreaStratificataconFiguraAppoggiataAunBastone": "vetrina_1_alto_s_9",
+    "S5-Vetrina 1 basso-DICAM_Carapaci": "vetrina_1_basso",
+    "S5-vetrina_1_alto_s_2-FICLIT_Lucerna fittile a volute con spalla decorata": "vetrina_1_alto_s_2",
+    "S5-vetrina_1_alto_s_13-FICLIT_Sferule di avorio e calcare": "vetrina_1_alto_s_13",
+    # Vetrina 2
+    "S5-Vetrina 2 ALTO N 3-FICLIT_SezioneDenteDiElefante": "vetrina_2_alto_n_3",
+    "S5-Vetrina 2 alto N - 1-DICAM_Calcoli": "vetrina_2_alto_n_1",
+    "S5-Vetrina 2 alto N - 3 - t-DICAM_MatriceElefante": "vetrina_2_alto_n_3_t",
+    "S5-Vetrina 2 alto N-1-t1-DBC_Tavoletta_con_calcolo_1": "vetrina_2_alto_n_1_t1",
+    "S5-Vetrina 2 alto N-1-t2-DBC_Tavoletta_con_calcolo_2": "vetrina_2_alto_n_1_t2",
+    "S5-Vetrina 2 alto S - 1 - t-DICAM_MatriceZanna": "vetrina_2_alto_s_1_t",
+    "S5-Vetrina 2 alto S - 1-DICAM_ZanneDiElefante": "vetrina_2_alto_s_1",
+    "S5-Vetrina 2 alto S - 2-DICAM_CornaDiBovidiECervidi": "vetrina_2_alto_s_2",
+    "S5-Vetrina 2 alto S-2-t-DBC_Tavoletta_con_cervo": "vetrina_2_alto_s_2_t",
+    "S5-Vetrina 2 basso t-DICAM_MatriceRinoceronte": "vetrina_2_basso_t",
+    "S5-Vetrina 2 basso-DICAM_Alce": "vetrina_2_basso",
+    "S5-Vetrina_2_alto_n2_BezoarGazzella": "vetrina_2_alto_n_2",
+    "S5-Vetrina_2_alto_s_3_ghiandoleCastoroeCapra": "vetrina_2_alto_s_3",
+    # Vetrina 3
+    "S5-Vetrina 3 alto N - 1-DICAM_UovaDiStruzzo": "vetrina_3_alto_n_1",
+    "S5-Vetrina 3 alto N - 3-DA_Graminacea Subfossile": "vetrina_3_alto_n_3",
+    "S5-Vetrina 3 alto N-4- DA- Apice vegetativo di palma": "vetrina_3_alto_n_4",
+    "S5-Vetrina 3 alto S-1-t-TavolettaConBaccelli": "vetrina_3_alto_s_1_t",
+    "S5-Vetrina 3 alto S-2-t-DBC_Tavoletta_con_nido": "vetrina_3_alto_s_2_t",
+    "S5-Vetrina 3 alto S-4-FICLIT_NidoDiPendolino": "vetrina_3_alto_s_4",
+    "S5-Vetrina 3 alto sinistra-1-DA-BaccelloConSeme": "vetrina_3_alto_s_1",
+    "S5-Vetrina 3 basso-DICAM_Preparati di terre e Terre sigillate": "vetrina_3_basso",
+    "S5-Vetrina_3_alto_n2_uovamostruosedipolloefagiano": "vetrina_3_alto_n_2",
+    "S5-vetrina_3_alto_s_3_nidipreparativegetali": "vetrina_3_alto_s_3",
+    # Vetrina 4
+    "S5-Vetrina 4 alto N - 10-DICAM_Echinoidifossilin.10": "vetrina_4_alto_n_10",
+    "S5-Vetrina 4 alto N - 11-DICAM_EchinoidiFossilin.11": "vetrina_4_alto_n_11",
+    "S5-Vetrina 4 alto N - 7-DICAM_EchinoidiFossilin.7": "vetrina_4_alto_n_7",
+    "S5-Vetrina 4 alto N - 8-DICAM_EchinoidiFossilin.8": "vetrina_4_alto_n_8",
+    "S5-Vetrina 4 alto N - 9-FICLIT_EchinoidiFossilin.9": "vetrina_4_alto_n_9",
+    "S5-Vetrina 4 alto N-1-DBC_Conoclypeus_conoideus": "vetrina_4_alto_n_1",
+    "S5-Vetrina 4 alto N-2-DBC_Dollaro_di_mare": "vetrina_4_alto_n_2",
+    "S5-Vetrina 4 alto N-3-DBC_Clypeaster_marginatus": "vetrina_4_alto_n_3",
+    "S5-Vetrina 4 alto N-4-DBC_Mazettia_pareti": "vetrina_4_alto_n_4",
+    "S5-Vetrina 4 alto N-5-DBC_Discoidea sp": "vetrina_4_alto_n_5",
+    "S5-Vetrina 4 alto N-6-DBC_Macropneustes_sp": "vetrina_4_alto_n_6",
+    "S5-Vetrina 4 alto S-1-DBC_Calcare a coralli lavorati": "vetrina_4_alto_s_1",
+    "S5-Vetrina 4 alto S-10-DBC_Productus_geinitzianus": "vetrina_4_alto_s_10",
+    "S5-Vetrina 4 alto S-11-DBC_Stephanoceras_bayleanus": "vetrina_4_alto_s_11",
+    "S5-Vetrina 4 alto S-12-DBC_Tellina_planata": "vetrina_4_alto_s_12",
+    "S5-Vetrina 4 alto S-13-DBC_Glossus_humanus": "vetrina_4_alto_s_13",
+    "S5-Vetrina 4 alto S-2-DBC_Coralli": "vetrina_4_alto_s_2",
+    "S5-Vetrina 4 alto S-3-DBC_Lumachella_a_Helicidi": "vetrina_4_alto_s_3",
+    "S5-Vetrina 4 alto S-4-DBC_Calcare_a_lumachella": "vetrina_4_alto_s_4",
+    "S5-Vetrina 4 alto S-5-DBC_Dentalium_elephantinum": "vetrina_4_alto_s_5",
+    "S5-Vetrina 4 alto S-6-DBC_Glycymeris_glycymeris": "vetrina_4_alto_s_6",
+    "S5-Vetrina 4 alto S-7-DBC_Bivalvi_indet": "vetrina_4_alto_s_7",
+    "S5-Vetrina 4 alto S-8-DBC_Lytoceras_sp": "vetrina_4_alto_s_8",
+    "S5-Vetrina 4 alto S-9-DBC_Megalodon_sp": "vetrina_4_alto_s_9",
+    "S5-Vetrina 4 basso-FICLIT_Campioni di rocce levigate": "vetrina_4_basso",
+    # Vetrina 5
+    "S5-Vetrina 5 alto N  - t-DICAM_MatriceBotroide1": "vetrina_5_alto_n_t",
+    "S5-Vetrina 5 alto N-DICAM_Botroide1": "vetrina_5_alto_n",
+    "S5-Vetrina 5 alto S - 1-DICAM_Botroide2": "vetrina_5_alto_s_1",
+    "S5-Vetrina 5 alto S - 2 - t-DICAM_MatriceBotroide2": "vetrina_5_alto_s_2_t",
+    "S5-Vetrina 5 alto S-2-DICAM_Botroide_triorchites": "vetrina_5_alto_s_2",
+    "S5-Vetrina 5 basso t-DICAM_MatriceBotroide3": "vetrina_5_basso_t",
+    "S5-Vetrina 5 basso-DICAM_Botroide3": "vetrina_5_basso",
+    # Vetrina 6
+    "S5-Vetrina 6 alto N-1-DBC_Bufo sp., Rospo": "vetrina_6_alto_n_1",
+    "S5-Vetrina 6 alto N-1-t-TavolettaBufo": "vetrina_6_alto_n_1_t",
+    "S5-Vetrina 6 alto N-2-DBC_Cordylus sp., lucertola": "vetrina_6_alto_n_2",
+    "S5-Vetrina 6 alto N-2-t-TavolettaConLucertola": "vetrina_6_alto_n_2_t",
+    "S5-Vetrina 6 alto S - 2 - t-DICAM_MatricePesce12_Pesce": "vetrina_6_alto_s_2_t",
+    "S5-Vetrina 6 basso 2-ScheletroDiDelfino": "vetrina_6_basso_2",
+    "S5-Vetrina 6 basso 2-t-TavolettaConDelfino": "vetrina_6_basso_2_t",
+    "S5-Vetrina 6 basso-DBC_Scapola di balena": "vetrina_6_basso",
+    "S5-vetrina_6_alto_s_1_Chamaleo": "vetrina_6_alto_s_1",
+    "S5-vetrina_6_alto_s_1_Scincus_Pescedellesabbie": "vetrina_6_alto_s_1",
+    # Vetrina 7
+    "S5-Vetrina 7 alto N - 1 - t-DICAM_MatricePesce6_PesceForca": "vetrina_7_alto_n_1_t",
+    "S5-Vetrina 7 alto N 1-FICLIT_PesceForca": "vetrina_7_alto_n_1",
+    "S5-Vetrina 7 alto N 2-FICLIT_PesceScatola": "vetrina_7_alto_n_2",
+    "S5-Vetrina 7 alto S - 1 - t-DICAM_MatricePesce11_PesceSpada": "vetrina_7_alto_s_1_t",
+    "S5-Vetrina 7 alto S - 3 - t-DICAM_MatricePesce10_PesceVolante": "vetrina_7_alto_s_3_t",
+    "S5-Vetrina 7 alto S - 3-FICLIT_PesceVolante": "vetrina_7_alto_s_3",
+    "S5-Vetrina 7 alto S 2-FICLIT_SorcioMarino": "vetrina_7_alto_s_2",
+    "S5-Vetrina 7 alto S-1-DA-Xiphias sp., Pesci spada": "vetrina_7_alto_s_1",
+    "S5-Vetrina 7 basso  - t-DICAM_MatricePesce13_PescePalla2": "vetrina_7_basso_t",
+    "S5-Vetrina 7 basso  - t-DICAM_MatricePesce9_PescePalla1": "vetrina_7_basso_t",
+    "S5-Vetrina 7 basso-DICAM_PescePalla": "vetrina_7_basso",
+    # Vetrina 8
+    "S5-Vetrina 8 alto N - 1-FICLIT_ScazzoneMarino": "vetrina_8_alto_n_1",
+    "S5-Vetrina 8 alto N - 3 - t-DICAM_MatricePesce4_Bocca1": "vetrina_8_alto_n_3_t",
+    "S5-Vetrina 8 alto N - 3 - t-DICAM_MatricePesce8_Bocca2": "vetrina_8_alto_n_3_t",
+    "S5-Vetrina 8 alto N - 3-DA-Apparato dentale di pesce cartilagineo (Elasmobrnchii)": "vetrina_8_alto_n_3",
+    "S5-Vetrina 8 alto N-2-DA-Lophius piscatorius (Linnaeus, 1758), rana pescatrice": "vetrina_8_alto_n_2",
+    "S5-Vetrina 8 alto S - 1 - t-DICAM_MatricePesce1_PesceChitarra": "vetrina_8_alto_s_1_t",
+    "S5-Vetrina 8 alto S - 1-DA-Rhinobatos rhinobatos": "vetrina_8_alto_s_1",
+    "S5-Vetrina 8 alto S - 2 - t-DICAM_MatricePesce2_Smeriglio": "vetrina_8_alto_s_2_t",
+    "S5-Vetrina 8 alto S - 2-DA-Lamna nasus (Bonnaterre, 1788), smeriglio": "vetrina_8_alto_s_2",
+    "S5-Vetrina 8 alto S - 3 - t-DICAM_MatricePesce3_RanaPescatrice": "vetrina_8_alto_s_3_t",
+    "S5-Vetrina 8 alto S.3-DA-Lophius piscatorius (Linnaeus, 1758), apparato boccale rana pescatrice": "vetrina_8_alto_s_3",
+    "S5-Vetrina 8 basso  - t1-DICAM_MatricePesce7_DentiPesceSega": "vetrina_8_basso_t1",
+    "S5-Vetrina 8 basso  - t2-DICAM_MatricePesce5_PesceSega": "vetrina_8_basso_t2",
+    "S5-Vetrina 8 basso-DA-Pesce Martello": "vetrina_8_basso",
+    "S5-Vetrina 8 basso-DA-Preparati zoologici, Pescecane": "vetrina_8_basso",
+    "S5-Vetrina 8 basso-DA-Preparati zoologici, pesce sega": "vetrina_8_basso",
+    # Manoscritti
+    "S5-Manoscritto-FICLIT_AdnotationesVariaePraesertimDeAnimalibus": "m1",
+    "S5-Manoscritto-FICLIT_VulgataProverbia": "m2",
+    "S5-Manoscritto-FICLIT_PandechionEpistemonicon": "m3",
+    "S5-Manoscritto-FICLIT_LexiconRerumInanimatarum": "m4",
+    "S5-Manoscritto-FICLIT_BibliothecaSecundumNominaAuthorum": "m5",
+    "S5-Manoscritto-FICLIT_TheatrumBiblicumNaturale": "m6",
+    "S5-Manoscritto-FICLIT_LibroDeiVisitatori": "m7",
+    "S5-Manoscritto-FICLIT_DiscorsoNaturaleAldrovandi": "m8",
+    # Grouped entities (KG has single entity for multiple folders)
+    "S6-98a-DA-Calchi facciali colorati, boscimani": "98",
+    "S6-98b-DA-Calchi facciali colorati, boscimani": "98",
+    "S6-98c-DA-Calchi facciali colorati, boscimani": "98",
+    "S6-111a-DA-Fossile, Dalmanites sp. RECTO": "111",
+    "S6-111b-DA-Fossile, Dalmanites sp. VERSO": "111",
 }
 
 
@@ -45,16 +195,16 @@ def load_kg(path: Path) -> Graph:
     return graph
 
 
-def extract_id_from_folder_name(folder_name: str) -> int | str:
+def extract_id_from_folder_name(folder_name: str) -> str:
     if folder_name in FOLDER_TO_ID:
         return FOLDER_TO_ID[folder_name]
-    match = re.match(r"S\d+-(\d+)[a-z]? ?[-_]", folder_name)
+    match = re.match(r"S\d+-(\d+[a-z]?) ?[-_]", folder_name)
     if not match:
         raise ValueError(f"Cannot extract ID from folder name: {folder_name}")
-    return int(match.group(1))
+    return match.group(1).lstrip("0") or "0"
 
 
-def extract_metadata_for_stage(graph: Graph, nr: int | str, stage: str) -> Graph:
+def extract_metadata_for_stage(graph: Graph, nr: str, stage: str) -> Graph:
     result = Graph()
     for prefix, namespace in graph.namespace_manager.namespaces():
         result.namespace_manager.bind(prefix, namespace)

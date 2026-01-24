@@ -22,9 +22,9 @@ REAL_KG_PATH = DATA_DIR / "kg.ttl"
 REAL_SHAREPOINT_PATH = DATA_DIR / "sharepoint_structure.json"
 
 TEST_ITEMS = [
-    ("Sala1", "S1-01-CNR_CartaNautica", 1),
-    ("Sala2", "S2-24-CNR_MappaOrtoBotanicoPADOVA", 24),
-    ("Sala5", "S5-57-FICLIT_VolumePolpo", 57),
+    ("Sala1", "S1-01-CNR_CartaNautica", "1"),
+    ("Sala2", "S2-24-CNR_MappaOrtoBotanicoPADOVA", "24"),
+    ("Sala5", "S5-57-FICLIT_VolumePolpo", "57"),
 ]
 
 
@@ -83,9 +83,9 @@ def test_folder_structure():
 
 class TestExtractMetadataForStageExact:
     @pytest.mark.parametrize("nr,stage", [
-        (1, "raw"), (1, "rawp"), (1, "dcho"), (1, "dchoo"),
-        (24, "raw"), (24, "rawp"), (24, "dcho"), (24, "dchoo"),
-        (57, "raw"), (57, "rawp"), (57, "dcho"), (57, "dchoo"),
+        ("1", "raw"), ("1", "rawp"), ("1", "dcho"), ("1", "dchoo"),
+        ("24", "raw"), ("24", "rawp"), ("24", "dcho"), ("24", "dchoo"),
+        ("57", "raw"), ("57", "rawp"), ("57", "dcho"), ("57", "dchoo"),
     ])
     def test_stage_output_matches_fixture(self, real_kg, nr, stage):
         result = extract_metadata_for_stage(real_kg, nr, stage)
@@ -95,10 +95,13 @@ class TestExtractMetadataForStageExact:
 
 class TestExtractIdFromFolderName:
     @pytest.mark.parametrize("folder_name,expected", [
-        ("S1-5-nome_oggetto", 5),
-        ("S2-42-altro_nome", 42),
-        ("S6-123-oggetto_complesso", 123),
-        ("S1-7-nome con spazi", 7),
+        ("S1-5-nome_oggetto", "5"),
+        ("S2-42-altro_nome", "42"),
+        ("S6-123-oggetto_complesso", "123"),
+        ("S1-7-nome con spazi", "7"),
+        ("S1-01-CNR_CartaNautica", "1"),
+        ("S2-27a-FICLIT_DelphiniumStaphisagria", "27a"),
+        ("S6-74b-ISPC-Orchis_morio_L", "74b"),
     ])
     def test_valid_folder_names(self, folder_name, expected):
         assert extract_id_from_folder_name(folder_name) == expected
