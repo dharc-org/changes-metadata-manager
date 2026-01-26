@@ -9,7 +9,7 @@ from changes_metadata_manager.generate_provenance import generate_provenance_sna
 
 
 BASE_URI = "https://w3id.org/changes/4/aldrovandi"
-STRUCTURE_PATH = Path("data/sharepoint_structure.json")
+STRUCTURE_PATH = Path("data/structure.json")
 KG_PATH = Path("data/kg.ttl")
 RESP_AGENT = "https://w3id.org/changes/4/agent/morph-kgc-changes-metadata/1.0.1"
 PRIMARY_SOURCE = "https://doi.org/10.5281/zenodo.18190642"
@@ -233,7 +233,7 @@ def extract_metadata_for_stage(graph: Graph, nr: str, stage: str) -> Graph:
     return result
 
 
-def load_sharepoint_structure(structure_path: Path) -> dict:
+def load_structure(structure_path: Path) -> dict:
     with open(structure_path) as f:
         return json.load(f)
 
@@ -259,7 +259,7 @@ def process_all_folders(
     structure_path: Path | None = None,
 ) -> None:
     if structure_path is not None:
-        structure = load_sharepoint_structure(structure_path)
+        structure = load_structure(structure_path)
     else:
         structure = scan_folder_structure(root)
     kg = load_kg(kg_path)

@@ -10,7 +10,7 @@ from changes_metadata_manager.folder_metadata_builder import (
     extract_metadata_for_stage,
     extract_id_from_folder_name,
     load_kg,
-    load_sharepoint_structure,
+    load_structure,
     process_all_folders,
     scan_folder_structure,
 )
@@ -19,7 +19,7 @@ from changes_metadata_manager.folder_metadata_builder import (
 DATA_DIR = Path(__file__).parent.parent / "data"
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "folder_metadata"
 REAL_KG_PATH = DATA_DIR / "kg.ttl"
-REAL_SHAREPOINT_PATH = DATA_DIR / "sharepoint_structure.json"
+REAL_STRUCTURE_PATH = DATA_DIR / "structure.json"
 
 TEST_ITEMS = [
     ("Sala1", "S1-01-CNR_CartaNautica", "1"),
@@ -57,7 +57,7 @@ def real_kg():
 
 @pytest.fixture
 def test_folder_structure():
-    full_structure = load_sharepoint_structure(REAL_SHAREPOINT_PATH)
+    full_structure = load_structure(REAL_STRUCTURE_PATH)
     subset = {"structure": {}}
 
     tmpdir = tempfile.mkdtemp()
