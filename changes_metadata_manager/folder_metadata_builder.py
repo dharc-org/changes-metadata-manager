@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 
 from rdflib import Graph, URIRef
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn
 
 from changes_metadata_manager.generate_provenance import generate_provenance_snapshots
 
@@ -26,6 +27,7 @@ SKIP_FOLDERS = {
     "S5-B basso-DICAM_FanoneBalenaAlto",
     "materials",
     "sala 4",
+    "_files",
 }
 
 FOLDER_TO_ID = {
@@ -264,11 +266,24 @@ def process_all_folders(
         structure = scan_folder_structure(root)
     kg = load_kg(kg_path)
 
-    for sala_name, sala_items in structure["structure"].items():
-        for folder_name, subfolders in sala_items.items():
-            if folder_name in SKIP_FOLDERS:
-                continue
+    folders = [
+        (sala_name, folder_name, subfolders)
+        for sala_name, sala_items in structure["structure"].items()
+        for folder_name, subfolders in sala_items.items()
+        if folder_name not in SKIP_FOLDERS
+    ]
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        MofNCompleteColumn(),
+    ) as progress:
+        task = progress.add_task("Processing folders", total=len(folders))
+
+        for sala_name, folder_name, subfolders in folders:
             nr = extract_id_from_folder_name(folder_name)
+            progress.update(task, description=f"{folder_name}")
 
             existing_stages = [
                 s for s in subfolders.keys()
@@ -294,7 +309,7 @@ def process_all_folders(
                     primary_source=PRIMARY_SOURCE,
                 )
 
-            print(f"Processed {folder_name} (NR={nr}): {len(existing_stages)} stages")
+            progress.advance(task)
 
 
 def parse_arguments():  # pragma: no cover
@@ -319,7 +334,6 @@ def parse_arguments():  # pragma: no cover
 def main():  # pragma: no cover
     args = parse_arguments()
     process_all_folders(root=args.root, structure_path=args.structure)
-    print("\nProcessing complete")
 
 
 if __name__ == "__main__":  # pragma: no cover

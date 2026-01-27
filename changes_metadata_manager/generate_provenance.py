@@ -41,22 +41,20 @@ def generate_provenance_snapshots(input_directory, output_file, input_format=Non
     
     for filename in os.listdir(input_directory):
         file_path = os.path.join(input_directory, filename)
-                
+
         if input_format:
             format_name = input_format
         else:
             _, ext = os.path.splitext(filename.lower())
+            if ext not in rdf_extensions:
+                continue
             format_name = rdf_extensions[ext]
         
-        print(f"Processing {file_path} as {format_name}...")
         default_graph.parse(file_path, format=format_name)
         file_count += 1
     
     if file_count == 0:
-        print(f"No valid RDF files found in {input_directory}")
         return
-    
-    print(f"Processed {file_count} RDF files")
     
     dataset = Dataset()
     
@@ -71,8 +69,6 @@ def generate_provenance_snapshots(input_directory, output_file, input_format=Non
     for s, p, o in default_graph:
         if isinstance(s, URIRef):
             subjects.add(s)
-    
-    print(f"Found {len(subjects)} subjects in the input files")
     
     generation_time = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
     
@@ -98,4 +94,3 @@ def generate_provenance_snapshots(input_directory, output_file, input_format=Non
         prov_graph.add((snapshot_uri, DCTERMS.description, Literal(description, lang="en")))
     
     dataset.serialize(destination=output_file, format=output_format)
-    print(f"Provenance snapshots saved to {output_file} in {output_format} format")
