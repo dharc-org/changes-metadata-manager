@@ -10,7 +10,7 @@ import datetime
 from rdflib import Dataset, URIRef, Namespace, Literal
 from rdflib.namespace import RDF, XSD, DCTERMS
 
-def generate_provenance_snapshots(input_directory, output_file, input_format=None, output_format='nquads', agent_orcid=None, primary_source=None):
+def generate_provenance_snapshots(input_directory, output_file, input_format=None, output_format='json-ld', agent_orcid=None, primary_source=None):
     """
     Generate provenance snapshots from RDF data.
     

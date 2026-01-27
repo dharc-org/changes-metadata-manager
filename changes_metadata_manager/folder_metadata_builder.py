@@ -282,14 +282,14 @@ def process_all_folders(
 
                 metadata = extract_metadata_for_stage(kg, nr, stage_key)
 
-                meta_path = stage_dir / "meta.ttl"
-                metadata.serialize(destination=str(meta_path), format="turtle")
+                meta_path = stage_dir / "meta.jsonld"
+                metadata.serialize(destination=str(meta_path), format="json-ld")
 
-                prov_path = stage_dir / "prov.nq"
+                prov_path = stage_dir / "prov.jsonld"
                 generate_provenance_snapshots(
                     input_directory=str(stage_dir),
                     output_file=str(prov_path),
-                    output_format="nquads",
+                    output_format="json-ld",
                     agent_orcid=RESP_AGENT,
                     primary_source=PRIMARY_SOURCE,
                 )

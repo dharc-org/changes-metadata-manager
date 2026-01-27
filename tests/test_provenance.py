@@ -61,11 +61,11 @@ def test_provenance_generation(test_environment):
     
     # Load the output file
     dataset = Dataset()
-    dataset.parse(test_output, format='nquads')
-    
+    dataset.parse(test_output, format='json-ld')
+
     # Define namespaces
     PROV = Namespace('http://www.w3.org/ns/prov#')
-    
+
     # Check that we have the expected named graphs
     expected_graphs = [
         URIRef('http://example.org/item1/prov/'),
@@ -118,11 +118,11 @@ ex:item3 a crm:E22_Human-Made_Object ;
     
     # Load the output file
     dataset = Dataset()
-    dataset.parse(test_output, format='nquads')
-    
+    dataset.parse(test_output, format='json-ld')
+
     # Define namespaces
     PROV = Namespace('http://www.w3.org/ns/prov#')
-    
+
     # Check that we have the expected named graph for item3
     item3_graph = URIRef('http://example.org/item3/prov/')
     actual_graphs = [g.identifier for g in dataset.graphs()]
