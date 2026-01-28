@@ -2,16 +2,87 @@ zenodo_url: https://sandbox.zenodo.org/api
 access_token: <YOUR_TOKEN>
 user_agent: changes-metadata-manager/1.0.0 (CHANGES Spoke 4 - Aldrovandi Case Study)
 creators:
+  - name: Ammirati, Luisa
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0009-0002-3055-674X
   - name: Barzaghi, Sebastian
-    affiliation: University of Bologna
+    affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0000-0002-0799-1527
+  - name: Bonifazi, Federica
+    affiliation: Consiglio Nazionale delle Ricerche, Sapienza Università di Roma, Alma Mater Studiorum - Università di Bologna
+    orcid: 0009-0000-8466-5541
   - name: Bordignon, Alice
-    affiliation: University of Bologna
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0009-0008-3556-0493
+  - name: Casadei, Veronica
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0009-0003-3587-3856
+  - name: Cipriani, Luca
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0000-0002-9966-9171
+  - name: Collina, Federica
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0000-0002-5759-8109
+  - name: Fabbri, Francesca
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0000-0003-4923-9875
+  - name: Fantini, Filippo
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0000-0003-4520-5045
+  - name: Ferdani, Daniele
+    affiliation: Consiglio Nazionale delle Ricerche
+    orcid: 0000-0003-1558-1365
+  - name: Fiorini, Giulia
+    affiliation: Sapienza Università di Roma, Alma Mater Studiorum - Università di Bologna
+    orcid: 0000-0002-1475-1556
+  - name: Forte, Anna
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0009-0008-8300-9057
+  - name: Giacomini, Federica
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0009-0002-5840-2769
+  - name: Girelli, Valentina Alena
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0000-0001-9257-9803
+  - name: Lamorte, Marco
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0009-0005-3895-6133
+  - name: Manganelli Del Fà, Rachele
+    affiliation: Consiglio Nazionale delle Ricerche
+    orcid: 0000-0002-4767-5684
   - name: Massari, Arcangelo
-    affiliation: University of Bologna
+    affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0000-0002-8420-0696
   - name: Moretti, Arianna
-    affiliation: University of Bologna
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0000-0001-5486-7070
+  - name: Peroni, Silvio
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0000-0003-0530-4305
+  - name: Pescarin, Sofia
+    affiliation: Consiglio Nazionale delle Ricerche, Alma Mater Studiorum - Università di Bologna
+    orcid: 0000-0002-9529-7083
+  - name: Rega, Maria Felicia
+    affiliation: Consiglio Nazionale delle Ricerche
+    orcid: 0000-0001-8404-1640
+  - name: Ronchi, Diego
+    affiliation: Consiglio Nazionale delle Ricerche
+    orcid: 0000-0001-7072-0108
+  - name: Sorrentino, Stefano
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0009-0001-9166-9396
+  - name: Spedicati, Daniele
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0009-0002-8965-3480
+  - name: Sullini, Mattia
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0009-0004-0022-4925
+  - name: Tini, Maria Alessandra
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0000-0001-7745-640X
+  - name: Travaglini, Laura
+    affiliation: Alma Mater Studiorum - Università di Bologna
+    orcid: 0009-0008-9055-4344
 keywords:
   - 3D digitization
   - cultural heritage
