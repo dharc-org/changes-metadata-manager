@@ -63,6 +63,49 @@ The script scans the folder structure and generates for each stage:
 
 Supported stages: raw, rawp, dcho, dchoo.
 
+### Zenodo upload
+
+The `zenodo_upload.py` module prepares and uploads entity packages to Zenodo.
+
+Step 1: Create zips and YAML configs
+
+```bash
+uv run python -m changes_metadata_manager.zenodo_upload prepare \
+    /path/to/root \
+    zenodo_config.yaml \
+    --output zenodo_output \
+    --structure structure.json
+```
+
+This creates:
+- `zenodo_output/zips/{entity_id}.zip`: One zip per entity containing all stages
+- `zenodo_output/configs/{entity_id}.yaml`: Piccione-compatible config for each entity
+
+The zip structure preserves folder names:
+```
+1.zip
+  S1-01-CNR_CartaNautica/
+    raw/
+      meta.jsonld
+      prov.jsonld
+      [3D files only if stage has license]
+    rawp/
+    dcho/
+    dchoo/
+```
+
+For grouped entities (98a/b/c), all variants are included in a single zip.
+
+Step 2: Upload to Zenodo
+
+```bash
+uv run python -m changes_metadata_manager.zenodo_upload upload \
+    zenodo_output/configs \
+    --publish
+```
+
+See `zenodo_config.example.yaml` for the base configuration format.
+
 ## Development
 
 ### SharePoint sync

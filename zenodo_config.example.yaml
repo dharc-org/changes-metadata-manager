@@ -1,0 +1,19 @@
+zenodo_url: https://sandbox.zenodo.org/api
+access_token: <YOUR_TOKEN>
+user_agent: changes-metadata-manager/1.0.0 (CHANGES Spoke 4 - Aldrovandi Case Study)
+creators:
+  - name: Barzaghi, Sebastian
+    affiliation: University of Bologna
+    orcid: 0000-0002-0799-1527
+  - name: Bordignon, Alice
+    affiliation: University of Bologna
+  - name: Massari, Arcangelo
+    affiliation: University of Bologna
+    orcid: 0000-0002-8420-0696
+  - name: Moretti, Arianna
+    affiliation: University of Bologna
+keywords:
+  - 3D digitization
+  - cultural heritage
+  - Aldrovandi collection
+  - CHAD-AP
