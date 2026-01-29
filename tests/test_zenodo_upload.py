@@ -9,6 +9,7 @@ from changes_metadata_manager.folder_metadata_builder import load_kg
 from changes_metadata_manager.zenodo_upload import (
     BASE_URI,
     E21_PERSON,
+    LICENSE_URI_TO_ZENODO,
     P14_CARRIED_OUT_BY,
     P190_HAS_SYMBOLIC_CONTENT,
     P1_IS_IDENTIFIED_BY,
@@ -16,9 +17,11 @@ from changes_metadata_manager.zenodo_upload import (
     P70I,
     RDF_TYPE,
     build_creators_for_entity_stage,
+    build_enhanced_description,
     create_stage_zip,
     extract_authors_for_entity_stage,
     extract_entity_title,
+    extract_license_for_entity_stage,
     extract_licensed_entity_stages,
     generate_zenodo_config,
     group_folders_by_entity,
@@ -301,7 +304,8 @@ class TestBuildCreatorsForEntityStage:
 
 
 class TestGenerateZenodoConfig:
-    def test_generates_valid_config(self):
+    def test_generates_valid_config(self, freezer):
+        freezer.move_to("2024-06-15")
         base_config = {
             "zenodo_url": "https://sandbox.zenodo.org/api",
             "access_token": "test_token",
@@ -318,9 +322,63 @@ class TestGenerateZenodoConfig:
             "access_token": "test_token",
             "user_agent": "piccione/2.1.0",
             "title": "Test Title - RAW - Aldrovandi collection",
-            "description": "Digitization data for entity 1 (RAW stage) from the Aldrovandi collection.\n\nThis dataset contains metadata (meta.jsonld) and provenance (prov.jsonld) files for the RAW processing stage.",
+            "description": "Digitization data for entity 1 (RAW stage) from the Aldrovandi collection.\n\nObject: Test Title\n\nContains raw acquisition data (photos/scans).\n\nIncludes metadata (meta.jsonld) and provenance (prov.jsonld) files.",
             "upload_type": "dataset",
             "creators": [{"name": "Test Author"}],
             "keywords": ["test"],
             "files": [str(zip_path.absolute())],
+            "publication_date": "2024-06-15",
         }
+
+
+class TestExtractLicenseForEntityStage:
+    def test_extracts_license_from_kg(self):
+        g = Graph()
+        lic_uri = URIRef(f"{BASE_URI}/lic/42/00/1")
+        license_url = URIRef("https://creativecommons.org/publicdomain/zero/1.0/")
+        g.add((lic_uri, P70I, license_url))
+        result = extract_license_for_entity_stage(g, "42", "raw")
+        assert result == "cc-zero"
+
+    def test_returns_none_for_missing_license(self):
+        g = Graph()
+        result = extract_license_for_entity_stage(g, "42", "raw")
+        assert result is None
+
+    def test_returns_none_for_unknown_license_uri(self):
+        g = Graph()
+        lic_uri = URIRef(f"{BASE_URI}/lic/42/00/1")
+        unknown_license = URIRef("https://example.com/custom-license")
+        g.add((lic_uri, P70I, unknown_license))
+        result = extract_license_for_entity_stage(g, "42", "raw")
+        assert result is None
+
+    def test_extracts_cc_by(self):
+        g = Graph()
+        lic_uri = URIRef(f"{BASE_URI}/lic/42/00/1")
+        license_url = URIRef("https://creativecommons.org/licenses/by/4.0/")
+        g.add((lic_uri, P70I, license_url))
+        result = extract_license_for_entity_stage(g, "42", "raw")
+        assert result == "cc-by-4.0"
+
+
+class TestBuildEnhancedDescription:
+    def test_raw_stage_description(self):
+        result = build_enhanced_description("42", "raw", "Test Object")
+        assert result == (
+            "Digitization data for entity 42 (RAW stage) from the Aldrovandi collection.\n\n"
+            "Object: Test Object\n\n"
+            "Contains raw acquisition data (photos/scans).\n\n"
+            "Includes metadata (meta.jsonld) and provenance (prov.jsonld) files."
+        )
+
+    def test_dcho_stage_description(self):
+        result = build_enhanced_description("1", "dcho", "Museum Specimen")
+        assert "DCHO stage" in result
+        assert "Object: Museum Specimen" in result
+        assert "Digital Cultural Heritage Object" in result
+
+    def test_dchoo_stage_description(self):
+        result = build_enhanced_description("1", "dchoo", "Object Title")
+        assert "DCHOO stage" in result
+        assert "web visualization" in result

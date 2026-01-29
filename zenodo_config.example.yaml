@@ -1,7 +1,53 @@
 zenodo_url: https://sandbox.zenodo.org/api
 access_token: <YOUR_TOKEN>
 user_agent: changes-metadata-manager/1.0.0 (CHANGES Spoke 4 - Aldrovandi Case Study)
+
 upload_type: dataset
+access_right: open
+language: ita
+version: "1.0.0"
+
+communities:
+  - identifier: project-changes
+
+related_identifiers:
+  - identifier: "10.3724/2096-7004.di.2024.0061"
+    relation: isDocumentedBy
+    resource_type: publication-article
+  - identifier: "10.46298/transformations.14773"
+    relation: isDocumentedBy
+    resource_type: publication-article
+  - identifier: "10.1016/j.daach.2023.e00309"
+    relation: isDocumentedBy
+    resource_type: publication-article
+  - identifier: "https://w3id.org/dharc/ontology/chad-ap"
+    relation: isDescribedBy
+    resource_type: model
+
+locations:
+  - lat: 44.49702307327547
+    lon: 11.352612745553351
+    place: "Bologna, Italy"
+    description: "Palazzo Poggi Museum, University of Bologna"
+
+notes: |
+  This dataset is part of the CHANGES project (Cultural Heritage Active Innovation for Next-Gen Sustainable Society), Spoke 4, funded by the European Union - NextGenerationEU under the National Recovery and Resilience Plan (PNRR), Mission 4 Component 2 Investment 1.3 (Project PE 0000020 - CUP B53C22003780006).
+
+  The Aldrovandi Digital Twin documents the temporary exhibition "The Other Renaissance: Ulisse Aldrovandi and the Wonders of the World" held at Palazzo Poggi Museum, Bologna (December 2022 - May 2023).
+
+method: |
+  Data was acquired using:
+  - Structured Light Scanning (Artec Space Spider, Artec Eva)
+  - Digital Photogrammetry (SfM/MVS)
+
+  Processing stages:
+  - RAW: Raw sensor data
+  - RAWp: Processed raw model
+  - DCHO: Digital Cultural Heritage Object (geometry corrections)
+  - DCHOo: Optimized DCHO (web-ready)
+
+  Metadata follows CHAD-AP ontology based on CIDOC-CRM.
+
 keywords:
   - PNRR CHANGES
   - Spoke 4

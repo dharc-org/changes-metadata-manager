@@ -2,6 +2,7 @@ import argparse
 import re
 import zipfile
 from collections import defaultdict
+from datetime import date
 from pathlib import Path
 
 import yaml
@@ -154,12 +155,49 @@ def extract_entity_title(graph: Graph, entity_id: str) -> str:
     return f"Entity {entity_id}"
 
 
+LICENSE_URI_TO_ZENODO = {
+    "https://creativecommons.org/publicdomain/zero/1.0/": "cc-zero",
+    "https://creativecommons.org/licenses/by/4.0/": "cc-by-4.0",
+    "https://creativecommons.org/licenses/by-nc/4.0/": "cc-by-nc-4.0",
+    "https://creativecommons.org/licenses/by-sa/4.0/": "cc-by-sa-4.0",
+    "https://creativecommons.org/licenses/by-nc-sa/4.0/": "cc-by-nc-sa-4.0",
+}
+
+STAGE_DESCRIPTIONS = {
+    "raw": "Contains raw acquisition data (photos/scans).",
+    "rawp": "Contains processed raw model from photogrammetry/scanning.",
+    "dcho": "Contains refined Digital Cultural Heritage Object with geometry corrections.",
+    "dchoo": "Contains optimized 3D model ready for web visualization.",
+}
+
 PROPAGATED_FIELDS = (
     'zenodo_url', 'access_token', 'user_agent', 'upload_type',
     'keywords', 'license', 'access_right', 'publication_date',
     'language', 'version', 'communities', 'grants', 'related_identifiers',
     'contributors', 'subjects', 'notes',
+    'references', 'locations', 'dates', 'method',
 )
+
+
+def extract_license_for_entity_stage(graph: Graph, entity_id: str, stage: str) -> str | None:
+    steps = STAGE_STEPS[stage]
+    for step in steps:
+        lic_uri = URIRef(f"{BASE_URI}/lic/{entity_id}/{step}/1")
+        for _, _, license_url in graph.triples((lic_uri, P70I, None)):
+            zenodo_license = LICENSE_URI_TO_ZENODO.get(str(license_url))
+            if zenodo_license:
+                return zenodo_license
+    return None
+
+
+def build_enhanced_description(entity_id: str, stage: str, title: str) -> str:
+    parts = [
+        f"Digitization data for entity {entity_id} ({stage.upper()} stage) from the Aldrovandi collection.",
+        f"Object: {title}",
+        STAGE_DESCRIPTIONS[stage],
+        "Includes metadata (meta.jsonld) and provenance (prov.jsonld) files.",
+    ]
+    return "\n\n".join(parts)
 
 
 def generate_zenodo_config(
@@ -169,15 +207,19 @@ def generate_zenodo_config(
     title: str,
     base_config: dict,
     creators: list[dict],
+    license: str | None = None,
 ) -> dict:
     config = {
         "title": f"{title} - {stage.upper()} - Aldrovandi collection",
-        "description": f"Digitization data for entity {entity_id} ({stage.upper()} stage) from the Aldrovandi collection.\n\nThis dataset contains metadata (meta.jsonld) and provenance (prov.jsonld) files for the {stage.upper()} processing stage.",
+        "description": build_enhanced_description(entity_id, stage, title),
         "files": [str(zip_path.absolute())],
         "creators": creators,
+        "publication_date": date.today().isoformat(),
     }
+    if license:
+        config["license"] = license
     for field in PROPAGATED_FIELDS:
-        if field in base_config:
+        if field in base_config and field not in config:
             config[field] = base_config[field]
     return config
 
@@ -225,7 +267,8 @@ def prepare_all(
                     progress.advance(task)
                     continue
                 creators = build_creators_for_entity_stage(kg, entity_id, stage, creators_lookup)
-                config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config, creators)
+                license = extract_license_for_entity_stage(kg, entity_id, stage)
+                config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config, creators, license)
                 config_path = configs_dir / f"{entity_id}-{stage}.yaml"
                 with open(config_path, "w") as f:
                     yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
