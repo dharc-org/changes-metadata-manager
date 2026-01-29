@@ -22,6 +22,8 @@ from changes_metadata_manager.folder_metadata_builder import (
     scan_folder_structure,
 )
 
+CREATORS_LOOKUP_PATH = Path(__file__).parent.parent / "data" / "creators_lookup.yaml"
+
 
 STEP_TO_STAGE = {
     "00": "raw",
@@ -36,6 +38,45 @@ STEP_TO_STAGE = {
 CRM = "http://www.cidoc-crm.org/cidoc-crm/"
 P70I = URIRef(f"{CRM}P70i_is_documented_in")
 P3_HAS_NOTE = URIRef(f"{CRM}P3_has_note")
+P14_CARRIED_OUT_BY = URIRef(f"{CRM}P14_carried_out_by")
+P1_IS_IDENTIFIED_BY = URIRef(f"{CRM}P1_is_identified_by")
+P190_HAS_SYMBOLIC_CONTENT = URIRef(f"{CRM}P190_has_symbolic_content")
+E21_PERSON = URIRef(f"{CRM}E21_Person")
+RDF_TYPE = URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+
+
+def load_creators_lookup(path: Path) -> dict[str, dict]:
+    with open(path) as f:
+        data = yaml.safe_load(f)
+    return {
+        creator["name_in_rdf"]: {
+            "name": creator["name"],
+            "affiliation": creator["affiliation"],
+            "orcid": creator["orcid"],
+        }
+        for creator in data["creators"]
+    }
+
+
+def build_creators_for_entity_stage(
+    graph: Graph, entity_id: str, stage: str, creators_lookup: dict[str, dict]
+) -> list[dict]:
+    author_names = extract_authors_for_entity_stage(graph, entity_id, stage)
+    return [creators_lookup[name] for name in sorted(author_names) if name in creators_lookup]
+
+
+def extract_authors_for_entity_stage(graph: Graph, entity_id: str, stage: str) -> set[str]:
+    steps = STAGE_STEPS[stage]
+    authors = set()
+    for step in steps:
+        act_uri = URIRef(f"{BASE_URI}/act/{entity_id}/{step}/1")
+        for _, _, actor_uri in graph.triples((act_uri, P14_CARRIED_OUT_BY, None)):
+            if (actor_uri, RDF_TYPE, E21_PERSON) not in graph:
+                continue
+            for _, _, apl_uri in graph.triples((actor_uri, P1_IS_IDENTIFIED_BY, None)):
+                for _, _, name in graph.triples((apl_uri, P190_HAS_SYMBOLIC_CONTENT, None)):
+                    authors.add(str(name))
+    return authors
 
 
 def extract_licensed_entity_stages(graph: Graph) -> set[tuple[str, str]]:
@@ -115,7 +156,7 @@ def extract_entity_title(graph: Graph, entity_id: str) -> str:
 
 PROPAGATED_FIELDS = (
     'zenodo_url', 'access_token', 'user_agent', 'upload_type',
-    'creators', 'keywords', 'license', 'access_right', 'publication_date',
+    'keywords', 'license', 'access_right', 'publication_date',
     'language', 'version', 'communities', 'grants', 'related_identifiers',
     'contributors', 'subjects', 'notes',
 )
@@ -127,11 +168,13 @@ def generate_zenodo_config(
     zip_path: Path,
     title: str,
     base_config: dict,
+    creators: list[dict],
 ) -> dict:
     config = {
         "title": f"{title} - {stage.upper()} - Aldrovandi collection",
         "description": f"Digitization data for entity {entity_id} ({stage.upper()} stage) from the Aldrovandi collection.\n\nThis dataset contains metadata (meta.jsonld) and provenance (prov.jsonld) files for the {stage.upper()} processing stage.",
         "files": [str(zip_path.absolute())],
+        "creators": creators,
     }
     for field in PROPAGATED_FIELDS:
         if field in base_config:
@@ -158,6 +201,8 @@ def prepare_all(
     with open(zenodo_base_config_path) as f:
         base_config = yaml.safe_load(f)
 
+    creators_lookup = load_creators_lookup(CREATORS_LOOKUP_PATH)
+
     zips_dir = output_dir / "zips"
     configs_dir = output_dir / "configs"
     zips_dir.mkdir(parents=True, exist_ok=True)
@@ -179,7 +224,8 @@ def prepare_all(
                 if zip_path is None:
                     progress.advance(task)
                     continue
-                config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config)
+                creators = build_creators_for_entity_stage(kg, entity_id, stage, creators_lookup)
+                config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config, creators)
                 config_path = configs_dir / f"{entity_id}-{stage}.yaml"
                 with open(config_path, "w") as f:
                     yaml.dump(config, f, default_flow_style=False, allow_unicode=True)

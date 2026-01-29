@@ -8,13 +8,21 @@ from rdflib import Graph, Literal, URIRef
 from changes_metadata_manager.folder_metadata_builder import load_kg
 from changes_metadata_manager.zenodo_upload import (
     BASE_URI,
+    E21_PERSON,
+    P14_CARRIED_OUT_BY,
+    P190_HAS_SYMBOLIC_CONTENT,
+    P1_IS_IDENTIFIED_BY,
     P3_HAS_NOTE,
     P70I,
+    RDF_TYPE,
+    build_creators_for_entity_stage,
     create_stage_zip,
+    extract_authors_for_entity_stage,
     extract_entity_title,
     extract_licensed_entity_stages,
     generate_zenodo_config,
     group_folders_by_entity,
+    load_creators_lookup,
 )
 
 
@@ -198,6 +206,100 @@ class TestExtractEntityTitle:
         assert title == "First line"
 
 
+class TestExtractAuthorsForEntityStage:
+    def test_extracts_author_from_kg(self, real_kg):
+        authors = extract_authors_for_entity_stage(real_kg, "1", "raw")
+        assert authors == {"Federica Bonifazi"}
+
+    def test_accumulates_authors_across_steps(self, real_kg):
+        authors = extract_authors_for_entity_stage(real_kg, "1", "dchoo")
+        assert "Federica Bonifazi" in authors
+        assert len(authors) > 1
+
+    def test_returns_empty_for_missing_entity(self, real_kg):
+        authors = extract_authors_for_entity_stage(real_kg, "nonexistent", "raw")
+        assert authors == set()
+
+    def test_filters_only_persons(self):
+        g = Graph()
+        act_uri = URIRef(f"{BASE_URI}/act/42/00/1")
+        actor_uri = URIRef(f"{BASE_URI}/per/42/1")
+        apl_uri = URIRef(f"{BASE_URI}/apl/42/1")
+        g.add((act_uri, P14_CARRIED_OUT_BY, actor_uri))
+        g.add((actor_uri, RDF_TYPE, E21_PERSON))
+        g.add((actor_uri, P1_IS_IDENTIFIED_BY, apl_uri))
+        g.add((apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal("Test Author")))
+        authors = extract_authors_for_entity_stage(g, "42", "raw")
+        assert authors == {"Test Author"}
+
+    def test_ignores_non_person_actors(self):
+        g = Graph()
+        act_uri = URIRef(f"{BASE_URI}/act/42/00/1")
+        actor_uri = URIRef(f"{BASE_URI}/grp/42/1")
+        apl_uri = URIRef(f"{BASE_URI}/apl/42/1")
+        g.add((act_uri, P14_CARRIED_OUT_BY, actor_uri))
+        g.add((actor_uri, P1_IS_IDENTIFIED_BY, apl_uri))
+        g.add((apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal("Test Group")))
+        authors = extract_authors_for_entity_stage(g, "42", "raw")
+        assert authors == set()
+
+
+class TestLoadCreatorsLookup:
+    def test_loads_creators_as_dict(self):
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
+            f.write("creators:\n  - name_in_rdf: Test Author\n    name: Author, Test\n    affiliation: Test Uni\n    orcid: 0000-0001-2345-6789\n")
+            f.flush()
+            lookup = load_creators_lookup(Path(f.name))
+        assert lookup == {
+            "Test Author": {
+                "name": "Author, Test",
+                "affiliation": "Test Uni",
+                "orcid": "0000-0001-2345-6789",
+            }
+        }
+
+
+class TestBuildCreatorsForEntityStage:
+    def test_builds_creators_list(self, real_kg):
+        lookup = {
+            "Federica Bonifazi": {
+                "name": "Bonifazi, Federica",
+                "affiliation": "CNR-ISPC",
+                "orcid": "0009-0000-8466-5541",
+            }
+        }
+        creators = build_creators_for_entity_stage(real_kg, "1", "raw", lookup)
+        assert creators == [
+            {
+                "name": "Bonifazi, Federica",
+                "affiliation": "CNR-ISPC",
+                "orcid": "0009-0000-8466-5541",
+            }
+        ]
+
+    def test_ignores_authors_not_in_lookup(self, real_kg):
+        lookup = {}
+        creators = build_creators_for_entity_stage(real_kg, "1", "raw", lookup)
+        assert creators == []
+
+    def test_sorts_authors_alphabetically(self):
+        g = Graph()
+        for name in ["Zeta, Author", "Alpha, Author"]:
+            act_uri = URIRef(f"{BASE_URI}/act/42/00/1")
+            actor_uri = URIRef(f"{BASE_URI}/per/{name}/1")
+            apl_uri = URIRef(f"{BASE_URI}/apl/{name}/1")
+            g.add((act_uri, P14_CARRIED_OUT_BY, actor_uri))
+            g.add((actor_uri, RDF_TYPE, E21_PERSON))
+            g.add((actor_uri, P1_IS_IDENTIFIED_BY, apl_uri))
+            g.add((apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal(name)))
+        lookup = {
+            "Alpha, Author": {"name": "Alpha, Author"},
+            "Zeta, Author": {"name": "Zeta, Author"},
+        }
+        creators = build_creators_for_entity_stage(g, "42", "raw", lookup)
+        assert [c["name"] for c in creators] == ["Alpha, Author", "Zeta, Author"]
+
+
 class TestGenerateZenodoConfig:
     def test_generates_valid_config(self):
         base_config = {
@@ -205,11 +307,11 @@ class TestGenerateZenodoConfig:
             "access_token": "test_token",
             "user_agent": "piccione/2.1.0",
             "upload_type": "dataset",
-            "creators": [{"name": "Test Author"}],
             "keywords": ["test"],
         }
+        creators = [{"name": "Test Author"}]
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", base_config)
+        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", base_config, creators)
 
         assert config == {
             "zenodo_url": "https://sandbox.zenodo.org/api",
