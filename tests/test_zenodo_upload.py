@@ -191,6 +191,7 @@ class TestGenerateZenodoConfig:
             "zenodo_url": "https://sandbox.zenodo.org/api",
             "access_token": "test_token",
             "user_agent": "piccione/2.1.0",
+            "upload_type": "dataset",
             "creators": [{"name": "Test Author"}],
             "keywords": ["test"],
         }

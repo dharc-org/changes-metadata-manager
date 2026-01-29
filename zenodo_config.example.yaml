@@ -1,6 +1,7 @@
 zenodo_url: https://sandbox.zenodo.org/api
 access_token: <YOUR_TOKEN>
 user_agent: changes-metadata-manager/1.0.0 (CHANGES Spoke 4 - Aldrovandi Case Study)
+upload_type: dataset
 creators:
   - name: Ammirati, Luisa
     affiliation: Alma Mater Studiorum - Università di Bologna

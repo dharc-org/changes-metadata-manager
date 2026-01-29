@@ -101,6 +101,14 @@ def extract_entity_title(graph: Graph, entity_id: str) -> str:
     return f"Entity {entity_id}"
 
 
+PROPAGATED_FIELDS = (
+    'zenodo_url', 'access_token', 'user_agent', 'upload_type',
+    'creators', 'keywords', 'license', 'access_right', 'publication_date',
+    'language', 'version', 'communities', 'grants', 'related_identifiers',
+    'contributors', 'subjects', 'notes',
+)
+
+
 def generate_zenodo_config(
     entity_id: str,
     zip_path: Path,
@@ -108,16 +116,13 @@ def generate_zenodo_config(
     base_config: dict,
 ) -> dict:
     config = {
-        "zenodo_url": base_config["zenodo_url"],
-        "access_token": base_config["access_token"],
-        "user_agent": base_config["user_agent"],
         "title": f"{title} - Aldrovandi collection",
-        "upload_type": "dataset",
-        "creators": base_config["creators"],
-        "keywords": base_config["keywords"],
         "description": f"Digitization data for entity {entity_id} from the Aldrovandi collection.\n\nThis dataset contains metadata (meta.jsonld) and provenance (prov.jsonld) files for each processing stage (raw, rawp, dcho, dchoo).",
         "files": [str(zip_path.absolute())],
     }
+    for field in PROPAGATED_FIELDS:
+        if field in base_config:
+            config[field] = base_config[field]
     return config
 
 
