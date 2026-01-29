@@ -10,7 +10,7 @@ from changes_metadata_manager.zenodo_upload import (
     BASE_URI,
     P3_HAS_NOTE,
     P70I,
-    create_entity_zip,
+    create_stage_zip,
     extract_entity_title,
     extract_licensed_entity_stages,
     generate_zenodo_config,
@@ -95,7 +95,7 @@ class TestGroupFoldersByEntity:
         assert "materials" not in folder_names
 
 
-class TestCreateEntityZip:
+class TestCreateStageZip:
     def test_includes_all_files_for_licensed_stage(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir) / "root"
@@ -111,13 +111,12 @@ class TestCreateEntityZip:
             folders = [("Sala1", "S1-01-Test", {"raw": {}})]
             licensed_stages = {("1", "raw")}
 
-            zip_path = create_entity_zip("1", folders, root, licensed_stages, output_dir)
+            zip_path = create_stage_zip("1", "raw", folders, root, licensed_stages, output_dir)
 
+            assert zip_path.name == "1-raw.zip"
             with zipfile.ZipFile(zip_path) as zf:
-                names = zf.namelist()
-                assert "S1-01-Test/raw/meta.jsonld" in names
-                assert "S1-01-Test/raw/prov.jsonld" in names
-                assert "S1-01-Test/raw/photo.jpg" in names
+                names = sorted(zf.namelist())
+                assert names == ["S1-01-Test/raw/meta.jsonld", "S1-01-Test/raw/photo.jpg", "S1-01-Test/raw/prov.jsonld"]
 
     def test_includes_only_metadata_for_unlicensed_stage(self):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -134,13 +133,11 @@ class TestCreateEntityZip:
             folders = [("Sala1", "S1-01-Test", {"raw": {}})]
             licensed_stages = set()
 
-            zip_path = create_entity_zip("1", folders, root, licensed_stages, output_dir)
+            zip_path = create_stage_zip("1", "raw", folders, root, licensed_stages, output_dir)
 
             with zipfile.ZipFile(zip_path) as zf:
-                names = zf.namelist()
-                assert "S1-01-Test/raw/meta.jsonld" in names
-                assert "S1-01-Test/raw/prov.jsonld" in names
-                assert "S1-01-Test/raw/photo.jpg" not in names
+                names = sorted(zf.namelist())
+                assert names == ["S1-01-Test/raw/meta.jsonld", "S1-01-Test/raw/prov.jsonld"]
 
     def test_multiple_folders_in_zip(self):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -159,12 +156,28 @@ class TestCreateEntityZip:
                 ("Sala6", "S6-98b-Test", {"raw": {}}),
             ]
 
-            zip_path = create_entity_zip("98", folders, root, set(), output_dir)
+            zip_path = create_stage_zip("98", "raw", folders, root, set(), output_dir)
 
             with zipfile.ZipFile(zip_path) as zf:
                 names = zf.namelist()
-                assert "S6-98a-Test/raw/meta.jsonld" in names
-                assert "S6-98b-Test/raw/meta.jsonld" in names
+                assert names == ["S6-98a-Test/raw/meta.jsonld", "S6-98b-Test/raw/meta.jsonld"]
+
+    def test_returns_none_for_missing_stage(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir) / "root"
+            stage_dir = root / "Sala1" / "S1-01-Test" / "raw"
+            stage_dir.mkdir(parents=True)
+            (stage_dir / "meta.jsonld").write_text("{}")
+
+            output_dir = Path(tmpdir) / "output"
+            output_dir.mkdir()
+
+            folders = [("Sala1", "S1-01-Test", {"raw": {}})]
+
+            result = create_stage_zip("1", "dcho", folders, root, set(), output_dir)
+
+            assert result is None
+            assert not (output_dir / "1-dcho.zip").exists()
 
 
 class TestExtractEntityTitle:
@@ -195,16 +208,17 @@ class TestGenerateZenodoConfig:
             "creators": [{"name": "Test Author"}],
             "keywords": ["test"],
         }
-        zip_path = Path("/tmp/1.zip")
-        config = generate_zenodo_config("1", zip_path, "Test Title", base_config)
+        zip_path = Path("/tmp/1-raw.zip")
+        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", base_config)
 
-        assert config["zenodo_url"] == "https://sandbox.zenodo.org/api"
-        assert config["access_token"] == "test_token"
-        assert config["user_agent"] == "piccione/2.1.0"
-        assert config["title"] == "Test Title - Aldrovandi collection"
-        assert config["upload_type"] == "dataset"
-        assert config["creators"] == [{"name": "Test Author"}]
-        assert config["keywords"] == ["test"]
-        assert config["files"] == [str(zip_path.absolute())]
-        assert "entity 1" in config["description"]
-        assert "license" not in config
+        assert config == {
+            "zenodo_url": "https://sandbox.zenodo.org/api",
+            "access_token": "test_token",
+            "user_agent": "piccione/2.1.0",
+            "title": "Test Title - RAW - Aldrovandi collection",
+            "description": "Digitization data for entity 1 (RAW stage) from the Aldrovandi collection.\n\nThis dataset contains metadata (meta.jsonld) and provenance (prov.jsonld) files for the RAW processing stage.",
+            "upload_type": "dataset",
+            "creators": [{"name": "Test Author"}],
+            "keywords": ["test"],
+            "files": [str(zip_path.absolute())],
+        }

@@ -68,28 +68,40 @@ def group_folders_by_entity(structure: dict) -> dict[str, list[tuple[str, str, d
     return dict(groups)
 
 
-def create_entity_zip(
+STAGES = ("raw", "rawp", "dcho", "dchoo")
+
+
+def create_stage_zip(
     entity_id: str,
+    stage: str,
     folders: list[tuple[str, str, dict]],
     root: Path,
     licensed_stages: set[tuple[str, str]],
     output_dir: Path,
-) -> Path:
-    zip_path = output_dir / f"{entity_id}.zip"
+) -> Path | None:
+    zip_path = output_dir / f"{entity_id}-{stage}.zip"
+    has_files = False
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         for sala_name, folder_name, stages_dict in folders:
-            for stage_name in stages_dict:
-                stage_key = stage_name.lower()
-                if stage_key not in STAGE_STEPS:
+            stage_name_in_folder = None
+            for name in stages_dict:
+                if name.lower() == stage:
+                    stage_name_in_folder = name
+                    break
+            if stage_name_in_folder is None:
+                continue
+            stage_dir = root / sala_name / folder_name / stage_name_in_folder
+            has_license = (entity_id, stage) in licensed_stages
+            for file_path in stage_dir.iterdir():
+                if not file_path.is_file():
                     continue
-                stage_dir = root / sala_name / folder_name / stage_name
-                has_license = (entity_id, stage_key) in licensed_stages
-                for file_path in stage_dir.iterdir():
-                    if not file_path.is_file():
-                        continue
-                    if has_license or file_path.name in ("meta.jsonld", "prov.jsonld"):
-                        arc_name = f"{folder_name}/{stage_name}/{file_path.name}"
-                        zf.write(file_path, arc_name)
+                if has_license or file_path.name in ("meta.jsonld", "prov.jsonld"):
+                    arc_name = f"{folder_name}/{stage_name_in_folder}/{file_path.name}"
+                    zf.write(file_path, arc_name)
+                    has_files = True
+    if not has_files:
+        zip_path.unlink()
+        return None
     return zip_path
 
 
@@ -111,13 +123,14 @@ PROPAGATED_FIELDS = (
 
 def generate_zenodo_config(
     entity_id: str,
+    stage: str,
     zip_path: Path,
     title: str,
     base_config: dict,
 ) -> dict:
     config = {
-        "title": f"{title} - Aldrovandi collection",
-        "description": f"Digitization data for entity {entity_id} from the Aldrovandi collection.\n\nThis dataset contains metadata (meta.jsonld) and provenance (prov.jsonld) files for each processing stage (raw, rawp, dcho, dchoo).",
+        "title": f"{title} - {stage.upper()} - Aldrovandi collection",
+        "description": f"Digitization data for entity {entity_id} ({stage.upper()} stage) from the Aldrovandi collection.\n\nThis dataset contains metadata (meta.jsonld) and provenance (prov.jsonld) files for the {stage.upper()} processing stage.",
         "files": [str(zip_path.absolute())],
     }
     for field in PROPAGATED_FIELDS:
@@ -156,17 +169,21 @@ def prepare_all(
         BarColumn(),
         MofNCompleteColumn(),
     ) as progress:
-        task = progress.add_task("Creating entity packages", total=len(entity_groups))
+        task = progress.add_task("Creating stage packages", total=len(entity_groups) * len(STAGES))
 
         for entity_id, folders in entity_groups.items():
-            progress.update(task, description=f"Entity {entity_id}")
-            zip_path = create_entity_zip(entity_id, folders, root, licensed_stages, zips_dir)
             title = extract_entity_title(kg, entity_id)
-            config = generate_zenodo_config(entity_id, zip_path, title, base_config)
-            config_path = configs_dir / f"{entity_id}.yaml"
-            with open(config_path, "w") as f:
-                yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
-            progress.advance(task)
+            for stage in STAGES:
+                progress.update(task, description=f"Entity {entity_id} - {stage}")
+                zip_path = create_stage_zip(entity_id, stage, folders, root, licensed_stages, zips_dir)
+                if zip_path is None:
+                    progress.advance(task)
+                    continue
+                config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config)
+                config_path = configs_dir / f"{entity_id}-{stage}.yaml"
+                with open(config_path, "w") as f:
+                    yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
+                progress.advance(task)
 
 
 def upload_all(configs_dir: Path, publish: bool = False) -> None:
