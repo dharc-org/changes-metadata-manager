@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 
 from rdflib import Graph, URIRef
+from rdflib.namespace import DCTERMS
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn
 
 from changes_metadata_manager.generate_provenance import generate_provenance_snapshots
@@ -14,6 +15,7 @@ STRUCTURE_PATH = Path("data/structure.json")
 KG_PATH = Path("data/kg.ttl")
 RESP_AGENT = "https://w3id.org/changes/4/agent/morph-kgc-changes-metadata/1.0.1"
 PRIMARY_SOURCE = "https://doi.org/10.5281/zenodo.18190642"
+CC0 = URIRef("https://creativecommons.org/publicdomain/zero/1.0/")
 
 STAGE_STEPS = {
     "raw": ["00"],
@@ -296,15 +298,16 @@ def process_all_folders(
                 stage_dir.mkdir(parents=True, exist_ok=True)
 
                 metadata = extract_metadata_for_stage(kg, nr, stage_key)
+                metadata.add((URIRef(""), DCTERMS.license, CC0))
 
-                meta_path = stage_dir / "meta.jsonld"
-                metadata.serialize(destination=str(meta_path), format="json-ld")
+                meta_path = stage_dir / "meta.ttl"
+                metadata.serialize(destination=str(meta_path), format="turtle")
 
-                prov_path = stage_dir / "prov.jsonld"
+                prov_path = stage_dir / "prov.trig"
                 generate_provenance_snapshots(
                     input_directory=str(stage_dir),
                     output_file=str(prov_path),
-                    output_format="json-ld",
+                    output_format="trig",
                     agent_orcid=RESP_AGENT,
                     primary_source=PRIMARY_SOURCE,
                 )

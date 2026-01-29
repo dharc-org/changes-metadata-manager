@@ -54,14 +54,14 @@ def test_provenance_generation(test_environment):
     # Generate provenance snapshots
     agent_orcid = "https://orcid.org/0000-0002-8420-0696"
     primary_source = "https://example.org/primary-source"
-    generate_provenance_snapshots(test_dir, test_output, agent_orcid=agent_orcid, primary_source=primary_source)
+    generate_provenance_snapshots(test_dir, test_output, output_format='trig', agent_orcid=agent_orcid, primary_source=primary_source)
     
     # Check that the output file was created
     assert os.path.exists(test_output), "Output file was not created"
     
     # Load the output file
     dataset = Dataset()
-    dataset.parse(test_output, format='json-ld')
+    dataset.parse(test_output, format='trig')
 
     # Define namespaces
     PROV = Namespace('http://www.w3.org/ns/prov#')
@@ -111,14 +111,14 @@ ex:item3 a crm:E22_Human-Made_Object ;
     # Generate provenance snapshots, specifying the format explicitly
     agent_orcid = "https://orcid.org/0000-0002-8420-0696"
     primary_source = "https://example.org/primary-source"
-    generate_provenance_snapshots(test_dir, test_output, input_format='turtle', agent_orcid=agent_orcid, primary_source=primary_source)
+    generate_provenance_snapshots(test_dir, test_output, input_format='turtle', output_format='trig', agent_orcid=agent_orcid, primary_source=primary_source)
     
     # Check that the output file was created
     assert os.path.exists(test_output), "Output file was not created"
     
     # Load the output file
     dataset = Dataset()
-    dataset.parse(test_output, format='json-ld')
+    dataset.parse(test_output, format='trig')
 
     # Define namespaces
     PROV = Namespace('http://www.w3.org/ns/prov#')

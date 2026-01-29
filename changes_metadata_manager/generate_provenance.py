@@ -10,6 +10,8 @@ import datetime
 from rdflib import Dataset, URIRef, Namespace, Literal
 from rdflib.namespace import RDF, XSD, DCTERMS
 
+CC0 = URIRef("https://creativecommons.org/publicdomain/zero/1.0/")
+
 def generate_provenance_snapshots(input_directory, output_file, input_format=None, output_format='json-ld', agent_orcid=None, primary_source=None):
     """
     Generate provenance snapshots from RDF data.
@@ -57,10 +59,12 @@ def generate_provenance_snapshots(input_directory, output_file, input_format=Non
         return
     
     dataset = Dataset()
-    
+
     PROV = Namespace('http://www.w3.org/ns/prov#')
     dataset.namespace_manager.bind('prov', PROV)
     dataset.namespace_manager.bind('dcterms', DCTERMS)
+
+    dataset.default_graph.add((URIRef(""), DCTERMS.license, CC0))
     
     for prefix, namespace in input_graph.namespace_manager.namespaces():
         dataset.namespace_manager.bind(prefix, namespace)

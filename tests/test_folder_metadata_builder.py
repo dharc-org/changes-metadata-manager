@@ -131,10 +131,10 @@ class TestProcessAllFolders:
             assert len(stage_dirs) == 4, f"Expected 4 stages for {folder}, got {len(stage_dirs)}"
 
             for stage_dir in stage_dirs:
-                meta_file = stage_dir / "meta.jsonld"
-                prov_file = stage_dir / "prov.jsonld"
-                assert meta_file.exists(), f"meta.jsonld not created for {folder}/{stage_dir.name}"
-                assert prov_file.exists(), f"prov.jsonld not created for {folder}/{stage_dir.name}"
+                meta_file = stage_dir / "meta.ttl"
+                prov_file = stage_dir / "prov.trig"
+                assert meta_file.exists(), f"meta.ttl not created for {folder}/{stage_dir.name}"
+                assert prov_file.exists(), f"prov.trig not created for {folder}/{stage_dir.name}"
 
     def test_creates_files_in_place_without_structure_json(self, test_folder_structure):
         root, _ = test_folder_structure
@@ -149,10 +149,10 @@ class TestProcessAllFolders:
             assert len(stage_dirs) == 4, f"Expected 4 stages for {folder}, got {len(stage_dirs)}"
 
             for stage_dir in stage_dirs:
-                meta_file = stage_dir / "meta.jsonld"
-                prov_file = stage_dir / "prov.jsonld"
-                assert meta_file.exists(), f"meta.jsonld not created for {folder}/{stage_dir.name}"
-                assert prov_file.exists(), f"prov.jsonld not created for {folder}/{stage_dir.name}"
+                meta_file = stage_dir / "meta.ttl"
+                prov_file = stage_dir / "prov.trig"
+                assert meta_file.exists(), f"meta.ttl not created for {folder}/{stage_dir.name}"
+                assert prov_file.exists(), f"prov.trig not created for {folder}/{stage_dir.name}"
 
 
 class TestScanFolderStructure:
