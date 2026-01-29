@@ -200,6 +200,10 @@ def build_enhanced_description(entity_id: str, stage: str, title: str) -> str:
     return "\n\n".join(parts)
 
 
+def build_entity_uri(entity_id: str) -> str:
+    return f"{BASE_URI}/itm/{entity_id}/ob00/1"
+
+
 def generate_zenodo_config(
     entity_id: str,
     stage: str,
@@ -208,6 +212,7 @@ def generate_zenodo_config(
     base_config: dict,
     creators: list[dict],
     license: str | None = None,
+    entity_uri: str | None = None,
 ) -> dict:
     config = {
         "title": f"{title} - {stage.upper()} - Aldrovandi collection",
@@ -221,6 +226,14 @@ def generate_zenodo_config(
     for field in PROPAGATED_FIELDS:
         if field in base_config and field not in config:
             config[field] = base_config[field]
+    if entity_uri:
+        alternate_id = {
+            "identifier": entity_uri,
+            "relation": "isAlternateIdentifier",
+            "scheme": "url",
+        }
+        existing = config.get("related_identifiers", [])
+        config["related_identifiers"] = existing + [alternate_id]
     return config
 
 
@@ -268,7 +281,8 @@ def prepare_all(
                     continue
                 creators = build_creators_for_entity_stage(kg, entity_id, stage, creators_lookup)
                 license = extract_license_for_entity_stage(kg, entity_id, stage)
-                config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config, creators, license)
+                entity_uri = build_entity_uri(entity_id)
+                config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config, creators, license, entity_uri)
                 config_path = configs_dir / f"{entity_id}-{stage}.yaml"
                 with open(config_path, "w") as f:
                     yaml.dump(config, f, default_flow_style=False, allow_unicode=True)

@@ -18,6 +18,7 @@ from changes_metadata_manager.zenodo_upload import (
     RDF_TYPE,
     build_creators_for_entity_stage,
     build_enhanced_description,
+    build_entity_uri,
     create_stage_zip,
     extract_authors_for_entity_stage,
     extract_entity_title,
@@ -303,6 +304,16 @@ class TestBuildCreatorsForEntityStage:
         assert [c["name"] for c in creators] == ["Alpha, Author", "Zeta, Author"]
 
 
+class TestBuildEntityUri:
+    def test_builds_uri_for_numeric_id(self):
+        result = build_entity_uri("27")
+        assert result == "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1"
+
+    def test_builds_uri_for_string_id(self):
+        result = build_entity_uri("ptb")
+        assert result == "https://w3id.org/changes/4/aldrovandi/itm/ptb/ob00/1"
+
+
 class TestGenerateZenodoConfig:
     def test_generates_valid_config(self, freezer):
         freezer.move_to("2024-06-15")
@@ -329,6 +340,56 @@ class TestGenerateZenodoConfig:
             "files": [str(zip_path.absolute())],
             "publication_date": "2024-06-15",
         }
+
+    def test_adds_entity_uri_as_alternate_identifier(self, freezer):
+        freezer.move_to("2024-06-15")
+        base_config = {
+            "zenodo_url": "https://sandbox.zenodo.org/api",
+            "access_token": "test_token",
+        }
+        creators = [{"name": "Test Author"}]
+        zip_path = Path("/tmp/27-raw.zip")
+        entity_uri = "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1"
+        config = generate_zenodo_config("27", "raw", zip_path, "Test Title", base_config, creators, entity_uri=entity_uri)
+
+        assert config["related_identifiers"] == [
+            {
+                "identifier": "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1",
+                "relation": "isAlternateIdentifier",
+                "scheme": "url",
+            }
+        ]
+
+    def test_merges_entity_uri_with_existing_related_identifiers(self, freezer):
+        freezer.move_to("2024-06-15")
+        base_config = {
+            "zenodo_url": "https://sandbox.zenodo.org/api",
+            "access_token": "test_token",
+            "related_identifiers": [
+                {
+                    "identifier": "10.3724/2096-7004.di.2024.0061",
+                    "relation": "isDocumentedBy",
+                    "resource_type": "publication-article",
+                }
+            ],
+        }
+        creators = [{"name": "Test Author"}]
+        zip_path = Path("/tmp/27-raw.zip")
+        entity_uri = "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1"
+        config = generate_zenodo_config("27", "raw", zip_path, "Test Title", base_config, creators, entity_uri=entity_uri)
+
+        assert config["related_identifiers"] == [
+            {
+                "identifier": "10.3724/2096-7004.di.2024.0061",
+                "relation": "isDocumentedBy",
+                "resource_type": "publication-article",
+            },
+            {
+                "identifier": "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1",
+                "relation": "isAlternateIdentifier",
+                "scheme": "url",
+            },
+        ]
 
 
 class TestExtractLicenseForEntityStage:
