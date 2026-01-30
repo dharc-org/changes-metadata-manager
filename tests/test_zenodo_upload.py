@@ -27,6 +27,7 @@ from changes_metadata_manager.zenodo_upload import (
     generate_zenodo_config,
     group_folders_by_entity,
     load_creators_lookup,
+    slugify,
 )
 
 
@@ -107,14 +108,31 @@ class TestGroupFoldersByEntity:
         assert "materials" not in folder_names
 
 
+class TestSlugify:
+    def test_simple_text(self):
+        assert slugify("Carta nautica") == "carta-nautica"
+
+    def test_accented_characters(self):
+        assert slugify("Oggettò àccéntàto") == "oggetto-accentato"
+
+    def test_special_characters(self):
+        assert slugify("Test (object) #1") == "test-object-1"
+
+    def test_multiple_spaces(self):
+        assert slugify("Multiple   spaces   here") == "multiple-spaces-here"
+
+    def test_leading_trailing_spaces(self):
+        assert slugify("  trimmed  ") == "trimmed"
+
+
 class TestCreateStageZip:
     def test_includes_all_files_for_licensed_stage(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir) / "root"
             stage_dir = root / "Sala1" / "S1-01-Test" / "raw"
             stage_dir.mkdir(parents=True)
-            (stage_dir / "meta.jsonld").write_text("{}")
-            (stage_dir / "prov.jsonld").write_text("{}")
+            (stage_dir / "meta.ttl").write_text("{}")
+            (stage_dir / "prov.trig").write_text("{}")
             (stage_dir / "photo.jpg").write_text("image")
 
             output_dir = Path(tmpdir) / "output"
@@ -123,20 +141,20 @@ class TestCreateStageZip:
             folders = [("Sala1", "S1-01-Test", {"raw": {}})]
             licensed_stages = {("1", "raw")}
 
-            zip_path = create_stage_zip("1", "raw", folders, root, licensed_stages, output_dir)
+            zip_path = create_stage_zip("1", "raw", folders, root, licensed_stages, output_dir, "Test Object")
 
-            assert zip_path.name == "1-raw.zip"
+            assert zip_path.name == "sala1-test-object-raw.zip"
             with zipfile.ZipFile(zip_path) as zf:
                 names = sorted(zf.namelist())
-                assert names == ["S1-01-Test/raw/meta.jsonld", "S1-01-Test/raw/photo.jpg", "S1-01-Test/raw/prov.jsonld"]
+                assert names == ["S1-01-Test/raw/meta.ttl", "S1-01-Test/raw/photo.jpg", "S1-01-Test/raw/prov.trig"]
 
     def test_includes_only_metadata_for_unlicensed_stage(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir) / "root"
             stage_dir = root / "Sala1" / "S1-01-Test" / "raw"
             stage_dir.mkdir(parents=True)
-            (stage_dir / "meta.jsonld").write_text("{}")
-            (stage_dir / "prov.jsonld").write_text("{}")
+            (stage_dir / "meta.ttl").write_text("{}")
+            (stage_dir / "prov.trig").write_text("{}")
             (stage_dir / "photo.jpg").write_text("image")
 
             output_dir = Path(tmpdir) / "output"
@@ -145,11 +163,11 @@ class TestCreateStageZip:
             folders = [("Sala1", "S1-01-Test", {"raw": {}})]
             licensed_stages = set()
 
-            zip_path = create_stage_zip("1", "raw", folders, root, licensed_stages, output_dir)
+            zip_path = create_stage_zip("1", "raw", folders, root, licensed_stages, output_dir, "Test Object")
 
             with zipfile.ZipFile(zip_path) as zf:
                 names = sorted(zf.namelist())
-                assert names == ["S1-01-Test/raw/meta.jsonld", "S1-01-Test/raw/prov.jsonld"]
+                assert names == ["S1-01-Test/raw/meta.ttl", "S1-01-Test/raw/prov.trig"]
 
     def test_multiple_folders_in_zip(self):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -158,7 +176,7 @@ class TestCreateStageZip:
             for variant in ["a", "b"]:
                 stage_dir = root / "Sala6" / f"S6-98{variant}-Test" / "raw"
                 stage_dir.mkdir(parents=True)
-                (stage_dir / "meta.jsonld").write_text("{}")
+                (stage_dir / "meta.ttl").write_text("{}")
 
             output_dir = Path(tmpdir) / "output"
             output_dir.mkdir()
@@ -168,28 +186,28 @@ class TestCreateStageZip:
                 ("Sala6", "S6-98b-Test", {"raw": {}}),
             ]
 
-            zip_path = create_stage_zip("98", "raw", folders, root, set(), output_dir)
+            zip_path = create_stage_zip("98", "raw", folders, root, set(), output_dir, "Test Masks")
 
             with zipfile.ZipFile(zip_path) as zf:
                 names = zf.namelist()
-                assert names == ["S6-98a-Test/raw/meta.jsonld", "S6-98b-Test/raw/meta.jsonld"]
+                assert names == ["S6-98a-Test/raw/meta.ttl", "S6-98b-Test/raw/meta.ttl"]
 
     def test_returns_none_for_missing_stage(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir) / "root"
             stage_dir = root / "Sala1" / "S1-01-Test" / "raw"
             stage_dir.mkdir(parents=True)
-            (stage_dir / "meta.jsonld").write_text("{}")
+            (stage_dir / "meta.ttl").write_text("{}")
 
             output_dir = Path(tmpdir) / "output"
             output_dir.mkdir()
 
             folders = [("Sala1", "S1-01-Test", {"raw": {}})]
 
-            result = create_stage_zip("1", "dcho", folders, root, set(), output_dir)
+            result = create_stage_zip("1", "dcho", folders, root, set(), output_dir, "Test Object")
 
             assert result is None
-            assert not (output_dir / "1-dcho.zip").exists()
+            assert not (output_dir / "sala1-test-object-dcho.zip").exists()
 
 
 class TestExtractEntityTitle:

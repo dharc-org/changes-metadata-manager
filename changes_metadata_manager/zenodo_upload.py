@@ -1,5 +1,6 @@
 import argparse
 import re
+import unicodedata
 import zipfile
 from collections import defaultdict
 from datetime import date
@@ -37,6 +38,13 @@ def _literal_str_representer(dumper: yaml.SafeDumper, data):
 LiteralBlockDumper.add_representer(str, _literal_str_representer)
 
 CREATORS_LOOKUP_PATH = Path(__file__).parent.parent / "data" / "creators_lookup.yaml"
+
+
+def slugify(text: str) -> str:
+    text = unicodedata.normalize("NFKD", text)
+    text = text.encode("ascii", "ignore").decode("ascii")
+    text = re.sub(r"[^\w\s-]", "", text.lower())
+    return re.sub(r"[-\s]+", "-", text).strip("-")
 
 STEP_TO_STAGE = {
     "00": "raw",
@@ -132,8 +140,12 @@ def create_stage_zip(
     root: Path,
     licensed_stages: set[tuple[str, str]],
     output_dir: Path,
+    title: str,
 ) -> Path | None:
-    zip_path = output_dir / f"{entity_id}-{stage}.zip"
+    sala_name = folders[0][0]
+    sala_slug = slugify(sala_name)
+    title_slug = slugify(title)
+    zip_path = output_dir / f"{sala_slug}-{title_slug}-{stage}.zip"
     has_files = False
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         for sala_name, folder_name, stages_dict in folders:
@@ -149,7 +161,7 @@ def create_stage_zip(
             for file_path in stage_dir.iterdir():
                 if not file_path.is_file():
                     continue
-                if has_license or file_path.name in ("meta.jsonld", "prov.jsonld"):
+                if has_license or file_path.name in ("meta.ttl", "prov.trig"):
                     arc_name = f"{folder_name}/{stage_name_in_folder}/{file_path.name}"
                     zf.write(file_path, arc_name)
                     has_files = True
@@ -291,9 +303,11 @@ def prepare_all(
 
         for entity_id, folders in entity_groups.items():
             title = extract_entity_title(kg, entity_id)
+            sala_slug = slugify(folders[0][0])
+            title_slug = slugify(title)
             for stage in STAGES:
                 progress.update(task, description=f"Entity {entity_id} - {stage}")
-                zip_path = create_stage_zip(entity_id, stage, folders, root, licensed_stages, zips_dir)
+                zip_path = create_stage_zip(entity_id, stage, folders, root, licensed_stages, zips_dir, title)
                 if zip_path is None:
                     progress.advance(task)
                     continue
@@ -301,7 +315,7 @@ def prepare_all(
                 license = extract_license_for_entity_stage(kg, entity_id, stage)
                 entity_uri = build_entity_uri(entity_id)
                 config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config, creators, license, entity_uri)
-                config_path = configs_dir / f"{entity_id}-{stage}.yaml"
+                config_path = configs_dir / f"{sala_slug}-{title_slug}-{stage}.yaml"
                 with open(config_path, "w") as f:
                     yaml.dump(config, f, Dumper=LiteralBlockDumper, default_flow_style=False, allow_unicode=True, sort_keys=False)
                 progress.advance(task)
