@@ -23,8 +23,20 @@ from changes_metadata_manager.folder_metadata_builder import (
     scan_folder_structure,
 )
 
-CREATORS_LOOKUP_PATH = Path(__file__).parent.parent / "data" / "creators_lookup.yaml"
 
+class LiteralBlockDumper(yaml.SafeDumper):
+    pass
+
+
+def _literal_str_representer(dumper: yaml.SafeDumper, data):
+    if "\n" in data:
+        return dumper.represent_scalar("tag:yaml.org,2002:str", data, style="|")
+    return dumper.represent_scalar("tag:yaml.org,2002:str", data)
+
+
+LiteralBlockDumper.add_representer(str, _literal_str_representer)
+
+CREATORS_LOOKUP_PATH = Path(__file__).parent.parent / "data" / "creators_lookup.yaml"
 
 STEP_TO_STAGE = {
     "00": "raw",
@@ -197,7 +209,7 @@ def build_enhanced_description(entity_id: str, stage: str, title: str) -> str:
         STAGE_DESCRIPTIONS[stage],
         "Includes metadata (meta.jsonld) and provenance (prov.jsonld) files.",
     ]
-    return "\n\n".join(parts)
+    return "\n".join(parts) + "\n"
 
 
 def build_entity_uri(entity_id: str) -> str:
@@ -285,7 +297,7 @@ def prepare_all(
                 config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config, creators, license, entity_uri)
                 config_path = configs_dir / f"{entity_id}-{stage}.yaml"
                 with open(config_path, "w") as f:
-                    yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
+                    yaml.dump(config, f, Dumper=LiteralBlockDumper, default_flow_style=False, allow_unicode=True, sort_keys=False)
                 progress.advance(task)
 
 
