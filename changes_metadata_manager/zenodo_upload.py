@@ -175,11 +175,18 @@ LICENSE_URI_TO_ZENODO = {
     "https://creativecommons.org/licenses/by-nc-sa/4.0/": "cc-by-nc-sa-4.0",
 }
 
+STAGE_FULL_NAMES = {
+    "raw": "Raw sensor data",
+    "rawp": "Processed raw model",
+    "dcho": "Digital Cultural Heritage Object",
+    "dchoo": "Optimized Digital Cultural Heritage Object",
+}
+
 STAGE_DESCRIPTIONS = {
-    "raw": "Contains raw acquisition data (photos/scans).",
-    "rawp": "Contains processed raw model from photogrammetry/scanning.",
-    "dcho": "Contains refined Digital Cultural Heritage Object with geometry corrections.",
-    "dchoo": "Contains optimized 3D model ready for web visualization.",
+    "raw": "This stage contains the original acquisition output (photos and/or scans) without processing.",
+    "rawp": "This stage contains the preliminary output from photogrammetry or scanner software after initial processing, without interpolation or geometry corrections.",
+    "dcho": "This stage contains the refined model with interpolation, gap filling, and geometry corrections.",
+    "dchoo": "This stage contains the web-ready version optimized for real-time online interaction.",
 }
 
 PROPAGATED_FIELDS = (
@@ -204,10 +211,9 @@ def extract_license_for_entity_stage(graph: Graph, entity_id: str, stage: str) -
 
 def build_enhanced_description(entity_id: str, stage: str, title: str) -> str:
     parts = [
-        f"Digitization data for entity {entity_id} ({stage.upper()} stage) from the Aldrovandi collection.",
-        f"Object: {title}",
+        f'{STAGE_FULL_NAMES[stage]} for the digitization of "{title}" (entity {entity_id}) from the Aldrovandi Digital Twin.',
         STAGE_DESCRIPTIONS[stage],
-        "Includes metadata (meta.jsonld) and provenance (prov.jsonld) files.",
+        "Includes metadata (meta.ttl) and provenance (prov.trig) files following the CHAD-AP ontology.",
     ]
     return "\n".join(parts) + "\n"
 
@@ -227,7 +233,7 @@ def generate_zenodo_config(
     entity_uri: str | None = None,
 ) -> dict:
     config = {
-        "title": f"{title} - {stage.upper()} - Aldrovandi collection",
+        "title": f"{title} - {STAGE_FULL_NAMES[stage]} - Aldrovandi Digital Twin",
         "description": build_enhanced_description(entity_id, stage, title),
         "files": [str(zip_path.absolute())],
         "creators": creators,

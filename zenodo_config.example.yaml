@@ -36,17 +36,19 @@ notes: |
   The Aldrovandi Digital Twin documents the temporary exhibition "The Other Renaissance: Ulisse Aldrovandi and the Wonders of the World" held at Palazzo Poggi Museum, Bologna (December 2022 - May 2023).
 
 method: |
+  Acquisition and digitization followed the reproducible workflow documented in DOI:10.46298/transformations.14773.
+
   Data was acquired using:
   - Structured Light Scanning (Artec Space Spider, Artec Eva)
-  - Digital Photogrammetry (SfM/MVS)
+  - Digital Photogrammetry (Structure from Motion / Multi-View Stereo)
 
   Processing stages:
-  - RAW: Raw sensor data
-  - RAWp: Processed raw model
-  - DCHO: Digital Cultural Heritage Object (geometry corrections)
-  - DCHOo: Optimized DCHO (web-ready)
+  - Raw sensor data: original acquisition output (photos/scans)
+  - Processed raw model (RAWp): preliminary output after initial processing
+  - Digital Cultural Heritage Object (DCHO): refined model with geometry corrections
+  - Optimized DCHO (DCHOo): web-ready version for real-time interaction
 
-  Metadata follows CHAD-AP ontology based on CIDOC-CRM.
+  Metadata follows the Cultural Heritage Acquisition and Digitisation Application Profile (CHAD-AP) based on CIDOC-CRM.
 
 keywords:
   - PNRR CHANGES

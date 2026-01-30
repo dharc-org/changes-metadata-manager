@@ -332,8 +332,8 @@ class TestGenerateZenodoConfig:
             "zenodo_url": "https://sandbox.zenodo.org/api",
             "access_token": "test_token",
             "user_agent": "piccione/2.1.0",
-            "title": "Test Title - RAW - Aldrovandi collection",
-            "description": "Digitization data for entity 1 (RAW stage) from the Aldrovandi collection.\n\nObject: Test Title\n\nContains raw acquisition data (photos/scans).\n\nIncludes metadata (meta.jsonld) and provenance (prov.jsonld) files.",
+            "title": "Test Title - Raw sensor data - Aldrovandi Digital Twin",
+            "description": 'Raw sensor data for the digitization of "Test Title" (entity 1) from the Aldrovandi Digital Twin.\nThis stage contains the original acquisition output (photos and/or scans) without processing.\nIncludes metadata (meta.ttl) and provenance (prov.trig) files following the CHAD-AP ontology.\n',
             "upload_type": "dataset",
             "creators": [{"name": "Test Author"}],
             "keywords": ["test"],
@@ -427,19 +427,18 @@ class TestBuildEnhancedDescription:
     def test_raw_stage_description(self):
         result = build_enhanced_description("42", "raw", "Test Object")
         assert result == (
-            "Digitization data for entity 42 (RAW stage) from the Aldrovandi collection.\n\n"
-            "Object: Test Object\n\n"
-            "Contains raw acquisition data (photos/scans).\n\n"
-            "Includes metadata (meta.jsonld) and provenance (prov.jsonld) files."
+            'Raw sensor data for the digitization of "Test Object" (entity 42) from the Aldrovandi Digital Twin.\n'
+            "This stage contains the original acquisition output (photos and/or scans) without processing.\n"
+            "Includes metadata (meta.ttl) and provenance (prov.trig) files following the CHAD-AP ontology.\n"
         )
 
     def test_dcho_stage_description(self):
         result = build_enhanced_description("1", "dcho", "Museum Specimen")
-        assert "DCHO stage" in result
-        assert "Object: Museum Specimen" in result
         assert "Digital Cultural Heritage Object" in result
+        assert '"Museum Specimen"' in result
+        assert "interpolation, gap filling, and geometry corrections" in result
 
     def test_dchoo_stage_description(self):
         result = build_enhanced_description("1", "dchoo", "Object Title")
-        assert "DCHOO stage" in result
-        assert "web visualization" in result
+        assert "Optimized Digital Cultural Heritage Object" in result
+        assert "web-ready version optimized for real-time online interaction" in result
