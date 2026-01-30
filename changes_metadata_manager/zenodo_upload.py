@@ -180,7 +180,7 @@ def extract_entity_title(graph: Graph, entity_id: str) -> str:
 
 
 LICENSE_URI_TO_ZENODO = {
-    "https://creativecommons.org/publicdomain/zero/1.0/": "cc-zero",
+    "https://creativecommons.org/publicdomain/zero/1.0/": "cc0-1.0",
     "https://creativecommons.org/licenses/by/4.0/": "cc-by-4.0",
     "https://creativecommons.org/licenses/by-nc/4.0/": "cc-by-nc-4.0",
     "https://creativecommons.org/licenses/by-sa/4.0/": "cc-by-sa-4.0",
@@ -203,7 +203,7 @@ STAGE_DESCRIPTIONS = {
 
 PROPAGATED_FIELDS = (
     'zenodo_url', 'access_token', 'user_agent', 'upload_type',
-    'keywords', 'license', 'access_right', 'publication_date',
+    'keywords', 'access_right', 'publication_date',
     'language', 'version', 'communities', 'grants', 'related_identifiers',
     'contributors', 'subjects', 'notes',
     'references', 'locations', 'dates', 'method',
@@ -234,6 +234,45 @@ def build_entity_uri(entity_id: str) -> str:
     return f"{BASE_URI}/itm/{entity_id}/ob00/1"
 
 
+LICENSE_INFO = {
+    "cc0-1.0": {
+        "title": "Creative Commons Zero v1.0 Universal",
+        "link": "https://creativecommons.org/publicdomain/zero/1.0/",
+    },
+    "cc-by-4.0": {
+        "title": "Creative Commons Attribution 4.0 International",
+        "link": "https://creativecommons.org/licenses/by/4.0/",
+    },
+    "cc-by-nc-4.0": {
+        "title": "Creative Commons Attribution Non Commercial 4.0 International",
+        "link": "https://creativecommons.org/licenses/by-nc/4.0/",
+    },
+    "cc-by-sa-4.0": {
+        "title": "Creative Commons Attribution Share Alike 4.0 International",
+        "link": "https://creativecommons.org/licenses/by-sa/4.0/",
+    },
+    "cc-by-nc-sa-4.0": {
+        "title": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+        "link": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    },
+}
+
+
+def build_rights(content_license: str | None) -> list[dict]:
+    metadata_info = LICENSE_INFO["cc0-1.0"]
+    rights = [{
+        "title": {"en": f"{metadata_info['title']} (Metadata license)"},
+        "link": metadata_info["link"],
+    }]
+    if content_license and content_license in LICENSE_INFO:
+        content_info = LICENSE_INFO[content_license]
+        rights.append({
+            "title": {"en": f"{content_info['title']} (Content license)"},
+            "link": content_info["link"],
+        })
+    return rights
+
+
 def generate_zenodo_config(
     entity_id: str,
     stage: str,
@@ -250,9 +289,8 @@ def generate_zenodo_config(
         "files": [str(zip_path.absolute())],
         "creators": creators,
         "publication_date": date.today().isoformat(),
+        "rights": build_rights(license),
     }
-    if license:
-        config["license"] = license
     for field in PROPAGATED_FIELDS:
         if field in base_config and field not in config:
             config[field] = base_config[field]

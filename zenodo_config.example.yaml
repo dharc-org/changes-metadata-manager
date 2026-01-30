@@ -36,7 +36,7 @@ notes: |
   The Aldrovandi Digital Twin documents the temporary exhibition "The Other Renaissance: Ulisse Aldrovandi and the Wonders of the World" held at Palazzo Poggi Museum, Bologna (December 2022 - May 2023).
 
 method: |
-  Acquisition and digitization followed the reproducible workflow documented in DOI:10.46298/transformations.14773.
+  Acquisition and digitization followed the reproducible workflow documented in https://doi.org/10.46298/transformations.14773.
 
   Data was acquired using:
   - Structured Light Scanning (Artec Space Spider, Artec Eva)
