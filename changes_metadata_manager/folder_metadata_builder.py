@@ -185,9 +185,6 @@ FOLDER_TO_ID = {
     "S5-Manoscritto-FICLIT_LibroDeiVisitatori": "m7",
     "S5-Manoscritto-FICLIT_DiscorsoNaturaleAldrovandi": "m8",
     # Grouped entities (KG has single entity for multiple folders)
-    "S6-98a-DA-Calchi facciali colorati, boscimani": "98",
-    "S6-98b-DA-Calchi facciali colorati, boscimani": "98",
-    "S6-98c-DA-Calchi facciali colorati, boscimani": "98",
     "S6-111a-DA-Fossile, Dalmanites sp. RECTO": "111",
     "S6-111b-DA-Fossile, Dalmanites sp. VERSO": "111",
 }

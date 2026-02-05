@@ -1,6 +1,6 @@
 {
   "site_url": "https://liveunibo.sharepoint.com/sites/PE5-Spoke4-CaseStudyAldrovandi",
-  "extracted_at": "2026-01-26T13:48:10.293699+00:00",
+  "extracted_at": "2026-02-05T13:26:56.307786+00:00",
   "structure": {
     "Sala1": {
       "S1-01-CNR_CartaNautica": {
@@ -90402,588 +90402,638 @@
           }
         }
       },
-      "S6-111a-DA-Fossile, Dalmanites sp. RECTO": {
-        "RAW": {
-          "_files": {
-            "DSC_0189.NEF": {
-              "etag": "\"{DE040A7F-28D9-4103-90C4-83F6735AAA92},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25313378
-            },
-            "DSC_0190.NEF": {
-              "etag": "\"{B2704EF0-2FD5-4588-8715-5004FD7C113C},1\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25000754
-            },
-            "DSC_0191.NEF": {
-              "etag": "\"{B6500C64-4669-44F1-9DE0-5DF19B6D1A73},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25311010
-            },
-            "DSC_0192.NEF": {
-              "etag": "\"{784D6C5F-D1C3-4DE5-8A4C-9F15B9BF5C33},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25600760
-            },
-            "DSC_0193.NEF": {
-              "etag": "\"{6D3C6B77-9C5C-416A-9F2C-227219A50959},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25551173
-            },
-            "DSC_0194.NEF": {
-              "etag": "\"{72551FE7-E5C6-453A-A462-1D9123DA5A9D},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25320154
-            },
-            "DSC_0195.NEF": {
-              "etag": "\"{AA4428CB-981D-4E1E-A2C8-0FA8055082A8},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25369479
-            },
-            "DSC_0196.NEF": {
-              "etag": "\"{78F1A4B8-6AAB-45AD-ACA7-86ECB86C9A0E},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25398913
-            },
-            "DSC_0197.NEF": {
-              "etag": "\"{3FE788EE-E001-4A1B-A976-79AC3B6F283D},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25529389
-            },
-            "DSC_0198.NEF": {
-              "etag": "\"{EB36C1BA-F69F-458A-99EF-E038B54B0C16},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25771768
-            },
-            "DSC_0199.NEF": {
-              "etag": "\"{3C0CD6EE-DB34-4A7E-9AF9-5F173F293844},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25631116
-            },
-            "DSC_0200.NEF": {
-              "etag": "\"{5B397F0B-B5F7-408D-9EC0-35539096F6B6},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25635068
-            },
-            "DSC_0201.NEF": {
-              "etag": "\"{6B70C67A-50DC-43DF-9D90-041F471354B9},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25613859
-            },
-            "DSC_0202.NEF": {
-              "etag": "\"{16165412-698C-4CAF-A7A7-EEBCC0D71786},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25362531
-            },
-            "DSC_0203.NEF": {
-              "etag": "\"{12B1EB60-BBC3-4FAB-BCEC-D54E76535994},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25197080
-            },
-            "DSC_0204.NEF": {
-              "etag": "\"{2431A54C-136A-4496-B253-332D0D6A94DF},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25242538
-            },
-            "DSC_0205.NEF": {
-              "etag": "\"{6145804C-4489-425A-A3FB-F035820DCC69},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25308728
-            },
-            "DSC_0206.NEF": {
-              "etag": "\"{9A495D57-FA94-4634-9644-E660B4C7A439},1\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25164842
-            },
-            "DSC_0207.NEF": {
-              "etag": "\"{2DEC496F-97AC-4E5B-8252-9D7A47FF765B},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25399506
-            },
-            "DSC_0208.NEF": {
-              "etag": "\"{923398C9-144E-4103-8A61-5F811E4518D2},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25460451
-            },
-            "DSC_0210.NEF": {
-              "etag": "\"{599F6161-BF24-4588-89D8-F1E63EA78DBA},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25256159
-            },
-            "DSC_0211.NEF": {
-              "etag": "\"{719D7754-33E5-4B4F-8210-B290E990361E},1\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25007326
-            },
-            "DSC_0212.NEF": {
-              "etag": "\"{5A16D1B9-8EFD-4EF8-AA46-0060054AC033},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25291783
-            },
-            "DSC_0213.NEF": {
-              "etag": "\"{6AC5C48E-97C5-4882-B8B9-415ED79AEDFE},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25294257
-            },
-            "DSC_0214.NEF": {
-              "etag": "\"{7A34E227-0930-4A5A-A743-531DA43C2F69},1\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25042188
-            },
-            "DSC_0215.NEF": {
-              "etag": "\"{2F654E28-9EA5-4AA5-900E-3EFBE3144614},1\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25093916
-            },
-            "DSC_0216.NEF": {
-              "etag": "\"{288D7769-D002-46D6-BA12-BB951451C63C},1\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25075968
-            },
-            "DSC_0217.NEF": {
-              "etag": "\"{279AE94C-0780-4AFB-9B6F-DADE29DB172B},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25497702
-            },
-            "DSC_0218.NEF": {
-              "etag": "\"{DC9282AB-2B36-4DDE-8029-C95FEE59CFEC},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25202196
-            },
-            "DSC_0219.NEF": {
-              "etag": "\"{2F612AB8-5B1F-4C13-90CB-3FB4B79A9DD2},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25371795
-            },
-            "DSC_0220.NEF": {
-              "etag": "\"{0DC1C9AA-7395-4E59-9566-1144F4DA31F3},1\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25117013
-            },
-            "DSC_0221.NEF": {
-              "etag": "\"{509F02BC-EAEB-49A0-8E75-0B4F8F5AB421},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25245004
-            },
-            "DSC_0222.NEF": {
-              "etag": "\"{15E6DE4B-3767-4C3C-8BA0-643A326EB32A},1\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25060481
-            },
-            "DSC_0223.NEF": {
-              "etag": "\"{A146027A-6FD8-436E-8C9D-F6EA92441D6F},2\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25197501
-            },
-            "DSC_0224.NEF": {
-              "etag": "\"{748BC9A8-BEB0-40DB-85C4-AA0D6688120C},1\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25025024
-            },
-            "DSC_0225.NEF": {
-              "etag": "\"{B3F0D92C-F9B1-4DE9-8F2E-D0F2495921B5},1\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25074245
-            },
-            "DSC_0226.NEF": {
-              "etag": "\"{3210F3DD-0EE5-4278-B61D-76D9B2CFCBD4},1\"",
-              "modified": "2024-11-20T08:32:38Z",
-              "size": 25126519
-            }
-          }
-        },
+      "S6-111-DA-Fossile, Dalmanites sp": {
         "dcho": {
-          "_files": {
-            "Dalmanites_recto_1.mtl": {
-              "etag": "\"{FEC6277B-4AFC-4881-952F-DD488370EDB3},1\"",
-              "modified": "2025-10-14T14:34:49Z",
-              "size": 333
-            },
-            "Dalmanites_recto_1.obj": {
-              "etag": "\"{079FB648-EB51-4C96-B193-FFA9D3E4A320},1\"",
-              "modified": "2025-10-14T14:34:49Z",
-              "size": 18900913
-            },
-            "Dalmanites_recto_text.jpg": {
-              "etag": "\"{68EB5692-54E2-441B-AA16-E9578B743F9E},2\"",
-              "modified": "2025-10-14T14:34:49Z",
-              "size": 4405398
+          "object1": {
+            "_files": {
+              "Dalmanites_recto_1.mtl": {
+                "etag": "\"{FEC6277B-4AFC-4881-952F-DD488370EDB3},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 333
+              },
+              "Dalmanites_recto_1.obj": {
+                "etag": "\"{079FB648-EB51-4C96-B193-FFA9D3E4A320},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 18900913
+              },
+              "Dalmanites_recto_text.jpg": {
+                "etag": "\"{68EB5692-54E2-441B-AA16-E9578B743F9E},4\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 4405398
+              }
+            }
+          },
+          "object2": {
+            "_files": {
+              "Dalmanites_verso_1.mtl": {
+                "etag": "\"{EBA4DFE7-1CED-4831-A44D-CFA3963A0F8D},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 259
+              },
+              "Dalmanites_verso_1.obj": {
+                "etag": "\"{0043FFF9-4B63-4DBC-852C-A71203656F12},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 37235267
+              },
+              "Dalmanites_verso_text.jpg": {
+                "etag": "\"{DBEADF4E-D77F-4CD0-B11B-D5A1717A51A8},4\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 4965934
+              }
             }
           }
         },
         "dchoo": {
+          "Materials": {
+            "object1": {
+              "_files": {
+                "Dalmanites_recto_2.bin": {
+                  "etag": "\"{7DDA5ED1-8E21-42EA-9BA6-4DFEA3DCF083},3\"",
+                  "modified": "2026-01-29T14:48:30Z",
+                  "size": 56900
+                },
+                "Dalmanites_recto_2.gltf": {
+                  "etag": "\"{25C0B767-8EE2-4886-8E39-04B15298C8AA},3\"",
+                  "modified": "2026-01-29T14:48:30Z",
+                  "size": 2089
+                },
+                "dalmanites_diffuse.jpg": {
+                  "etag": "\"{42CCF92A-AF56-4BA6-B1F5-1A05DC727CF1},6\"",
+                  "modified": "2026-01-29T14:48:30Z",
+                  "size": 2886173
+                },
+                "dalmanites_rough.jpg": {
+                  "etag": "\"{168B3B3F-75EB-4C61-868C-490020B41290},6\"",
+                  "modified": "2026-01-29T14:48:30Z",
+                  "size": 95815
+                }
+              }
+            },
+            "object2": {
+              "_files": {
+                "Dalmanites_verso_2.bin": {
+                  "etag": "\"{E47616FB-C72D-4FC1-9F61-21917885A885},2\"",
+                  "modified": "2026-01-29T14:48:30Z",
+                  "size": 45148
+                },
+                "Dalmanites_verso_2.gltf": {
+                  "etag": "\"{AF457DC7-ACB3-4815-B6A3-C53A8705931C},2\"",
+                  "modified": "2026-01-29T14:48:30Z",
+                  "size": 2279
+                },
+                "dalmanites_verso_diffuse.jpg": {
+                  "etag": "\"{B8FAD3A7-1491-492C-91A7-3E424C7266EE},4\"",
+                  "modified": "2026-01-29T14:48:30Z",
+                  "size": 2727104
+                },
+                "dalmanites_verso_norm.jpg": {
+                  "etag": "\"{98824DFA-BCC1-40FF-B9CB-DCA7A204A0B9},4\"",
+                  "modified": "2026-01-29T14:48:30Z",
+                  "size": 546794
+                },
+                "dalmanites_verso_rough.jpg": {
+                  "etag": "\"{3AB7C1F2-95B1-4431-9BEF-219CFEEB36CC},4\"",
+                  "modified": "2026-01-29T14:48:30Z",
+                  "size": 134689
+                }
+              }
+            }
+          },
           "_files": {
-            "Dalmanites_recto_2.bin": {
-              "etag": "\"{7DDA5ED1-8E21-42EA-9BA6-4DFEA3DCF083},1\"",
-              "modified": "2025-10-14T14:34:56Z",
-              "size": 56900
-            },
-            "Dalmanites_recto_2.gltf": {
-              "etag": "\"{25C0B767-8EE2-4886-8E39-04B15298C8AA},1\"",
-              "modified": "2025-10-14T14:34:56Z",
-              "size": 2089
-            },
             "dalmanites_diffuse.jpg": {
-              "etag": "\"{42CCF92A-AF56-4BA6-B1F5-1A05DC727CF1},2\"",
-              "modified": "2025-10-14T14:34:56Z",
+              "etag": "\"{F6AE70BC-4C2E-4569-A178-CB9987314E7F},2\"",
+              "modified": "2026-01-29T14:48:30Z",
               "size": 2886173
             },
+            "dalmanites_rough-1.jpg": {
+              "etag": "\"{26500B62-4DE0-4ECE-9E95-37BE8F117101},2\"",
+              "modified": "2026-01-29T14:48:30Z",
+              "size": 95760
+            },
             "dalmanites_rough.jpg": {
-              "etag": "\"{168B3B3F-75EB-4C61-868C-490020B41290},2\"",
-              "modified": "2025-10-14T14:34:56Z",
-              "size": 95815
-            }
-          }
-        },
-        "rawp": {
-          "_files": {
-            "Dalmanites_recto_0.jpg": {
-              "etag": "\"{7020346E-1629-47B8-8F0D-4D0382F695AD},2\"",
-              "modified": "2025-10-14T14:34:02Z",
-              "size": 2946625
-            },
-            "Dalmanites_recto_0.mtl": {
-              "etag": "\"{212B6DF0-984A-4EBE-A972-C047227EE560},1\"",
-              "modified": "2025-10-14T14:34:02Z",
-              "size": 142
-            },
-            "Dalmanites_recto_0.obj": {
-              "etag": "\"{B18DA35E-7C8C-4FBA-8C89-9CBA531984F1},2\"",
-              "modified": "2025-10-14T14:34:02Z",
-              "size": 25297045
-            }
-          }
-        }
-      },
-      "S6-111b-DA-Fossile, Dalmanites sp. VERSO": {
-        "RAW": {
-          "_files": {
-            "DSC_0001.NEF": {
-              "etag": "\"{0A60B2B4-7086-4461-9053-778558826F06},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25318213
-            },
-            "DSC_0002.NEF": {
-              "etag": "\"{2BB06B34-5C59-4E02-8FD6-BE78AF075D66},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25243935
-            },
-            "DSC_0003.NEF": {
-              "etag": "\"{8B8EDF14-A703-4754-B2AC-C9A8137D5EF3},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25494444
-            },
-            "DSC_0004.NEF": {
-              "etag": "\"{3CC873FC-C88F-422E-B786-9BF45022C046},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25452464
-            },
-            "DSC_0005.NEF": {
-              "etag": "\"{CAAB0008-417D-4D90-8634-3D6D3F3DF9E9},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25550792
-            },
-            "DSC_0006.NEF": {
-              "etag": "\"{931AD941-AAFC-414C-A99D-451AF5179B5D},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25486808
-            },
-            "DSC_0007.NEF": {
-              "etag": "\"{0547ED5C-E443-4D3A-9541-601257ABBEC5},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25151291
-            },
-            "DSC_0008.NEF": {
-              "etag": "\"{BB18CFA5-48F6-4032-9A10-1F53F1476099},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25170565
-            },
-            "DSC_0009.NEF": {
-              "etag": "\"{9C9B52C3-AEE6-415E-9A56-1E55E728DC96},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25242881
-            },
-            "DSC_0010.NEF": {
-              "etag": "\"{27330558-D327-4351-AE72-58A6147DFBF1},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25283905
-            },
-            "DSC_0011.NEF": {
-              "etag": "\"{A8EE960C-0D0E-428C-AF4A-6C42BB66A0D1},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25325207
-            },
-            "DSC_0012.NEF": {
-              "etag": "\"{D91CEB87-ED5A-4A6E-A58C-11D06FC99CDF},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25517999
-            },
-            "DSC_0013.NEF": {
-              "etag": "\"{AC53C734-F33F-4671-9C58-08D162B90193},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25459294
-            },
-            "DSC_0014.NEF": {
-              "etag": "\"{984D29B1-2F3A-46ED-BC7D-408179D06527},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25673352
-            },
-            "DSC_0015.NEF": {
-              "etag": "\"{2C6738B7-69C8-4564-9B69-02BEB2605ED7},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25339138
-            },
-            "DSC_0016.NEF": {
-              "etag": "\"{A9856D37-0CF0-4793-92EC-4F3D896A8D2C},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25517357
-            },
-            "DSC_0017.NEF": {
-              "etag": "\"{18AA3C16-33B4-4EB6-9357-707F8D3D6311},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25481562
-            },
-            "DSC_0018.NEF": {
-              "etag": "\"{DB9C12E7-1170-4E5B-9B48-9CAB12685936},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25402363
-            },
-            "DSC_0019.NEF": {
-              "etag": "\"{4349A637-747E-46FF-BBFC-2655CD6C5F28},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25428424
-            },
-            "DSC_0020.NEF": {
-              "etag": "\"{8F317F16-7664-4975-A554-676ACEB39DC2},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25185935
-            },
-            "DSC_0021.NEF": {
-              "etag": "\"{9A678B4D-9CB0-4858-B2B6-BCB8D578718D},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25335965
-            },
-            "DSC_0022.NEF": {
-              "etag": "\"{4F1F8CC7-D59A-48D4-A4CC-181649B5503E},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 24989100
-            },
-            "DSC_0023.NEF": {
-              "etag": "\"{F7D36684-0CCC-465E-89E9-763FB91BB113},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25317168
-            },
-            "DSC_0024.NEF": {
-              "etag": "\"{B42A8A07-2EE9-42B7-8643-B7F2DF6D8907},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25127103
-            },
-            "DSC_0025.NEF": {
-              "etag": "\"{B8E40C1B-A374-4DB1-AA8D-07B20F74FD3E},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25226850
-            },
-            "DSC_0026.NEF": {
-              "etag": "\"{DAF37B7D-7D9E-43F1-BF33-CB612713F0D5},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25200806
-            },
-            "DSC_0027.NEF": {
-              "etag": "\"{1BA250F5-C5CC-463B-A06A-2263DAFF4AFD},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25250296
-            },
-            "DSC_0028.NEF": {
-              "etag": "\"{BF11B4F5-C986-42C3-8696-FED371B85310},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25284587
-            },
-            "DSC_0029.NEF": {
-              "etag": "\"{B775ECB7-EEBA-4748-95AE-F9240D7A0503},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25136948
-            },
-            "DSC_0030.NEF": {
-              "etag": "\"{078085D3-EDB9-4A85-A26E-FEAAC16FEC9C},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25062150
-            },
-            "DSC_0031.NEF": {
-              "etag": "\"{5001DAC3-9369-4595-820B-4419F23C5F1D},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25120885
-            },
-            "DSC_0032.NEF": {
-              "etag": "\"{A26A73B5-3C2B-41DE-9443-7D03408BFC83},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25212222
-            },
-            "DSC_0033.NEF": {
-              "etag": "\"{DA5CA8D2-A3DB-44C6-8287-2AF1FD29D6B9},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25124437
-            },
-            "DSC_0034.NEF": {
-              "etag": "\"{05BB4666-E9FB-4D6B-BF57-0866F3FB95A4},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25171489
-            },
-            "DSC_0035.NEF": {
-              "etag": "\"{A0BC53B0-40A6-46A2-8B63-BD7B0A389AAF},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 24714200
-            },
-            "DSC_0036.NEF": {
-              "etag": "\"{CA57424F-0C72-486F-805F-786584344C16},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 24842614
-            },
-            "DSC_0037.NEF": {
-              "etag": "\"{6652F76F-998C-44D4-84B7-E3D5F84B9FE4},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25069240
-            },
-            "DSC_0038.NEF": {
-              "etag": "\"{487A3400-E757-4719-90D8-AB13D81642EE},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25000473
-            },
-            "DSC_0039.NEF": {
-              "etag": "\"{5D2DDBC7-1895-4389-90D4-B7AA4D01ADF3},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25204992
-            },
-            "DSC_0040.NEF": {
-              "etag": "\"{A6CC22F0-2D94-4298-B695-FBDB3D4ADC41},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25396077
-            },
-            "DSC_0041.NEF": {
-              "etag": "\"{3DAFEDBE-3812-4A6B-88C4-8B5922A20D44},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 24970820
-            },
-            "DSC_0042.NEF": {
-              "etag": "\"{117DF060-F161-4FF6-9B32-EC3B34C52E41},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25168421
-            },
-            "DSC_0043.NEF": {
-              "etag": "\"{582B02D2-EBEF-45C3-A997-F43A1DB6B1B0},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25252161
-            },
-            "DSC_0044.NEF": {
-              "etag": "\"{A907F87A-66BF-4ADB-B18C-BD3B372363D6},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25240589
-            },
-            "DSC_0045.NEF": {
-              "etag": "\"{24770DE6-B45D-4757-9D9A-985EBBC8BA75},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25144069
-            },
-            "DSC_0046.NEF": {
-              "etag": "\"{AAAFD87C-651A-49E2-ACA6-A9E8CF0BA963},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25330454
-            },
-            "DSC_0047.NEF": {
-              "etag": "\"{E68C5777-1A06-4B52-B705-A61847B571DA},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 24690495
-            },
-            "DSC_0048.NEF": {
-              "etag": "\"{13CA4F7E-2394-40A2-9F67-E051DDC8489B},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25048296
-            },
-            "DSC_0049.NEF": {
-              "etag": "\"{7055AC6E-DA14-4C94-81AC-B21FDCD528C9},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 24817773
-            },
-            "DSC_0050.NEF": {
-              "etag": "\"{6B0A3EBD-BE08-4248-8D8F-AE044FE1E961},1\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 24968065
-            },
-            "DSC_0051.NEF": {
-              "etag": "\"{73944F56-048D-44EB-8400-FB2087F59AF0},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25193051
-            },
-            "DSC_0052.NEF": {
-              "etag": "\"{857B3D65-28F1-4888-821A-A2F8B7CC9AB2},2\"",
-              "modified": "2024-11-20T08:32:46Z",
-              "size": 25247166
-            }
-          }
-        },
-        "dcho": {
-          "_files": {
-            "Dalmanites_verso_1.mtl": {
-              "etag": "\"{EBA4DFE7-1CED-4831-A44D-CFA3963A0F8D},1\"",
-              "modified": "2025-10-14T14:37:46Z",
-              "size": 259
-            },
-            "Dalmanites_verso_1.obj": {
-              "etag": "\"{0043FFF9-4B63-4DBC-852C-A71203656F12},2\"",
-              "modified": "2025-10-14T14:37:46Z",
-              "size": 37235267
-            },
-            "Dalmanites_verso_text.jpg": {
-              "etag": "\"{DBEADF4E-D77F-4CD0-B11B-D5A1717A51A8},2\"",
-              "modified": "2025-10-14T14:37:46Z",
-              "size": 4965934
-            }
-          }
-        },
-        "dchoo": {
-          "_files": {
-            "Dalmanites_verso_2.bin": {
-              "etag": "\"{E47616FB-C72D-4FC1-9F61-21917885A885},1\"",
-              "modified": "2025-10-14T14:37:51Z",
-              "size": 45148
-            },
-            "Dalmanites_verso_2.gltf": {
-              "etag": "\"{AF457DC7-ACB3-4815-B6A3-C53A8705931C},1\"",
-              "modified": "2025-10-14T14:37:51Z",
-              "size": 2279
+              "etag": "\"{7491C598-351E-4EFD-A5E2-140D3E0303CB},2\"",
+              "modified": "2026-01-29T14:48:30Z",
+              "size": 96126
             },
             "dalmanites_verso_diffuse.jpg": {
-              "etag": "\"{B8FAD3A7-1491-492C-91A7-3E424C7266EE},2\"",
-              "modified": "2025-10-14T14:37:51Z",
-              "size": 2727104
+              "etag": "\"{DD4A6A27-661A-4671-ADEE-8F620BF8801B},2\"",
+              "modified": "2026-01-29T14:48:30Z",
+              "size": 1313259
             },
             "dalmanites_verso_norm.jpg": {
-              "etag": "\"{98824DFA-BCC1-40FF-B9CB-DCA7A204A0B9},2\"",
-              "modified": "2025-10-14T14:37:51Z",
+              "etag": "\"{F6172F50-F8F4-42CC-8884-1F93A83F2E62},2\"",
+              "modified": "2026-01-29T14:48:30Z",
               "size": 546794
             },
             "dalmanites_verso_rough.jpg": {
-              "etag": "\"{3AB7C1F2-95B1-4431-9BEF-219CFEEB36CC},2\"",
-              "modified": "2025-10-14T14:37:51Z",
-              "size": 134689
+              "etag": "\"{67E6B0FA-BF3F-436B-A9CE-31B9CE650659},2\"",
+              "modified": "2026-01-29T14:48:30Z",
+              "size": 140477
+            },
+            "fossile_dalmanites.bin": {
+              "etag": "\"{6F879D37-ECB2-48D8-9652-0FC60CA0C2EF},1\"",
+              "modified": "2026-01-29T14:48:30Z",
+              "size": 105784
+            },
+            "fossile_dalmanites.gltf": {
+              "etag": "\"{F340D8FD-9BCC-4C67-A9ED-C43816DCA3F0},1\"",
+              "modified": "2026-01-29T14:48:30Z",
+              "size": 6165
+            }
+          }
+        },
+        "raw": {
+          "object1": {
+            "_files": {
+              "DSC_0189.NEF": {
+                "etag": "\"{DE040A7F-28D9-4103-90C4-83F6735AAA92},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25313378
+              },
+              "DSC_0190.NEF": {
+                "etag": "\"{B2704EF0-2FD5-4588-8715-5004FD7C113C},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25000754
+              },
+              "DSC_0191.NEF": {
+                "etag": "\"{B6500C64-4669-44F1-9DE0-5DF19B6D1A73},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25311010
+              },
+              "DSC_0192.NEF": {
+                "etag": "\"{784D6C5F-D1C3-4DE5-8A4C-9F15B9BF5C33},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25600760
+              },
+              "DSC_0193.NEF": {
+                "etag": "\"{6D3C6B77-9C5C-416A-9F2C-227219A50959},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25551173
+              },
+              "DSC_0194.NEF": {
+                "etag": "\"{72551FE7-E5C6-453A-A462-1D9123DA5A9D},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25320154
+              },
+              "DSC_0195.NEF": {
+                "etag": "\"{AA4428CB-981D-4E1E-A2C8-0FA8055082A8},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25369479
+              },
+              "DSC_0196.NEF": {
+                "etag": "\"{78F1A4B8-6AAB-45AD-ACA7-86ECB86C9A0E},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25398913
+              },
+              "DSC_0197.NEF": {
+                "etag": "\"{3FE788EE-E001-4A1B-A976-79AC3B6F283D},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25529389
+              },
+              "DSC_0198.NEF": {
+                "etag": "\"{EB36C1BA-F69F-458A-99EF-E038B54B0C16},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25771768
+              },
+              "DSC_0199.NEF": {
+                "etag": "\"{3C0CD6EE-DB34-4A7E-9AF9-5F173F293844},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25631116
+              },
+              "DSC_0200.NEF": {
+                "etag": "\"{5B397F0B-B5F7-408D-9EC0-35539096F6B6},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25635068
+              },
+              "DSC_0201.NEF": {
+                "etag": "\"{6B70C67A-50DC-43DF-9D90-041F471354B9},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25613859
+              },
+              "DSC_0202.NEF": {
+                "etag": "\"{16165412-698C-4CAF-A7A7-EEBCC0D71786},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25362531
+              },
+              "DSC_0203.NEF": {
+                "etag": "\"{12B1EB60-BBC3-4FAB-BCEC-D54E76535994},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25197080
+              },
+              "DSC_0204.NEF": {
+                "etag": "\"{2431A54C-136A-4496-B253-332D0D6A94DF},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25242538
+              },
+              "DSC_0205.NEF": {
+                "etag": "\"{6145804C-4489-425A-A3FB-F035820DCC69},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25308728
+              },
+              "DSC_0206.NEF": {
+                "etag": "\"{9A495D57-FA94-4634-9644-E660B4C7A439},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25164842
+              },
+              "DSC_0207.NEF": {
+                "etag": "\"{2DEC496F-97AC-4E5B-8252-9D7A47FF765B},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25399506
+              },
+              "DSC_0208.NEF": {
+                "etag": "\"{923398C9-144E-4103-8A61-5F811E4518D2},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25460451
+              },
+              "DSC_0210.NEF": {
+                "etag": "\"{599F6161-BF24-4588-89D8-F1E63EA78DBA},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25256159
+              },
+              "DSC_0211.NEF": {
+                "etag": "\"{719D7754-33E5-4B4F-8210-B290E990361E},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25007326
+              },
+              "DSC_0212.NEF": {
+                "etag": "\"{5A16D1B9-8EFD-4EF8-AA46-0060054AC033},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25291783
+              },
+              "DSC_0213.NEF": {
+                "etag": "\"{6AC5C48E-97C5-4882-B8B9-415ED79AEDFE},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25294257
+              },
+              "DSC_0214.NEF": {
+                "etag": "\"{7A34E227-0930-4A5A-A743-531DA43C2F69},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25042188
+              },
+              "DSC_0215.NEF": {
+                "etag": "\"{2F654E28-9EA5-4AA5-900E-3EFBE3144614},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25093916
+              },
+              "DSC_0216.NEF": {
+                "etag": "\"{288D7769-D002-46D6-BA12-BB951451C63C},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25075968
+              },
+              "DSC_0217.NEF": {
+                "etag": "\"{279AE94C-0780-4AFB-9B6F-DADE29DB172B},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25497702
+              },
+              "DSC_0218.NEF": {
+                "etag": "\"{DC9282AB-2B36-4DDE-8029-C95FEE59CFEC},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25202196
+              },
+              "DSC_0219.NEF": {
+                "etag": "\"{2F612AB8-5B1F-4C13-90CB-3FB4B79A9DD2},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25371795
+              },
+              "DSC_0220.NEF": {
+                "etag": "\"{0DC1C9AA-7395-4E59-9566-1144F4DA31F3},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25117013
+              },
+              "DSC_0221.NEF": {
+                "etag": "\"{509F02BC-EAEB-49A0-8E75-0B4F8F5AB421},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25245004
+              },
+              "DSC_0222.NEF": {
+                "etag": "\"{15E6DE4B-3767-4C3C-8BA0-643A326EB32A},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25060481
+              },
+              "DSC_0223.NEF": {
+                "etag": "\"{A146027A-6FD8-436E-8C9D-F6EA92441D6F},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25197501
+              },
+              "DSC_0224.NEF": {
+                "etag": "\"{748BC9A8-BEB0-40DB-85C4-AA0D6688120C},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25025024
+              },
+              "DSC_0225.NEF": {
+                "etag": "\"{B3F0D92C-F9B1-4DE9-8F2E-D0F2495921B5},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25074245
+              },
+              "DSC_0226.NEF": {
+                "etag": "\"{3210F3DD-0EE5-4278-B61D-76D9B2CFCBD4},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25126519
+              }
+            }
+          },
+          "object2": {
+            "_files": {
+              "DSC_0001.NEF": {
+                "etag": "\"{0A60B2B4-7086-4461-9053-778558826F06},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25318213
+              },
+              "DSC_0002.NEF": {
+                "etag": "\"{2BB06B34-5C59-4E02-8FD6-BE78AF075D66},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25243935
+              },
+              "DSC_0003.NEF": {
+                "etag": "\"{8B8EDF14-A703-4754-B2AC-C9A8137D5EF3},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25494444
+              },
+              "DSC_0004.NEF": {
+                "etag": "\"{3CC873FC-C88F-422E-B786-9BF45022C046},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25452464
+              },
+              "DSC_0005.NEF": {
+                "etag": "\"{CAAB0008-417D-4D90-8634-3D6D3F3DF9E9},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25550792
+              },
+              "DSC_0006.NEF": {
+                "etag": "\"{931AD941-AAFC-414C-A99D-451AF5179B5D},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25486808
+              },
+              "DSC_0007.NEF": {
+                "etag": "\"{0547ED5C-E443-4D3A-9541-601257ABBEC5},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25151291
+              },
+              "DSC_0008.NEF": {
+                "etag": "\"{BB18CFA5-48F6-4032-9A10-1F53F1476099},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25170565
+              },
+              "DSC_0009.NEF": {
+                "etag": "\"{9C9B52C3-AEE6-415E-9A56-1E55E728DC96},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25242881
+              },
+              "DSC_0010.NEF": {
+                "etag": "\"{27330558-D327-4351-AE72-58A6147DFBF1},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25283905
+              },
+              "DSC_0011.NEF": {
+                "etag": "\"{A8EE960C-0D0E-428C-AF4A-6C42BB66A0D1},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25325207
+              },
+              "DSC_0012.NEF": {
+                "etag": "\"{D91CEB87-ED5A-4A6E-A58C-11D06FC99CDF},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25517999
+              },
+              "DSC_0013.NEF": {
+                "etag": "\"{AC53C734-F33F-4671-9C58-08D162B90193},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25459294
+              },
+              "DSC_0014.NEF": {
+                "etag": "\"{984D29B1-2F3A-46ED-BC7D-408179D06527},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25673352
+              },
+              "DSC_0015.NEF": {
+                "etag": "\"{2C6738B7-69C8-4564-9B69-02BEB2605ED7},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25339138
+              },
+              "DSC_0016.NEF": {
+                "etag": "\"{A9856D37-0CF0-4793-92EC-4F3D896A8D2C},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25517357
+              },
+              "DSC_0017.NEF": {
+                "etag": "\"{18AA3C16-33B4-4EB6-9357-707F8D3D6311},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25481562
+              },
+              "DSC_0018.NEF": {
+                "etag": "\"{DB9C12E7-1170-4E5B-9B48-9CAB12685936},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25402363
+              },
+              "DSC_0019.NEF": {
+                "etag": "\"{4349A637-747E-46FF-BBFC-2655CD6C5F28},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25428424
+              },
+              "DSC_0020.NEF": {
+                "etag": "\"{8F317F16-7664-4975-A554-676ACEB39DC2},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25185935
+              },
+              "DSC_0021.NEF": {
+                "etag": "\"{9A678B4D-9CB0-4858-B2B6-BCB8D578718D},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25335965
+              },
+              "DSC_0022.NEF": {
+                "etag": "\"{4F1F8CC7-D59A-48D4-A4CC-181649B5503E},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 24989100
+              },
+              "DSC_0023.NEF": {
+                "etag": "\"{F7D36684-0CCC-465E-89E9-763FB91BB113},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25317168
+              },
+              "DSC_0024.NEF": {
+                "etag": "\"{B42A8A07-2EE9-42B7-8643-B7F2DF6D8907},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25127103
+              },
+              "DSC_0025.NEF": {
+                "etag": "\"{B8E40C1B-A374-4DB1-AA8D-07B20F74FD3E},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25226850
+              },
+              "DSC_0026.NEF": {
+                "etag": "\"{DAF37B7D-7D9E-43F1-BF33-CB612713F0D5},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25200806
+              },
+              "DSC_0027.NEF": {
+                "etag": "\"{1BA250F5-C5CC-463B-A06A-2263DAFF4AFD},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25250296
+              },
+              "DSC_0028.NEF": {
+                "etag": "\"{BF11B4F5-C986-42C3-8696-FED371B85310},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25284587
+              },
+              "DSC_0029.NEF": {
+                "etag": "\"{B775ECB7-EEBA-4748-95AE-F9240D7A0503},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25136948
+              },
+              "DSC_0030.NEF": {
+                "etag": "\"{078085D3-EDB9-4A85-A26E-FEAAC16FEC9C},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25062150
+              },
+              "DSC_0031.NEF": {
+                "etag": "\"{5001DAC3-9369-4595-820B-4419F23C5F1D},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25120885
+              },
+              "DSC_0032.NEF": {
+                "etag": "\"{A26A73B5-3C2B-41DE-9443-7D03408BFC83},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25212222
+              },
+              "DSC_0033.NEF": {
+                "etag": "\"{DA5CA8D2-A3DB-44C6-8287-2AF1FD29D6B9},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25124437
+              },
+              "DSC_0034.NEF": {
+                "etag": "\"{05BB4666-E9FB-4D6B-BF57-0866F3FB95A4},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25171489
+              },
+              "DSC_0035.NEF": {
+                "etag": "\"{A0BC53B0-40A6-46A2-8B63-BD7B0A389AAF},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 24714200
+              },
+              "DSC_0036.NEF": {
+                "etag": "\"{CA57424F-0C72-486F-805F-786584344C16},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 24842614
+              },
+              "DSC_0037.NEF": {
+                "etag": "\"{6652F76F-998C-44D4-84B7-E3D5F84B9FE4},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25069240
+              },
+              "DSC_0038.NEF": {
+                "etag": "\"{487A3400-E757-4719-90D8-AB13D81642EE},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25000473
+              },
+              "DSC_0039.NEF": {
+                "etag": "\"{5D2DDBC7-1895-4389-90D4-B7AA4D01ADF3},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25204992
+              },
+              "DSC_0040.NEF": {
+                "etag": "\"{A6CC22F0-2D94-4298-B695-FBDB3D4ADC41},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25396077
+              },
+              "DSC_0041.NEF": {
+                "etag": "\"{3DAFEDBE-3812-4A6B-88C4-8B5922A20D44},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 24970820
+              },
+              "DSC_0042.NEF": {
+                "etag": "\"{117DF060-F161-4FF6-9B32-EC3B34C52E41},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25168421
+              },
+              "DSC_0043.NEF": {
+                "etag": "\"{582B02D2-EBEF-45C3-A997-F43A1DB6B1B0},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25252161
+              },
+              "DSC_0044.NEF": {
+                "etag": "\"{A907F87A-66BF-4ADB-B18C-BD3B372363D6},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25240589
+              },
+              "DSC_0045.NEF": {
+                "etag": "\"{24770DE6-B45D-4757-9D9A-985EBBC8BA75},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25144069
+              },
+              "DSC_0046.NEF": {
+                "etag": "\"{AAAFD87C-651A-49E2-ACA6-A9E8CF0BA963},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25330454
+              },
+              "DSC_0047.NEF": {
+                "etag": "\"{E68C5777-1A06-4B52-B705-A61847B571DA},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 24690495
+              },
+              "DSC_0048.NEF": {
+                "etag": "\"{13CA4F7E-2394-40A2-9F67-E051DDC8489B},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25048296
+              },
+              "DSC_0049.NEF": {
+                "etag": "\"{7055AC6E-DA14-4C94-81AC-B21FDCD528C9},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 24817773
+              },
+              "DSC_0050.NEF": {
+                "etag": "\"{6B0A3EBD-BE08-4248-8D8F-AE044FE1E961},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 24968065
+              },
+              "DSC_0051.NEF": {
+                "etag": "\"{73944F56-048D-44EB-8400-FB2087F59AF0},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25193051
+              },
+              "DSC_0052.NEF": {
+                "etag": "\"{857B3D65-28F1-4888-821A-A2F8B7CC9AB2},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25247166
+              }
             }
           }
         },
         "rawp": {
-          "_files": {
-            "Dalmanites_verso_0.jpg": {
-              "etag": "\"{C55F6B0C-F7B5-41EB-B53D-B47E6E89D471},2\"",
-              "modified": "2025-10-14T14:37:41Z",
-              "size": 3798554
-            },
-            "Dalmanites_verso_0.mtl": {
-              "etag": "\"{ACF913A8-F0B0-4ED7-9CE4-0AD285DF6335},1\"",
-              "modified": "2025-10-14T14:37:41Z",
-              "size": 142
-            },
-            "Dalmanites_verso_0.obj": {
-              "etag": "\"{93B565DD-4BE9-4476-85D5-A23471E0DD98},2\"",
-              "modified": "2025-10-14T14:37:41Z",
-              "size": 28137695
+          "object1": {
+            "_files": {
+              "Dalmanites_recto_0.jpg": {
+                "etag": "\"{7020346E-1629-47B8-8F0D-4D0382F695AD},4\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 2946625
+              },
+              "Dalmanites_recto_0.mtl": {
+                "etag": "\"{212B6DF0-984A-4EBE-A972-C047227EE560},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 142
+              },
+              "Dalmanites_recto_0.obj": {
+                "etag": "\"{B18DA35E-7C8C-4FBA-8C89-9CBA531984F1},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 25297045
+              }
+            }
+          },
+          "object2": {
+            "_files": {
+              "Dalmanites_verso_0.jpg": {
+                "etag": "\"{C55F6B0C-F7B5-41EB-B53D-B47E6E89D471},4\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 3798554
+              },
+              "Dalmanites_verso_0.mtl": {
+                "etag": "\"{ACF913A8-F0B0-4ED7-9CE4-0AD285DF6335},2\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 142
+              },
+              "Dalmanites_verso_0.obj": {
+                "etag": "\"{93B565DD-4BE9-4476-85D5-A23471E0DD98},3\"",
+                "modified": "2026-01-29T14:48:30Z",
+                "size": 28137695
+              }
             }
           }
         }
@@ -111820,946 +111870,1009 @@
           }
         }
       },
-      "S6-98a-DA-Calchi facciali colorati, boscimani": {
+      "S6-98-DA-Calchi facciali colorati, boscimani": {
         "dcho": {
-          "_files": {
-            "calco_boscimano(a)_1.mtl": {
-              "etag": "\"{EB0E9CC8-9417-4040-8AF1-42EBA764EDF8},1\"",
-              "modified": "2025-11-07T10:15:11Z",
-              "size": 265
-            },
-            "calco_boscimano(a)_1.obj": {
-              "etag": "\"{B68F92D0-8F79-4C46-B5D0-A13C79578993},2\"",
-              "modified": "2025-11-07T10:15:11Z",
-              "size": 35494089
-            },
-            "calco_boscimanoa_1.jpg": {
-              "etag": "\"{10D9582D-CD14-4BAD-9E22-A26B992314F2},2\"",
-              "modified": "2025-11-07T10:15:11Z",
-              "size": 4872127
+          "object1": {
+            "_files": {
+              "calco_boscimano(a)_1.mtl": {
+                "etag": "\"{EB0E9CC8-9417-4040-8AF1-42EBA764EDF8},2\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 265
+              },
+              "calco_boscimano(a)_1.obj": {
+                "etag": "\"{B68F92D0-8F79-4C46-B5D0-A13C79578993},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 35494089
+              },
+              "calco_boscimanoa_1.jpg": {
+                "etag": "\"{10D9582D-CD14-4BAD-9E22-A26B992314F2},4\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 4872127
+              }
+            }
+          },
+          "object2": {
+            "_files": {
+              "calco_boscimano(b)_1.mtl": {
+                "etag": "\"{8DA7F567-0458-4877-B261-C9DEC3FF869B},2\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 281
+              },
+              "calco_boscimano(b)_1.obj": {
+                "etag": "\"{6E869B0A-D5D1-40AB-9144-7F2EDE45816C},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 37691448
+              },
+              "calcofacciale_boscimano(b)_1.jpg": {
+                "etag": "\"{46C3C2C3-D772-4B16-B0E9-26E7077FA938},4\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 4774619
+              }
+            }
+          },
+          "object3": {
+            "_files": {
+              "calco_boscimano(b)_1.mtl": {
+                "etag": "\"{4118DE09-FDDC-4293-923A-5DE5CF4CDE37},2\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 281
+              },
+              "calco_boscimano(b)_1.obj": {
+                "etag": "\"{6EEE773F-210A-417B-B800-086FBCB2993A},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 37691448
+              },
+              "calcofacciale_boscimano(b)_1.jpg": {
+                "etag": "\"{5D787C1D-8A70-4DCB-988A-FE612E0F6268},4\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 4774619
+              }
             }
           }
         },
         "dchoo": {
-          "_files": {
-            "calco_boscimano(a)_02.bin": {
-              "etag": "\"{BA7F95EB-FD7A-4D01-B21B-DF990FF5D0ED},1\"",
-              "modified": "2025-11-07T10:15:02Z",
-              "size": 69340
+          "Materials": {
+            "object1": {
+              "_files": {
+                "calco_boscimano(a)_02.bin": {
+                  "etag": "\"{BA7F95EB-FD7A-4D01-B21B-DF990FF5D0ED},2\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 69340
+                },
+                "calco_boscimano(a)_02.gltf": {
+                  "etag": "\"{229854FF-AEF8-40AB-ADB5-04B41A018919},2\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 2316
+                },
+                "calco_boscimanoa_diffuse.jpg": {
+                  "etag": "\"{2C5E00E5-60C0-49D5-BA55-AC0BBE196751},4\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 958248
+                },
+                "calco_boscimanoa_normal.jpg": {
+                  "etag": "\"{135CF1D2-0D34-47A1-8965-186FBB868948},4\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 209562
+                },
+                "calco_boscimanoa_roughness.jpg": {
+                  "etag": "\"{B66E4838-EF50-4892-BC89-E21C92152316},4\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 205523
+                }
+              }
             },
-            "calco_boscimano(a)_02.gltf": {
-              "etag": "\"{229854FF-AEF8-40AB-ADB5-04B41A018919},1\"",
-              "modified": "2025-11-07T10:15:02Z",
-              "size": 2316
+            "object2": {
+              "_files": {
+                "calco_boscimano(b)_02.bin": {
+                  "etag": "\"{27292D02-90A5-405C-AFD7-4B87EF1DEF39},2\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 60588
+                },
+                "calco_boscimano(b)_02.gltf": {
+                  "etag": "\"{815C7A1C-958C-4AC3-831E-B4E19B1F22B2},2\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 2383
+                },
+                "calcofacciale_boscimanob_diffuse.jpg": {
+                  "etag": "\"{A76E2075-6D09-439A-AD86-0B81842B791E},4\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 998183
+                },
+                "calcofacciale_boscimanob_normal.jpg": {
+                  "etag": "\"{D0FB18D8-85E3-40B6-844D-4D12FB1DE8E3},4\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 434272
+                },
+                "calcofacciale_boscimanob_roughness.jpg": {
+                  "etag": "\"{AF66D551-D396-49EC-BF54-AE5B905BF3E0},4\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 220608
+                }
+              }
+            },
+            "object3": {
+              "_files": {
+                "calco_boscimano(c)_02.bin": {
+                  "etag": "\"{D652AF15-E62F-40C7-A818-7202476E707F},2\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 39360
+                },
+                "calco_boscimano(c)_02.gltf": {
+                  "etag": "\"{3D562BD3-3868-4A1F-94A8-E38C82C86CB2},2\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 2394
+                },
+                "calcofacciale_boscimanoc_diffuse.jpg": {
+                  "etag": "\"{D65354F6-44F2-47CD-B45E-D4B8F7ACDED4},4\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 937480
+                },
+                "calcofacciale_boscimanoc_normal.jpg": {
+                  "etag": "\"{F651A7EA-CAD5-4F6F-853C-510FB1BFF5C0},4\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 223850
+                },
+                "calcofacciale_boscimanoc_roughness.jpg": {
+                  "etag": "\"{51A792D9-C178-4F85-8138-14BEAA36C624},4\"",
+                  "modified": "2026-01-29T15:28:40Z",
+                  "size": 459575
+                }
+              }
+            }
+          },
+          "_files": {
+            "calchi_facciali_boscimani.bin": {
+              "etag": "\"{34C56638-F4FA-49C6-BDBC-D5CD5F7BB24E},1\"",
+              "modified": "2026-01-29T15:28:40Z",
+              "size": 169876
+            },
+            "calchi_facciali_boscimani.gltf": {
+              "etag": "\"{DB483258-4239-4F5D-8229-2D4161C3E601},1\"",
+              "modified": "2026-01-29T15:28:40Z",
+              "size": 5900
             },
             "calco_boscimanoa_diffuse.jpg": {
-              "etag": "\"{2C5E00E5-60C0-49D5-BA55-AC0BBE196751},2\"",
-              "modified": "2025-11-07T10:15:02Z",
+              "etag": "\"{0A4E35A3-2D16-4776-B56D-800B0CDE7614},2\"",
+              "modified": "2026-01-29T15:28:40Z",
               "size": 958248
             },
             "calco_boscimanoa_normal.jpg": {
-              "etag": "\"{135CF1D2-0D34-47A1-8965-186FBB868948},2\"",
-              "modified": "2025-11-07T10:15:02Z",
+              "etag": "\"{FE38BDBA-0048-4422-A932-334D5AC388D7},2\"",
+              "modified": "2026-01-29T15:28:40Z",
               "size": 209562
             },
             "calco_boscimanoa_roughness.jpg": {
-              "etag": "\"{B66E4838-EF50-4892-BC89-E21C92152316},2\"",
-              "modified": "2025-11-07T10:15:02Z",
+              "etag": "\"{2BC52228-816A-47AC-BE05-E1E19C5DB08B},2\"",
+              "modified": "2026-01-29T15:28:40Z",
               "size": 205523
-            }
-          }
-        },
-        "raw": {
-          "_files": {
-            "DSC02322.ARW": {
-              "etag": "\"{15300F1B-6AC2-4269-B15B-3618EB875EFB},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02323.ARW": {
-              "etag": "\"{02F03C5E-1655-4950-BB60-1E61BC0E567B},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02324.ARW": {
-              "etag": "\"{918D639C-0B83-4A64-842B-5CE00601FF44},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02325.ARW": {
-              "etag": "\"{62B71D20-DC56-4618-875D-D018B4F8BB23},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02326.ARW": {
-              "etag": "\"{4F3B83E9-DD5D-4EC1-8C9C-F6ACFFB5F076},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02327.ARW": {
-              "etag": "\"{B8F4152F-6E92-418A-A98D-9FDA668740FE},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02328.ARW": {
-              "etag": "\"{68E274FF-C41E-42FD-9313-DF55D0FEA8A4},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02329.ARW": {
-              "etag": "\"{0101F00A-5E23-4122-9500-4E3E2B6D6946},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02330.ARW": {
-              "etag": "\"{9219A977-9CD4-4915-A590-D81007FF7769},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02331.ARW": {
-              "etag": "\"{C29621CD-0C4A-4A2D-A359-B1855B51A0A9},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02332.ARW": {
-              "etag": "\"{E6878283-C8C8-4944-964C-35473F02AC56},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02333.ARW": {
-              "etag": "\"{3B859B04-43E5-4FE3-9A84-A01D2F2BD8D9},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02334.ARW": {
-              "etag": "\"{ACD9BB91-564C-424A-9389-A1B122C6AAE4},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02335.ARW": {
-              "etag": "\"{9E1929A9-56AE-4B47-8D39-471D397E73EA},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02336.ARW": {
-              "etag": "\"{2C6F5D94-8F8D-4047-8817-0F329745A1FA},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02337.ARW": {
-              "etag": "\"{EA5317D4-50A6-4482-A282-DF2770A7AA24},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02338.ARW": {
-              "etag": "\"{00770637-5F88-4FCF-BB20-708747DE0CA2},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02339.ARW": {
-              "etag": "\"{908BA6EC-971A-4B1F-A998-044415F6413E},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02340.ARW": {
-              "etag": "\"{7582CA7A-ED4C-4DC7-A8D9-4E0EB1D2F984},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02341.ARW": {
-              "etag": "\"{C0642A3E-E1CF-475B-A756-6C6221C3C3C0},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24674304
-            },
-            "DSC02342.ARW": {
-              "etag": "\"{209BD4B4-C6E4-4F4A-8895-05FE497C0534},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02343.ARW": {
-              "etag": "\"{10ABFB7C-C65F-4755-8349-08410725CB61},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02344.ARW": {
-              "etag": "\"{4271E87A-FA5A-4643-856F-D3AA42D98981},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02345.ARW": {
-              "etag": "\"{152315A6-229F-47BF-91D1-9DFE91AB8C9E},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02346.ARW": {
-              "etag": "\"{A38DE360-FFDD-427A-96E6-CBB84F6425D1},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02347.ARW": {
-              "etag": "\"{293AF2A0-1A7C-4A78-8688-1FC5AB00777A},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02348.ARW": {
-              "etag": "\"{2715BECB-3641-4798-A584-E2AE5A179DB3},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02349.ARW": {
-              "etag": "\"{DDFA846B-AD4A-4EA9-990B-12A7CFF6FCCF},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24772608
-            },
-            "DSC02350.ARW": {
-              "etag": "\"{1A379DCA-F60A-4569-8082-F9FE538AE209},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24772608
-            },
-            "DSC02351.ARW": {
-              "etag": "\"{CE8F6E71-A116-4E58-8990-C0CDA7AB0914},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02352.ARW": {
-              "etag": "\"{E1B49087-9C28-4D1B-972F-753CC1207B04},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02353.ARW": {
-              "etag": "\"{EC137799-4658-4105-91FC-69DACDBF9F62},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02354.ARW": {
-              "etag": "\"{0A8811AE-B458-43FE-AE9A-A21F3C0B12C6},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02355.ARW": {
-              "etag": "\"{8A0986BE-B400-4C92-BA00-C3114A4BF297},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02356.ARW": {
-              "etag": "\"{344783D3-51AA-4AA9-8623-687A2D6BDC32},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02357.ARW": {
-              "etag": "\"{0F7A3279-208E-429B-8B30-361A3607B211},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24772608
-            },
-            "DSC02358.ARW": {
-              "etag": "\"{232BDB20-7DC7-4CB2-8924-84274B41036D},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02359.ARW": {
-              "etag": "\"{E03298C2-8ADC-494D-8272-F70D76E93E2F},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02360.ARW": {
-              "etag": "\"{CAE0D957-DCD7-4389-88B8-B8D19EB6B7BE},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02361.ARW": {
-              "etag": "\"{A8EF41DD-84E6-4DD7-9E5D-42CA6E5DB444},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24674304
-            },
-            "DSC02362.ARW": {
-              "etag": "\"{536DAF25-649B-4344-A744-531231BEFBA4},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02363.ARW": {
-              "etag": "\"{B5058062-A5D7-4585-AF4A-51831DB549CA},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02364.ARW": {
-              "etag": "\"{26A6933F-8D08-43CC-B7CB-CC37FBB7E61B},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24674304
-            },
-            "DSC02365.ARW": {
-              "etag": "\"{B9DB5698-F168-449E-AF67-5A06EF8ACD22},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02366.ARW": {
-              "etag": "\"{19347A9D-51A8-436B-93F6-10FDB4084E85},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02367.ARW": {
-              "etag": "\"{8B9519DF-7CBD-471C-A7DF-61F4DAF178CC},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02368.ARW": {
-              "etag": "\"{F03FA06A-B2CD-4DB7-B1BE-61F23C753AB2},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24739840
-            },
-            "DSC02369.ARW": {
-              "etag": "\"{D5F8A650-8267-4882-971C-35B11A1F59CC},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            },
-            "DSC02370.ARW": {
-              "etag": "\"{5AE84E3C-D818-4D24-A19C-C1BF8BD6AFF9},2\"",
-              "modified": "2025-12-17T10:06:30Z",
-              "size": 24707072
-            }
-          }
-        },
-        "rawp": {
-          "_files": {
-            "calco_boscimano(a).jpg": {
-              "etag": "\"{85798C21-CB25-489C-B78C-2BF3520CBCE0},2\"",
-              "modified": "2025-11-07T10:15:06Z",
-              "size": 3312526
-            },
-            "calco_boscimano(a).mtl": {
-              "etag": "\"{508FDBBB-CA41-415B-B82D-A0ED232490E5},1\"",
-              "modified": "2025-11-07T10:15:06Z",
-              "size": 142
-            },
-            "calco_boscimano(a).obj": {
-              "etag": "\"{5BED9455-D558-422C-B9F2-59CDD176CE77},2\"",
-              "modified": "2025-11-07T10:15:06Z",
-              "size": 30874306
-            }
-          }
-        }
-      },
-      "S6-98b-DA-Calchi facciali colorati, boscimani": {
-        "dcho": {
-          "_files": {
-            "calco_boscimano(b)_1.mtl": {
-              "etag": "\"{8DA7F567-0458-4877-B261-C9DEC3FF869B},1\"",
-              "modified": "2025-12-02T14:38:58Z",
-              "size": 281
-            },
-            "calco_boscimano(b)_1.obj": {
-              "etag": "\"{6E869B0A-D5D1-40AB-9144-7F2EDE45816C},2\"",
-              "modified": "2025-12-02T14:39:01Z",
-              "size": 37691448
-            },
-            "calcofacciale_boscimano(b)_1.jpg": {
-              "etag": "\"{46C3C2C3-D772-4B16-B0E9-26E7077FA938},2\"",
-              "modified": "2025-12-02T14:38:59Z",
-              "size": 4774619
-            }
-          }
-        },
-        "dchoo": {
-          "_files": {
-            "calco_boscimano(b)_02.bin": {
-              "etag": "\"{27292D02-90A5-405C-AFD7-4B87EF1DEF39},1\"",
-              "modified": "2025-11-07T10:16:50Z",
-              "size": 60588
-            },
-            "calco_boscimano(b)_02.gltf": {
-              "etag": "\"{815C7A1C-958C-4AC3-831E-B4E19B1F22B2},1\"",
-              "modified": "2025-11-07T10:16:50Z",
-              "size": 2383
             },
             "calcofacciale_boscimanob_diffuse.jpg": {
-              "etag": "\"{A76E2075-6D09-439A-AD86-0B81842B791E},2\"",
-              "modified": "2025-11-07T10:16:50Z",
+              "etag": "\"{D9B1F7E9-C581-4ED1-BAB9-0ED46B8FAD46},2\"",
+              "modified": "2026-01-29T15:28:40Z",
               "size": 998183
             },
             "calcofacciale_boscimanob_normal.jpg": {
-              "etag": "\"{D0FB18D8-85E3-40B6-844D-4D12FB1DE8E3},2\"",
-              "modified": "2025-11-07T10:16:50Z",
+              "etag": "\"{D9D3BCDA-4190-4DE0-87C4-270D6D2BE5C8},2\"",
+              "modified": "2026-01-29T15:28:40Z",
               "size": 434272
             },
             "calcofacciale_boscimanob_roughness.jpg": {
-              "etag": "\"{AF66D551-D396-49EC-BF54-AE5B905BF3E0},2\"",
-              "modified": "2025-11-07T10:16:50Z",
+              "etag": "\"{241D761A-5EB2-4340-8DC2-0E1BB7D8B39B},2\"",
+              "modified": "2026-01-29T15:28:40Z",
               "size": 220608
-            }
-          }
-        },
-        "raw": {
-          "_files": {
-            "DSC02225.ARW": {
-              "etag": "\"{638A17FC-9C06-4A92-8369-D19C781FBC25},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02227.ARW": {
-              "etag": "\"{A14D16F4-261C-4F93-B9BC-B23DB5F31961},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02228.ARW": {
-              "etag": "\"{ACF93D0F-1387-4159-9514-82BC5A9E46BD},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02229.ARW": {
-              "etag": "\"{609D27FF-E6AC-46BC-A3B9-6FB1E75CB2D5},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02230.ARW": {
-              "etag": "\"{6B76E2CF-C0DB-416E-8B3B-D542709AF4BA},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02231.ARW": {
-              "etag": "\"{5785B41C-2F2C-4E41-9EEE-0A412708841B},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02232.ARW": {
-              "etag": "\"{91A8921D-98F5-48A9-A565-BBAF538588F0},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02233.ARW": {
-              "etag": "\"{97107736-974C-4B69-8545-D23FE771311A},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02234.ARW": {
-              "etag": "\"{4D9D5280-253B-45F5-84D2-8D33D1ED90CD},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02235.ARW": {
-              "etag": "\"{ADB46C7B-5695-445C-A556-6FC2BD781403},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02236.ARW": {
-              "etag": "\"{B9A8F324-D845-43EE-8246-F481140211E1},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24674304
-            },
-            "DSC02237.ARW": {
-              "etag": "\"{CEAAA03E-E6C1-4699-83F6-F1C7093425BE},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02238.ARW": {
-              "etag": "\"{235AD0A2-FAE1-4F51-A50C-219C1A1143A0},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02239.ARW": {
-              "etag": "\"{85AA42CA-796D-43D7-9182-89E80FACCDD8},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02240.ARW": {
-              "etag": "\"{08856A7A-6D6C-4B69-AFE0-BC5DECA47903},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24674304
-            },
-            "DSC02241.ARW": {
-              "etag": "\"{5BA46235-F18B-4571-BAE5-F1B9413FD10F},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02242.ARW": {
-              "etag": "\"{642A6002-7575-4E2B-8C95-ABCE917C5108},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02243.ARW": {
-              "etag": "\"{C64B6949-4B4C-4C31-9DB2-50FA8B17A77C},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24674304
-            },
-            "DSC02244.ARW": {
-              "etag": "\"{F87CA239-A110-4D38-8F98-0BADCD6E74DD},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02245.ARW": {
-              "etag": "\"{AA020F3F-C201-4763-8061-5BF972A778EC},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02246.ARW": {
-              "etag": "\"{761BD480-EF5C-4B52-9137-B4334229A909},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02247.ARW": {
-              "etag": "\"{49D15C73-03C6-4D05-8313-86325223FD89},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02248.ARW": {
-              "etag": "\"{B975AD64-B0DF-4004-8751-7C9F5556AF31},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02249.ARW": {
-              "etag": "\"{C70A48D6-3098-4090-9A5F-99C67F6EDBE2},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02250.ARW": {
-              "etag": "\"{B6408E1F-47AC-405A-88CA-E7C224247CE0},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02251.ARW": {
-              "etag": "\"{2521E28A-E7F3-4644-9B52-CA743D882828},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24674304
-            },
-            "DSC02252.ARW": {
-              "etag": "\"{0970896D-D7D4-4EB5-A56E-56537B765997},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02253.ARW": {
-              "etag": "\"{55AEDD39-CBD6-4CA3-AB1C-BB497DFFE104},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02254.ARW": {
-              "etag": "\"{5593C40A-557C-4739-AA96-89B2101CE3BE},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02255.ARW": {
-              "etag": "\"{CCB2213C-D8B4-4BAF-AB8D-68335ABDACFA},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02256.ARW": {
-              "etag": "\"{6E72F1AA-07A1-42DA-A3E2-851BBD05A1A3},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02257.ARW": {
-              "etag": "\"{A7AC6555-90F1-4BA9-A0F4-BB0DF410EBC9},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02258.ARW": {
-              "etag": "\"{EF666ED5-6623-4122-8C70-6E3E069ED2D2},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02259.ARW": {
-              "etag": "\"{78173470-16CA-47A5-863F-9C03CA27E8C2},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02260.ARW": {
-              "etag": "\"{A3D547A7-27A0-4FB9-B902-59C15898CEBD},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02261.ARW": {
-              "etag": "\"{126143DC-0F6A-4F3B-856A-06DBD7479381},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02262.ARW": {
-              "etag": "\"{F1BFD7CD-B624-4FE6-BF61-D02E2E583822},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02263.ARW": {
-              "etag": "\"{CFE641A1-5BE6-4A23-880D-F136CD7D7A1A},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02264.ARW": {
-              "etag": "\"{0F76C3AC-4E1B-456D-84D6-6AAAE01B1C63},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02265.ARW": {
-              "etag": "\"{B51E368D-50C0-43FE-B884-635ADD0E0A13},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02266.ARW": {
-              "etag": "\"{E63986BE-9069-41B5-890E-B10E1B89891C},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02267.ARW": {
-              "etag": "\"{A07BDFCD-9F61-4980-A17F-ACC46E17452B},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02268.ARW": {
-              "etag": "\"{7EE180D2-8E3F-4D65-9558-1D5C9E91FDA2},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02269.ARW": {
-              "etag": "\"{82508140-3654-45DC-82A3-0C4F5EF1C967},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24739840
-            },
-            "DSC02270.ARW": {
-              "etag": "\"{0C71B060-4CDA-418A-B5F7-17F55192D969},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02271.ARW": {
-              "etag": "\"{D50AFA4B-6C41-439A-BE64-053619356942},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02272.ARW": {
-              "etag": "\"{FD338E4D-0E51-454D-A0A5-A222B552CB8F},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02273.ARW": {
-              "etag": "\"{DF657259-FF78-4435-85FB-043C909F8EC2},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02274.ARW": {
-              "etag": "\"{8544C689-2FF7-468A-A09C-C67DE6CADB45},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            },
-            "DSC02275.ARW": {
-              "etag": "\"{E439F328-7F33-4C16-B876-50684A01DFF6},2\"",
-              "modified": "2025-12-17T10:06:40Z",
-              "size": 24707072
-            }
-          }
-        },
-        "rawp": {
-          "_files": {
-            "calcofacciale_boscimano(b).jpg": {
-              "etag": "\"{873151CD-CC39-4228-A924-20EC19D3A944},2\"",
-              "modified": "2025-11-07T10:16:41Z",
-              "size": 3182875
-            },
-            "calcofacciale_boscimano(b).mtl": {
-              "etag": "\"{11E51FAD-DE81-4885-A1F9-5EEBC78FD054},1\"",
-              "modified": "2025-11-07T10:16:41Z",
-              "size": 158
-            },
-            "calcofacciale_boscimano(b).obj": {
-              "etag": "\"{5C1D29BE-D64A-42D5-AF63-99053BD040F6},2\"",
-              "modified": "2025-11-07T10:16:41Z",
-              "size": 33176667
-            }
-          }
-        }
-      },
-      "S6-98c-DA-Calchi facciali colorati, boscimani": {
-        "dcho": {
-          "_files": {
-            "calco_boscimano(b)_1.mtl": {
-              "etag": "\"{4118DE09-FDDC-4293-923A-5DE5CF4CDE37},1\"",
-              "modified": "2025-11-07T10:18:11Z",
-              "size": 281
-            },
-            "calco_boscimano(b)_1.obj": {
-              "etag": "\"{6EEE773F-210A-417B-B800-086FBCB2993A},2\"",
-              "modified": "2025-11-07T10:18:11Z",
-              "size": 37691448
-            },
-            "calcofacciale_boscimano(b)_1.jpg": {
-              "etag": "\"{5D787C1D-8A70-4DCB-988A-FE612E0F6268},2\"",
-              "modified": "2025-11-07T10:18:11Z",
-              "size": 4774619
-            }
-          }
-        },
-        "dchoo": {
-          "_files": {
-            "calco_boscimano(c)_02.bin": {
-              "etag": "\"{D652AF15-E62F-40C7-A818-7202476E707F},1\"",
-              "modified": "2025-11-07T10:18:07Z",
-              "size": 39360
-            },
-            "calco_boscimano(c)_02.gltf": {
-              "etag": "\"{3D562BD3-3868-4A1F-94A8-E38C82C86CB2},1\"",
-              "modified": "2025-11-07T10:18:07Z",
-              "size": 2394
             },
             "calcofacciale_boscimanoc_diffuse.jpg": {
-              "etag": "\"{D65354F6-44F2-47CD-B45E-D4B8F7ACDED4},2\"",
-              "modified": "2025-11-07T10:18:07Z",
+              "etag": "\"{0419DFFD-18D6-4DA2-B1DA-21306DC5DFE4},2\"",
+              "modified": "2026-01-29T15:28:40Z",
               "size": 937480
             },
             "calcofacciale_boscimanoc_normal.jpg": {
-              "etag": "\"{F651A7EA-CAD5-4F6F-853C-510FB1BFF5C0},2\"",
-              "modified": "2025-11-07T10:18:07Z",
+              "etag": "\"{2D364911-DD54-49CD-A2B6-0F2928E11C18},2\"",
+              "modified": "2026-01-29T15:28:40Z",
               "size": 223850
             },
             "calcofacciale_boscimanoc_roughness.jpg": {
-              "etag": "\"{51A792D9-C178-4F85-8138-14BEAA36C624},2\"",
-              "modified": "2025-11-07T10:18:07Z",
+              "etag": "\"{DF1832BE-744D-415A-B4A0-AC4A3DD0F841},2\"",
+              "modified": "2026-01-29T15:28:40Z",
               "size": 459575
             }
           }
         },
         "raw": {
-          "_files": {
-            "DSC02276.ARW": {
-              "etag": "\"{2729D53A-B3EA-42D3-85CD-F8643F2BC623},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02277.ARW": {
-              "etag": "\"{6FF77BDF-EA87-4989-9848-76AAB5CAE78B},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02278.ARW": {
-              "etag": "\"{09BD3615-1F03-4F68-940E-59454703216A},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02279.ARW": {
-              "etag": "\"{CE46250A-131C-4088-B51E-F50F5377820A},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02280.ARW": {
-              "etag": "\"{63EE3B5E-B569-4963-84FC-9AC4D0B04ACF},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02281.ARW": {
-              "etag": "\"{07270BB2-7E98-453B-8447-498A125BD15B},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02282.ARW": {
-              "etag": "\"{44CC2FD0-9071-4019-8EA5-AC45E8535E4D},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02283.ARW": {
-              "etag": "\"{35C194E6-E74C-436D-AEFD-D51AA4FD2AFA},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02284.ARW": {
-              "etag": "\"{803443F9-3AFA-4779-9B37-774AEBEE4101},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02285.ARW": {
-              "etag": "\"{8DF75E37-14BC-41A3-BB05-F7056318EF66},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02286.ARW": {
-              "etag": "\"{DA9E2020-9719-4C7B-82EF-0866BBA54DBB},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02287.ARW": {
-              "etag": "\"{82F75B4F-E2EC-49BF-927D-C2309460B0CA},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02288.ARW": {
-              "etag": "\"{F8FC1FA6-9873-466C-9222-053DDD77DB06},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02289.ARW": {
-              "etag": "\"{C340B3E1-18E4-4F96-B823-60AE915B1336},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02290.ARW": {
-              "etag": "\"{40E15F53-F250-48F6-B73E-7EF26AF7653D},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02291.ARW": {
-              "etag": "\"{CEE22577-4BE5-48CF-8434-709255D4204E},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02292.ARW": {
-              "etag": "\"{BFD660BC-E18C-4740-8899-64FED60E27CC},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02293.ARW": {
-              "etag": "\"{8CD84FCA-DC23-4854-A339-CF2C1545EC38},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02294.ARW": {
-              "etag": "\"{B108A923-0937-4AC9-AA44-9797597255A9},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02295.ARW": {
-              "etag": "\"{2C3B88FE-C0CF-463F-B4B9-84FD4FCD928A},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02296.ARW": {
-              "etag": "\"{5916335A-BD76-4095-893C-231124637BBF},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02297.ARW": {
-              "etag": "\"{A69EA3C9-CCBE-47AA-9F32-A5777B38421E},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02298.ARW": {
-              "etag": "\"{01A138FD-6A78-492D-8812-DEFBF9D6AAB9},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02299.ARW": {
-              "etag": "\"{2D97AF50-9365-45DF-B533-E01720EBF2E0},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02300.ARW": {
-              "etag": "\"{CA41C0A9-4400-4133-8680-27F0AA083479},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02301.ARW": {
-              "etag": "\"{1641BB99-3661-4228-A332-209471A2E376},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02302.ARW": {
-              "etag": "\"{99811B7B-8344-42F4-9A89-8AE7C2D8929F},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02303.ARW": {
-              "etag": "\"{E0DDE09C-D5EC-4D81-AB41-29775E72F4F0},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02304.ARW": {
-              "etag": "\"{2AD25927-E96D-4CA5-99AB-4A28ABA1DD56},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02305.ARW": {
-              "etag": "\"{1ACE4681-BF2D-43F2-AD28-304FC25AC92C},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02306.ARW": {
-              "etag": "\"{D0108017-6544-4BB0-B43B-CA2D620676FB},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02307.ARW": {
-              "etag": "\"{53733E7D-4DA2-4462-A073-8CC8C1017D5E},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02308.ARW": {
-              "etag": "\"{4A8A4F1C-BBB9-4B5F-B18C-704EBAB970F1},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02309.ARW": {
-              "etag": "\"{215A2673-FFD6-4295-ACCB-2908BD6FDAEF},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02310.ARW": {
-              "etag": "\"{79944E19-CF07-453E-BF48-F28941AA1BF4},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02311.ARW": {
-              "etag": "\"{D21AB131-1588-43BF-8958-4DF097B8B37E},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02312.ARW": {
-              "etag": "\"{667BDB39-2349-4271-BFB2-95EEEFF2F11C},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02313.ARW": {
-              "etag": "\"{EBC681F0-E19A-42C8-BCAE-0DD23BC71C8B},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02314.ARW": {
-              "etag": "\"{DF60FE4D-93D3-49C4-9116-F34E0E87FA74},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24707072
-            },
-            "DSC02315.ARW": {
-              "etag": "\"{76AEADC1-158F-42EE-8074-6841C4E6713C},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24772608
-            },
-            "DSC02316.ARW": {
-              "etag": "\"{5E7BD9A9-EE34-4A25-B0E5-CF7AEC443967},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02317.ARW": {
-              "etag": "\"{96736A9C-A8EB-437E-8D96-62DCC233B530},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02318.ARW": {
-              "etag": "\"{78A5F9E7-27A1-4A23-BAC2-8C73B58608AC},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02319.ARW": {
-              "etag": "\"{954912C3-80A3-413D-8710-8819C8849EFE},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
-            },
-            "DSC02320.ARW": {
-              "etag": "\"{35066FD3-A421-4C84-965C-81D8C24725B0},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24772608
-            },
-            "DSC02321.ARW": {
-              "etag": "\"{8DD3FC37-F1CD-4102-8591-FBAA77BAEA8E},2\"",
-              "modified": "2025-12-15T10:05:31Z",
-              "size": 24739840
+          "object1": {
+            "_files": {
+              "DSC02322.ARW": {
+                "etag": "\"{15300F1B-6AC2-4269-B15B-3618EB875EFB},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02323.ARW": {
+                "etag": "\"{02F03C5E-1655-4950-BB60-1E61BC0E567B},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02324.ARW": {
+                "etag": "\"{918D639C-0B83-4A64-842B-5CE00601FF44},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02325.ARW": {
+                "etag": "\"{62B71D20-DC56-4618-875D-D018B4F8BB23},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02326.ARW": {
+                "etag": "\"{4F3B83E9-DD5D-4EC1-8C9C-F6ACFFB5F076},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02327.ARW": {
+                "etag": "\"{B8F4152F-6E92-418A-A98D-9FDA668740FE},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02328.ARW": {
+                "etag": "\"{68E274FF-C41E-42FD-9313-DF55D0FEA8A4},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02329.ARW": {
+                "etag": "\"{0101F00A-5E23-4122-9500-4E3E2B6D6946},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02330.ARW": {
+                "etag": "\"{9219A977-9CD4-4915-A590-D81007FF7769},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02331.ARW": {
+                "etag": "\"{C29621CD-0C4A-4A2D-A359-B1855B51A0A9},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02332.ARW": {
+                "etag": "\"{E6878283-C8C8-4944-964C-35473F02AC56},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02333.ARW": {
+                "etag": "\"{3B859B04-43E5-4FE3-9A84-A01D2F2BD8D9},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02334.ARW": {
+                "etag": "\"{ACD9BB91-564C-424A-9389-A1B122C6AAE4},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02335.ARW": {
+                "etag": "\"{9E1929A9-56AE-4B47-8D39-471D397E73EA},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02336.ARW": {
+                "etag": "\"{2C6F5D94-8F8D-4047-8817-0F329745A1FA},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02337.ARW": {
+                "etag": "\"{EA5317D4-50A6-4482-A282-DF2770A7AA24},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02338.ARW": {
+                "etag": "\"{00770637-5F88-4FCF-BB20-708747DE0CA2},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02339.ARW": {
+                "etag": "\"{908BA6EC-971A-4B1F-A998-044415F6413E},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02340.ARW": {
+                "etag": "\"{7582CA7A-ED4C-4DC7-A8D9-4E0EB1D2F984},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02341.ARW": {
+                "etag": "\"{C0642A3E-E1CF-475B-A756-6C6221C3C3C0},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24674304
+              },
+              "DSC02342.ARW": {
+                "etag": "\"{209BD4B4-C6E4-4F4A-8895-05FE497C0534},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02343.ARW": {
+                "etag": "\"{10ABFB7C-C65F-4755-8349-08410725CB61},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02344.ARW": {
+                "etag": "\"{4271E87A-FA5A-4643-856F-D3AA42D98981},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02345.ARW": {
+                "etag": "\"{152315A6-229F-47BF-91D1-9DFE91AB8C9E},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02346.ARW": {
+                "etag": "\"{A38DE360-FFDD-427A-96E6-CBB84F6425D1},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02347.ARW": {
+                "etag": "\"{293AF2A0-1A7C-4A78-8688-1FC5AB00777A},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02348.ARW": {
+                "etag": "\"{2715BECB-3641-4798-A584-E2AE5A179DB3},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02349.ARW": {
+                "etag": "\"{DDFA846B-AD4A-4EA9-990B-12A7CFF6FCCF},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24772608
+              },
+              "DSC02350.ARW": {
+                "etag": "\"{1A379DCA-F60A-4569-8082-F9FE538AE209},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24772608
+              },
+              "DSC02351.ARW": {
+                "etag": "\"{CE8F6E71-A116-4E58-8990-C0CDA7AB0914},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02352.ARW": {
+                "etag": "\"{E1B49087-9C28-4D1B-972F-753CC1207B04},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02353.ARW": {
+                "etag": "\"{EC137799-4658-4105-91FC-69DACDBF9F62},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02354.ARW": {
+                "etag": "\"{0A8811AE-B458-43FE-AE9A-A21F3C0B12C6},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02355.ARW": {
+                "etag": "\"{8A0986BE-B400-4C92-BA00-C3114A4BF297},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02356.ARW": {
+                "etag": "\"{344783D3-51AA-4AA9-8623-687A2D6BDC32},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02357.ARW": {
+                "etag": "\"{0F7A3279-208E-429B-8B30-361A3607B211},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24772608
+              },
+              "DSC02358.ARW": {
+                "etag": "\"{232BDB20-7DC7-4CB2-8924-84274B41036D},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02359.ARW": {
+                "etag": "\"{E03298C2-8ADC-494D-8272-F70D76E93E2F},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02360.ARW": {
+                "etag": "\"{CAE0D957-DCD7-4389-88B8-B8D19EB6B7BE},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02361.ARW": {
+                "etag": "\"{A8EF41DD-84E6-4DD7-9E5D-42CA6E5DB444},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24674304
+              },
+              "DSC02362.ARW": {
+                "etag": "\"{536DAF25-649B-4344-A744-531231BEFBA4},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02363.ARW": {
+                "etag": "\"{B5058062-A5D7-4585-AF4A-51831DB549CA},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02364.ARW": {
+                "etag": "\"{26A6933F-8D08-43CC-B7CB-CC37FBB7E61B},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24674304
+              },
+              "DSC02365.ARW": {
+                "etag": "\"{B9DB5698-F168-449E-AF67-5A06EF8ACD22},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02366.ARW": {
+                "etag": "\"{19347A9D-51A8-436B-93F6-10FDB4084E85},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02367.ARW": {
+                "etag": "\"{8B9519DF-7CBD-471C-A7DF-61F4DAF178CC},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02368.ARW": {
+                "etag": "\"{F03FA06A-B2CD-4DB7-B1BE-61F23C753AB2},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02369.ARW": {
+                "etag": "\"{D5F8A650-8267-4882-971C-35B11A1F59CC},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02370.ARW": {
+                "etag": "\"{5AE84E3C-D818-4D24-A19C-C1BF8BD6AFF9},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              }
+            }
+          },
+          "object2": {
+            "_files": {
+              "DSC02225.ARW": {
+                "etag": "\"{638A17FC-9C06-4A92-8369-D19C781FBC25},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02227.ARW": {
+                "etag": "\"{A14D16F4-261C-4F93-B9BC-B23DB5F31961},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02228.ARW": {
+                "etag": "\"{ACF93D0F-1387-4159-9514-82BC5A9E46BD},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02229.ARW": {
+                "etag": "\"{609D27FF-E6AC-46BC-A3B9-6FB1E75CB2D5},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02230.ARW": {
+                "etag": "\"{6B76E2CF-C0DB-416E-8B3B-D542709AF4BA},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02231.ARW": {
+                "etag": "\"{5785B41C-2F2C-4E41-9EEE-0A412708841B},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02232.ARW": {
+                "etag": "\"{91A8921D-98F5-48A9-A565-BBAF538588F0},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02233.ARW": {
+                "etag": "\"{97107736-974C-4B69-8545-D23FE771311A},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02234.ARW": {
+                "etag": "\"{4D9D5280-253B-45F5-84D2-8D33D1ED90CD},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02235.ARW": {
+                "etag": "\"{ADB46C7B-5695-445C-A556-6FC2BD781403},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02236.ARW": {
+                "etag": "\"{B9A8F324-D845-43EE-8246-F481140211E1},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24674304
+              },
+              "DSC02237.ARW": {
+                "etag": "\"{CEAAA03E-E6C1-4699-83F6-F1C7093425BE},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02238.ARW": {
+                "etag": "\"{235AD0A2-FAE1-4F51-A50C-219C1A1143A0},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02239.ARW": {
+                "etag": "\"{85AA42CA-796D-43D7-9182-89E80FACCDD8},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02240.ARW": {
+                "etag": "\"{08856A7A-6D6C-4B69-AFE0-BC5DECA47903},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24674304
+              },
+              "DSC02241.ARW": {
+                "etag": "\"{5BA46235-F18B-4571-BAE5-F1B9413FD10F},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02242.ARW": {
+                "etag": "\"{642A6002-7575-4E2B-8C95-ABCE917C5108},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02243.ARW": {
+                "etag": "\"{C64B6949-4B4C-4C31-9DB2-50FA8B17A77C},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24674304
+              },
+              "DSC02244.ARW": {
+                "etag": "\"{F87CA239-A110-4D38-8F98-0BADCD6E74DD},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02245.ARW": {
+                "etag": "\"{AA020F3F-C201-4763-8061-5BF972A778EC},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02246.ARW": {
+                "etag": "\"{761BD480-EF5C-4B52-9137-B4334229A909},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02247.ARW": {
+                "etag": "\"{49D15C73-03C6-4D05-8313-86325223FD89},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02248.ARW": {
+                "etag": "\"{B975AD64-B0DF-4004-8751-7C9F5556AF31},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02249.ARW": {
+                "etag": "\"{C70A48D6-3098-4090-9A5F-99C67F6EDBE2},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02250.ARW": {
+                "etag": "\"{B6408E1F-47AC-405A-88CA-E7C224247CE0},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02251.ARW": {
+                "etag": "\"{2521E28A-E7F3-4644-9B52-CA743D882828},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24674304
+              },
+              "DSC02252.ARW": {
+                "etag": "\"{0970896D-D7D4-4EB5-A56E-56537B765997},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02253.ARW": {
+                "etag": "\"{55AEDD39-CBD6-4CA3-AB1C-BB497DFFE104},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02254.ARW": {
+                "etag": "\"{5593C40A-557C-4739-AA96-89B2101CE3BE},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02255.ARW": {
+                "etag": "\"{CCB2213C-D8B4-4BAF-AB8D-68335ABDACFA},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02256.ARW": {
+                "etag": "\"{6E72F1AA-07A1-42DA-A3E2-851BBD05A1A3},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02257.ARW": {
+                "etag": "\"{A7AC6555-90F1-4BA9-A0F4-BB0DF410EBC9},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02258.ARW": {
+                "etag": "\"{EF666ED5-6623-4122-8C70-6E3E069ED2D2},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02259.ARW": {
+                "etag": "\"{78173470-16CA-47A5-863F-9C03CA27E8C2},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02260.ARW": {
+                "etag": "\"{A3D547A7-27A0-4FB9-B902-59C15898CEBD},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02261.ARW": {
+                "etag": "\"{126143DC-0F6A-4F3B-856A-06DBD7479381},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02262.ARW": {
+                "etag": "\"{F1BFD7CD-B624-4FE6-BF61-D02E2E583822},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02263.ARW": {
+                "etag": "\"{CFE641A1-5BE6-4A23-880D-F136CD7D7A1A},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02264.ARW": {
+                "etag": "\"{0F76C3AC-4E1B-456D-84D6-6AAAE01B1C63},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02265.ARW": {
+                "etag": "\"{B51E368D-50C0-43FE-B884-635ADD0E0A13},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02266.ARW": {
+                "etag": "\"{E63986BE-9069-41B5-890E-B10E1B89891C},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02267.ARW": {
+                "etag": "\"{A07BDFCD-9F61-4980-A17F-ACC46E17452B},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02268.ARW": {
+                "etag": "\"{7EE180D2-8E3F-4D65-9558-1D5C9E91FDA2},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02269.ARW": {
+                "etag": "\"{82508140-3654-45DC-82A3-0C4F5EF1C967},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02270.ARW": {
+                "etag": "\"{0C71B060-4CDA-418A-B5F7-17F55192D969},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02271.ARW": {
+                "etag": "\"{D50AFA4B-6C41-439A-BE64-053619356942},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02272.ARW": {
+                "etag": "\"{FD338E4D-0E51-454D-A0A5-A222B552CB8F},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02273.ARW": {
+                "etag": "\"{DF657259-FF78-4435-85FB-043C909F8EC2},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02274.ARW": {
+                "etag": "\"{8544C689-2FF7-468A-A09C-C67DE6CADB45},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02275.ARW": {
+                "etag": "\"{E439F328-7F33-4C16-B876-50684A01DFF6},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              }
+            }
+          },
+          "object3": {
+            "_files": {
+              "DSC02276.ARW": {
+                "etag": "\"{2729D53A-B3EA-42D3-85CD-F8643F2BC623},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02277.ARW": {
+                "etag": "\"{6FF77BDF-EA87-4989-9848-76AAB5CAE78B},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02278.ARW": {
+                "etag": "\"{09BD3615-1F03-4F68-940E-59454703216A},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02279.ARW": {
+                "etag": "\"{CE46250A-131C-4088-B51E-F50F5377820A},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02280.ARW": {
+                "etag": "\"{63EE3B5E-B569-4963-84FC-9AC4D0B04ACF},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02281.ARW": {
+                "etag": "\"{07270BB2-7E98-453B-8447-498A125BD15B},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02282.ARW": {
+                "etag": "\"{44CC2FD0-9071-4019-8EA5-AC45E8535E4D},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02283.ARW": {
+                "etag": "\"{35C194E6-E74C-436D-AEFD-D51AA4FD2AFA},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02284.ARW": {
+                "etag": "\"{803443F9-3AFA-4779-9B37-774AEBEE4101},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02285.ARW": {
+                "etag": "\"{8DF75E37-14BC-41A3-BB05-F7056318EF66},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02286.ARW": {
+                "etag": "\"{DA9E2020-9719-4C7B-82EF-0866BBA54DBB},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02287.ARW": {
+                "etag": "\"{82F75B4F-E2EC-49BF-927D-C2309460B0CA},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02288.ARW": {
+                "etag": "\"{F8FC1FA6-9873-466C-9222-053DDD77DB06},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02289.ARW": {
+                "etag": "\"{C340B3E1-18E4-4F96-B823-60AE915B1336},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02290.ARW": {
+                "etag": "\"{40E15F53-F250-48F6-B73E-7EF26AF7653D},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02291.ARW": {
+                "etag": "\"{CEE22577-4BE5-48CF-8434-709255D4204E},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02292.ARW": {
+                "etag": "\"{BFD660BC-E18C-4740-8899-64FED60E27CC},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02293.ARW": {
+                "etag": "\"{8CD84FCA-DC23-4854-A339-CF2C1545EC38},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02294.ARW": {
+                "etag": "\"{B108A923-0937-4AC9-AA44-9797597255A9},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02295.ARW": {
+                "etag": "\"{2C3B88FE-C0CF-463F-B4B9-84FD4FCD928A},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02296.ARW": {
+                "etag": "\"{5916335A-BD76-4095-893C-231124637BBF},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02297.ARW": {
+                "etag": "\"{A69EA3C9-CCBE-47AA-9F32-A5777B38421E},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02298.ARW": {
+                "etag": "\"{01A138FD-6A78-492D-8812-DEFBF9D6AAB9},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02299.ARW": {
+                "etag": "\"{2D97AF50-9365-45DF-B533-E01720EBF2E0},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02300.ARW": {
+                "etag": "\"{CA41C0A9-4400-4133-8680-27F0AA083479},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02301.ARW": {
+                "etag": "\"{1641BB99-3661-4228-A332-209471A2E376},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02302.ARW": {
+                "etag": "\"{99811B7B-8344-42F4-9A89-8AE7C2D8929F},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02303.ARW": {
+                "etag": "\"{E0DDE09C-D5EC-4D81-AB41-29775E72F4F0},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02304.ARW": {
+                "etag": "\"{2AD25927-E96D-4CA5-99AB-4A28ABA1DD56},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02305.ARW": {
+                "etag": "\"{1ACE4681-BF2D-43F2-AD28-304FC25AC92C},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02306.ARW": {
+                "etag": "\"{D0108017-6544-4BB0-B43B-CA2D620676FB},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02307.ARW": {
+                "etag": "\"{53733E7D-4DA2-4462-A073-8CC8C1017D5E},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02308.ARW": {
+                "etag": "\"{4A8A4F1C-BBB9-4B5F-B18C-704EBAB970F1},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02309.ARW": {
+                "etag": "\"{215A2673-FFD6-4295-ACCB-2908BD6FDAEF},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02310.ARW": {
+                "etag": "\"{79944E19-CF07-453E-BF48-F28941AA1BF4},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02311.ARW": {
+                "etag": "\"{D21AB131-1588-43BF-8958-4DF097B8B37E},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02312.ARW": {
+                "etag": "\"{667BDB39-2349-4271-BFB2-95EEEFF2F11C},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02313.ARW": {
+                "etag": "\"{EBC681F0-E19A-42C8-BCAE-0DD23BC71C8B},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02314.ARW": {
+                "etag": "\"{DF60FE4D-93D3-49C4-9116-F34E0E87FA74},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24707072
+              },
+              "DSC02315.ARW": {
+                "etag": "\"{76AEADC1-158F-42EE-8074-6841C4E6713C},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24772608
+              },
+              "DSC02316.ARW": {
+                "etag": "\"{5E7BD9A9-EE34-4A25-B0E5-CF7AEC443967},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02317.ARW": {
+                "etag": "\"{96736A9C-A8EB-437E-8D96-62DCC233B530},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02318.ARW": {
+                "etag": "\"{78A5F9E7-27A1-4A23-BAC2-8C73B58608AC},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02319.ARW": {
+                "etag": "\"{954912C3-80A3-413D-8710-8819C8849EFE},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              },
+              "DSC02320.ARW": {
+                "etag": "\"{35066FD3-A421-4C84-965C-81D8C24725B0},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24772608
+              },
+              "DSC02321.ARW": {
+                "etag": "\"{8DD3FC37-F1CD-4102-8591-FBAA77BAEA8E},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 24739840
+              }
             }
           }
         },
         "rawp": {
-          "_files": {
-            "calcofacciale_boscimano(c).jpg": {
-              "etag": "\"{9CE3F133-D1BB-4E4F-8DC7-EB90AC6D5D32},4\"",
-              "modified": "2025-11-07T10:18:02Z",
-              "size": 2618376
-            },
-            "calcofacciale_boscimano(c).mtl": {
-              "etag": "\"{B79E82D5-1F88-404D-8AF3-A3547700A3BC},2\"",
-              "modified": "2025-11-07T10:18:02Z",
-              "size": 158
-            },
-            "calcofacciale_boscimano(c).obj": {
-              "etag": "\"{B96AE381-C393-409B-B1B1-619702964DF5},3\"",
-              "modified": "2025-11-07T10:18:02Z",
-              "size": 27019636
+          "object1": {
+            "_files": {
+              "calco_boscimano(a).jpg": {
+                "etag": "\"{85798C21-CB25-489C-B78C-2BF3520CBCE0},4\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 3312526
+              },
+              "calco_boscimano(a).mtl": {
+                "etag": "\"{508FDBBB-CA41-415B-B82D-A0ED232490E5},2\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 142
+              },
+              "calco_boscimano(a).obj": {
+                "etag": "\"{5BED9455-D558-422C-B9F2-59CDD176CE77},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 30874306
+              }
+            }
+          },
+          "object2": {
+            "_files": {
+              "calcofacciale_boscimano(b).jpg": {
+                "etag": "\"{873151CD-CC39-4228-A924-20EC19D3A944},4\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 3182875
+              },
+              "calcofacciale_boscimano(b).mtl": {
+                "etag": "\"{11E51FAD-DE81-4885-A1F9-5EEBC78FD054},2\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 158
+              },
+              "calcofacciale_boscimano(b).obj": {
+                "etag": "\"{5C1D29BE-D64A-42D5-AF63-99053BD040F6},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 33176667
+              }
+            }
+          },
+          "object3": {
+            "_files": {
+              "calcofacciale_boscimano(c).jpg": {
+                "etag": "\"{9CE3F133-D1BB-4E4F-8DC7-EB90AC6D5D32},6\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 2618376
+              },
+              "calcofacciale_boscimano(c).mtl": {
+                "etag": "\"{B79E82D5-1F88-404D-8AF3-A3547700A3BC},3\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 158
+              },
+              "calcofacciale_boscimano(c).obj": {
+                "etag": "\"{B96AE381-C393-409B-B1B1-619702964DF5},4\"",
+                "modified": "2026-01-29T15:28:40Z",
+                "size": 27019636
+              }
             }
           }
         }
