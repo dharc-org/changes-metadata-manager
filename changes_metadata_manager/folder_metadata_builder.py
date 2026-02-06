@@ -184,9 +184,6 @@ FOLDER_TO_ID = {
     "S5-Manoscritto-FICLIT_TheatrumBiblicumNaturale": "m6",
     "S5-Manoscritto-FICLIT_LibroDeiVisitatori": "m7",
     "S5-Manoscritto-FICLIT_DiscorsoNaturaleAldrovandi": "m8",
-    # Grouped entities (KG has single entity for multiple folders)
-    "S6-111a-DA-Fossile, Dalmanites sp. RECTO": "111",
-    "S6-111b-DA-Fossile, Dalmanites sp. VERSO": "111",
 }
 
 

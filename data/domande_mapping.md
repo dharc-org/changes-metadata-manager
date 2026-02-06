@@ -47,15 +47,12 @@ Tutte le 10 posizioni A/B e le 113 vetrine sono mappate esplicitamente in `FOLDE
 
 ## 3. Note
 
-### 3.1 Entità raggruppate
-
-Alcune cartelle SharePoint con suffisso (111a/b) mappano a un'unica entità nel KG. Il KG fa sempre fede: se il KG ha un'unica entità, le cartelle con suffisso mappano all'entità padre.
-
-| Cartella | ID RDF |
-|----------|--------|
-| `S6-111a-DA-Fossile, Dalmanites sp. RECTO` | `111` |
-| `S6-111b-DA-Fossile, Dalmanites sp. VERSO` | `111` |
+### 3.1 Note sulle cartelle
 
 Nota: `27a-f` e `74a-e` esistono nel KG con suffisso, quindi hanno mapping 1:1.
 
-Nota: Le cartelle `S6-98a/b/c-DA-Calchi facciali colorati, boscimani` sono state unificate in `S6-98-DA-Calchi facciali colorati, boscimani` (febbraio 2026).
+### 3.2 Storico unificazioni (febbraio 2026)
+
+- Le cartelle `S6-98a/b/c-DA-Calchi facciali colorati, boscimani` sono state unificate in `S6-98-DA-Calchi facciali colorati, boscimani`
+- Le cartelle `S6-111a/b-DA-Fossile, Dalmanites sp. RECTO/VERSO` sono state unificate in `S6-111-DA-Fossile, Dalmanites sp`
+- Gli ID 111 e 113 sono stati invertiti nelle tabelle metadati (111 = Dalmanites, 113 = Cambropallas)
