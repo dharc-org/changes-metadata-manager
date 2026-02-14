@@ -221,12 +221,30 @@ def extract_license_for_entity_stage(graph: Graph, entity_id: str, stage: str) -
     return None
 
 
-def build_enhanced_description(entity_id: str, stage: str, title: str) -> str:
+CC0_DISCLAIMER = (
+    "No copyright or related rights are claimed in these digital reproductions. "
+    "The files are released under CC0 1.0 Universal (Public Domain Dedication).\n"
+    "\n"
+    "Please note that the original works may qualify as cultural heritage assets "
+    "under Italian law (D. Lgs. 42/2004). Consequently, although the digital "
+    "reproductions are released under CC0, certain uses — and in particular "
+    "commercial uses — may be subject to specific authorisations, restrictions, "
+    "or fees pursuant to the applicable provisions governing the reproduction "
+    "and publication of cultural heritage assets. Users are therefore responsible "
+    "for ensuring compliance with Italian cultural heritage regulations before "
+    "undertaking any commercial exploitation of the images."
+)
+
+
+def build_enhanced_description(entity_id: str, stage: str, title: str, content_license: str | None = None) -> str:
     parts = [
         f'{STAGE_FULL_NAMES[stage]} for the digitization of "{title}" (entity {entity_id}) from the Aldrovandi Digital Twin.',
         STAGE_DESCRIPTIONS[stage],
         "Includes metadata (meta.ttl) and provenance (prov.trig) files following the CHAD-AP ontology.",
     ]
+    if content_license == "cc0-1.0":
+        parts.append("")
+        parts.append(CC0_DISCLAIMER)
     return "\n".join(parts) + "\n"
 
 
@@ -285,7 +303,7 @@ def generate_zenodo_config(
 ) -> dict:
     config = {
         "title": f"{title} - {STAGE_FULL_NAMES[stage]} - Aldrovandi Digital Twin",
-        "description": build_enhanced_description(entity_id, stage, title),
+        "description": build_enhanced_description(entity_id, stage, title, license),
         "files": [str(zip_path.absolute())],
         "creators": creators,
         "publication_date": date.today().isoformat(),

@@ -8,8 +8,8 @@ from rdflib import Graph, Literal, URIRef
 from changes_metadata_manager.folder_metadata_builder import load_kg
 from changes_metadata_manager.zenodo_upload import (
     BASE_URI,
+    CC0_DISCLAIMER,
     E21_PERSON,
-    LICENSE_URI_TO_ZENODO,
     P14_CARRIED_OUT_BY,
     P190_HAS_SYMBOLIC_CONTENT,
     P1_IS_IDENTIFIED_BY,
@@ -143,6 +143,7 @@ class TestCreateStageZip:
 
             zip_path = create_stage_zip("1", "raw", folders, root, licensed_stages, output_dir, "Test Object")
 
+            assert zip_path is not None
             assert zip_path.name == "sala1-test-object-raw.zip"
             with zipfile.ZipFile(zip_path) as zf:
                 names = sorted(zf.namelist())
@@ -165,6 +166,7 @@ class TestCreateStageZip:
 
             zip_path = create_stage_zip("1", "raw", folders, root, licensed_stages, output_dir, "Test Object")
 
+            assert zip_path is not None
             with zipfile.ZipFile(zip_path) as zf:
                 names = sorted(zf.namelist())
                 assert names == ["S1-01-Test/raw/meta.ttl", "S1-01-Test/raw/prov.trig"]
@@ -188,6 +190,7 @@ class TestCreateStageZip:
 
             zip_path = create_stage_zip("98", "raw", folders, root, set(), output_dir, "Test Masks")
 
+            assert zip_path is not None
             with zipfile.ZipFile(zip_path) as zf:
                 names = zf.namelist()
                 assert names == ["S6-98a-Test/raw/meta.ttl", "S6-98b-Test/raw/meta.ttl"]
@@ -357,6 +360,12 @@ class TestGenerateZenodoConfig:
             "keywords": ["test"],
             "files": [str(zip_path.absolute())],
             "publication_date": "2024-06-15",
+            "rights": [
+                {
+                    "title": {"en": "Creative Commons Zero v1.0 Universal (Metadata license)"},
+                    "link": "https://creativecommons.org/publicdomain/zero/1.0/",
+                },
+            ],
         }
 
     def test_adds_entity_uri_as_alternate_identifier(self, freezer):
@@ -417,7 +426,7 @@ class TestExtractLicenseForEntityStage:
         license_url = URIRef("https://creativecommons.org/publicdomain/zero/1.0/")
         g.add((lic_uri, P70I, license_url))
         result = extract_license_for_entity_stage(g, "42", "raw")
-        assert result == "cc-zero"
+        assert result == "cc0-1.0"
 
     def test_returns_none_for_missing_license(self):
         g = Graph()
@@ -460,3 +469,15 @@ class TestBuildEnhancedDescription:
         result = build_enhanced_description("1", "dchoo", "Object Title")
         assert "Optimized Digital Cultural Heritage Object" in result
         assert "web-ready version optimized for real-time online interaction" in result
+
+    def test_cc0_license_appends_disclaimer(self):
+        result = build_enhanced_description("42", "dcho", "Test Object", content_license="cc0-1.0")
+        assert result.endswith(CC0_DISCLAIMER + "\n")
+
+    def test_non_cc0_license_no_disclaimer(self):
+        result = build_enhanced_description("42", "dcho", "Test Object", content_license="cc-by-4.0")
+        assert CC0_DISCLAIMER not in result
+
+    def test_no_license_no_disclaimer(self):
+        result = build_enhanced_description("42", "dcho", "Test Object")
+        assert CC0_DISCLAIMER not in result
