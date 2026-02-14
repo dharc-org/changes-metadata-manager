@@ -12,7 +12,7 @@ from rdflib.namespace import RDF, XSD, DCTERMS
 
 CC0 = URIRef("https://creativecommons.org/publicdomain/zero/1.0/")
 
-def generate_provenance_snapshots(input_directory, output_file, input_format=None, output_format='json-ld', agent_orcid=None, primary_source=None):
+def generate_provenance_snapshots(input_directory: str, output_file: str, input_format: str | None = None, output_format: str = 'json-ld', agent_orcid: str = '', primary_source: str = ''):
     """
     Generate provenance snapshots from RDF data.
     

@@ -1,0 +1,282 @@
+@prefix chad_ap_sh: <https://w3id.org/dharc/ontology/chad-ap/shapes/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+chad_ap_sh:D10_Software_ExecutionShape a sh:NodeShape ;
+    sh:property [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:D9_Data_ObjectShape ;
+            sh:path <http://www.cidoc-crm.org/extensions/crmdig/L11_had_output> ],
+        [ sh:minCount 1 ;
+            sh:node chad_ap_sh:D14_SoftwareShape ;
+            sh:path <http://www.cidoc-crm.org/extensions/crmdig/L23_used_software_or_hardware> ],
+        [ sh:minCount 1 ;
+            sh:node chad_ap_sh:E39_ActorShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:D9_Data_ObjectShape ;
+            sh:path <http://www.cidoc-crm.org/extensions/crmdig/L10_had_input> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:E52_Time-SpanShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P4_has_time-span> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:E55_TypeShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ],
+        [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E74_GroupShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P11_had_participant> ] ;
+    sh:targetClass <http://www.cidoc-crm.org/extensions/crmdig/D10_Software_Execution> .
+
+chad_ap_sh:D2_Digitization_ProcessShape a sh:NodeShape ;
+    sh:property [ sh:minCount 1 ;
+            sh:node chad_ap_sh:D8_Digital_DeviceShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P16_used_specific_object> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:E55_TypeShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P32_used_general_technique> ],
+        [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E74_GroupShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P11_had_participant> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:D9_Data_ObjectShape ;
+            sh:path <http://www.cidoc-crm.org/extensions/crmdig/L11_had_output> ],
+        [ sh:minCount 1 ;
+            sh:node chad_ap_sh:E39_ActorShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:F5_ItemShape ;
+            sh:path <http://www.cidoc-crm.org/extensions/crmdig/L1_digitized> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:E52_Time-SpanShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P4_has_time-span> ] ;
+    sh:targetClass <http://www.cidoc-crm.org/extensions/crmdig/D2_Digitization_Process> .
+
+chad_ap_sh:E21_PersonShape a sh:NodeShape ;
+    sh:property [ sh:minCount 0 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P70i_is_documented_in> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:node chad_ap_sh:E53_PlaceShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P74_has_current_or_former_residence> ],
+        [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E41_AppellationShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P1_is_identified_by> ] ;
+    sh:targetClass <http://www.cidoc-crm.org/cidoc-crm/E21_Person> .
+
+chad_ap_sh:E24_Physical_Human-Made_ThingShape a sh:NodeShape ;
+    sh:property [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E41_AppellationShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P1_is_identified_by> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:E55_TypeShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ] ;
+    sh:targetClass <http://www.cidoc-crm.org/cidoc-crm/E24_Physical_Human-Made_Thing> .
+
+chad_ap_sh:F28_Expression_CreationShape a sh:NodeShape ;
+    sh:property [ sh:minCount 1 ;
+            sh:node chad_ap_sh:E7_ActivityShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P9_consists_of> ],
+        [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E55_TypeShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/R32_used_general_technique> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:E52_Time-SpanShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P4_has_time-span> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:F2_ExpressionShape ;
+            sh:path <http://iflastandards.info/ns/lrm/lrmoo/R17_created> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path <http://iflastandards.info/ns/lrm/lrmoo/R19_created_a_realisation_of> ] ;
+    sh:targetClass <http://iflastandards.info/ns/lrm/lrmoo/F28_Expression_Creation> .
+
+chad_ap_sh:D14_SoftwareShape a sh:NodeShape ;
+    sh:property [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E41_AppellationShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P1_is_identified_by> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:E55_TypeShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ] .
+
+chad_ap_sh:D8_Digital_DeviceShape a sh:NodeShape ;
+    sh:property [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:E55_TypeShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ],
+        [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E41_AppellationShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P1_is_identified_by> ] .
+
+chad_ap_sh:E35_TitleShape a sh:NodeShape ;
+    sh:property [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:E55_TypeShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P190_has_symbolic_content> ] .
+
+chad_ap_sh:E42_IdentifierShape a sh:NodeShape ;
+    sh:property [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:E55_TypeShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:nodeKind sh:Literal ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P190_has_symbolic_content> ] .
+
+chad_ap_sh:E73_Information_ObjectShape a sh:NodeShape ;
+    sh:property [ sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:node chad_ap_sh:F3_ManifestationShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P67_refers_to> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P70i_is_documented_in> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:nodeKind sh:Literal ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P190_has_symbolic_content> ],
+        [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E41_AppellationShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P1_is_identified_by> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:E55_TypeShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ] .
+
+chad_ap_sh:E7_ActivityShape a sh:NodeShape ;
+    sh:property [ sh:minCount 1 ;
+            sh:node chad_ap_sh:E39_ActorShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P14_carried_out_by> ],
+        [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E55_TypeShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P32_used_general_technique> ],
+        [ sh:minCount 0 ;
+            sh:node chad_ap_sh:F5_ItemShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P16_used_specific_object> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:E55_TypeShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ] .
+
+chad_ap_sh:F1_WorkShape a sh:NodeShape ;
+    sh:property [ sh:minCount 1 ;
+            sh:node chad_ap_sh:F2_ExpressionShape ;
+            sh:path <http://iflastandards.info/ns/lrm/lrmoo/R3_is_realized_in> ],
+        [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E35_TitleShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P102_has_title> ],
+        [ sh:minCount 0 ;
+            sh:node chad_ap_sh:F1_WorkShape ;
+            sh:path <http://iflastandards.info/ns/lrm/lrmoo/R10_has_member> ] .
+
+chad_ap_sh:E74_GroupShape a sh:NodeShape ;
+    sh:property [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E41_AppellationShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P1_is_identified_by> ],
+        [ sh:minCount 0 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P70i_is_documented_in> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:node chad_ap_sh:E53_PlaceShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P74_has_current_or_former_residence> ] .
+
+chad_ap_sh:F2_ExpressionShape a sh:NodeShape ;
+    sh:property [ sh:minCount 1 ;
+            sh:node chad_ap_sh:F3_ManifestationShape ;
+            sh:path <http://iflastandards.info/ns/lrm/lrmoo/R4i_is_embodied_in> ],
+        [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E73_Information_ObjectShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/R129_is_about> ] .
+
+chad_ap_sh:F3_ManifestationShape a sh:NodeShape ;
+    sh:property [ sh:minCount 1 ;
+            sh:node chad_ap_sh:F5_ItemShape ;
+            sh:path <http://iflastandards.info/ns/lrm/lrmoo/R7i_is_exemplified_by> ],
+        [ sh:minCount 0 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P130i_features_are_also_found_on> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:node chad_ap_sh:E55_TypeShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> ] .
+
+chad_ap_sh:E39_ActorShape a sh:NodeShape ;
+    sh:property [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E41_AppellationShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P1_is_identified_by> ],
+        [ sh:minCount 0 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P70i_is_documented_in> ],
+        [ sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:node chad_ap_sh:E53_PlaceShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P74_has_current_or_former_residence> ] .
+
+chad_ap_sh:E52_Time-SpanShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:dateTime ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P82a_begin_of_the_begin> ],
+        [ sh:datatype xsd:dateTime ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P82b_end_of_the_end> ] .
+
+chad_ap_sh:E53_PlaceShape a sh:NodeShape ;
+    sh:property [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E41_AppellationShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P1_is_identified_by> ],
+        [ sh:minCount 0 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P70i_is_documented_in> ] .
+
+chad_ap_sh:F5_ItemShape a sh:NodeShape ;
+    sh:property [ sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:nodeKind sh:Literal ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P3_has_note> ],
+        [ sh:minCount 1 ;
+            sh:node chad_ap_sh:E42_IdentifierShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P1_is_identified_by> ] .
+
+chad_ap_sh:D9_Data_ObjectShape a sh:NodeShape ;
+    sh:property [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E41_AppellationShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P1_is_identified_by> ],
+        [ sh:minCount 0 ;
+            sh:node chad_ap_sh:D9_Data_ObjectShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P130i_features_are_also_found_on> ] .
+
+chad_ap_sh:E41_AppellationShape a sh:NodeShape ;
+    sh:property [ sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:nodeKind sh:Literal ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P190_has_symbolic_content> ] .
+
+chad_ap_sh:E55_TypeShape a sh:NodeShape ;
+    sh:property [ sh:minCount 0 ;
+            sh:node chad_ap_sh:E41_AppellationShape ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P1_is_identified_by> ],
+        [ sh:minCount 0 ;
+            sh:nodeKind sh:BlankNodeOrIRI ;
+            sh:path <http://www.cidoc-crm.org/cidoc-crm/P70i_is_documented_in> ] .
+

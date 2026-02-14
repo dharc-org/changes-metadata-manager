@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "piccione~=2.2.0",
+    "pyshacl>=0.31.0",
     "rdflib>=7.4.0",
     "rich>=14.2.0",
 ]

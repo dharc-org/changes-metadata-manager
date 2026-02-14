@@ -3,8 +3,10 @@ import json
 import re
 from pathlib import Path
 
+import pyshacl
 from rdflib import Graph, URIRef
 from rdflib.namespace import DCTERMS
+from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn
 
 from changes_metadata_manager.generate_provenance import generate_provenance_snapshots
@@ -13,6 +15,7 @@ from changes_metadata_manager.generate_provenance import generate_provenance_sna
 BASE_URI = "https://w3id.org/changes/4/aldrovandi"
 STRUCTURE_PATH = Path("data/structure.json")
 KG_PATH = Path("data/kg.ttl")
+SHAPES_PATH = Path("data/shapes-chadap.ttl")
 RESP_AGENT = "https://w3id.org/changes/4/agent/morph-kgc-changes-metadata/1.0.1"
 PRIMARY_SOURCE = "https://doi.org/10.5281/zenodo.18190642"
 CC0 = URIRef("https://creativecommons.org/publicdomain/zero/1.0/")
@@ -231,6 +234,14 @@ def extract_metadata_for_stage(graph: Graph, nr: str, stage: str) -> Graph:
     return result
 
 
+def validate_metadata(data_graph: Graph, shapes_graph: Graph) -> tuple[bool, str]:
+    conforms, _, results_text = pyshacl.validate(
+        data_graph,
+        shacl_graph=shapes_graph,
+    )
+    return bool(conforms), str(results_text)
+
+
 def load_structure(structure_path: Path) -> dict:
     with open(structure_path) as f:
         return json.load(f)
@@ -255,12 +266,17 @@ def process_all_folders(
     root: Path,
     kg_path: Path = KG_PATH,
     structure_path: Path | None = None,
-) -> None:
+    shapes_path: Path = SHAPES_PATH,
+) -> list[tuple[str, str]]:
     if structure_path is not None:
         structure = load_structure(structure_path)
     else:
         structure = scan_folder_structure(root)
     kg = load_kg(kg_path)
+    shapes_graph = load_kg(shapes_path)
+
+    console = Console()
+    validation_errors = []
 
     folders = [
         (sala_name, folder_name, subfolders)
@@ -294,6 +310,11 @@ def process_all_folders(
                 metadata = extract_metadata_for_stage(kg, nr, stage_key)
                 metadata.add((URIRef(""), DCTERMS.license, CC0))
 
+                conforms, results_text = validate_metadata(metadata, shapes_graph)
+                if not conforms:
+                    label = f"{folder_name}/{stage_name}"
+                    validation_errors.append((label, results_text))
+
                 meta_path = stage_dir / "meta.ttl"
                 metadata.serialize(destination=str(meta_path), format="turtle")
 
@@ -307,6 +328,16 @@ def process_all_folders(
                 )
 
             progress.advance(task)
+
+    if validation_errors:
+        console.print(f"\n[bold red]SHACL validation failed for {len(validation_errors)} stage(s):[/bold red]")
+        for label, results_text in validation_errors:
+            console.print(f"\n[bold yellow]{label}[/bold yellow]")
+            console.print(results_text)
+    else:
+        console.print("\n[bold green]All metadata passed SHACL validation.[/bold green]")
+
+    return validation_errors
 
 
 def parse_arguments():  # pragma: no cover
