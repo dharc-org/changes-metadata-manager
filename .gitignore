@@ -6,8 +6,9 @@ htmlcov
 coverage.xml
 data/aldrovandi_obj.csv
 data/aldrovandi_pro.csv
-docs/naming_convention.md
-docs/media
+docs/node_modules
+docs/dist
+docs/.astro
 .env
 data/output
 data/test_output

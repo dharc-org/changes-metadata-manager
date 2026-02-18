@@ -109,9 +109,8 @@ DCHOO (dipende da RAW + RAWP + DCHO)
 - [ ] Compilare tabella CSV di Silvio con informazioni sui documenti caricati su Zenodo
 - [ ] Gestire rate limiting e retry logic
 
-### Fase 6: Verifica e documentazione
-- [ ] Verificare campione di record Zenodo
-- [ ] Documentare processo per riproducibilità
+### Fase 6: Documentazione
+- [x] Documentare processo per riproducibilità
 
 ---
 
