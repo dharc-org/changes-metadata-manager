@@ -85,7 +85,11 @@ def test_provenance_generation(test_environment):
     
     assert (item1_snapshot, RDF.type, PROV.Entity) in item1_prov_graph, "item1 snapshot is not typed as prov:Entity"
     assert (item2_snapshot, RDF.type, PROV.Entity) in item2_prov_graph, "item2 snapshot is not typed as prov:Entity"
-    
+
+    # Check for specializationOf relationship
+    assert (item1_snapshot, PROV.specializationOf, URIRef('http://example.org/item1')) in item1_prov_graph
+    assert (item2_snapshot, PROV.specializationOf, URIRef('http://example.org/item2')) in item2_prov_graph
+
     # Check for primary source relationship
     assert (item1_snapshot, PROV.hadPrimarySource, URIRef(primary_source)) in item1_prov_graph, "item1 snapshot missing primary source"
     assert (item2_snapshot, PROV.hadPrimarySource, URIRef(primary_source)) in item2_prov_graph, "item2 snapshot missing primary source"

@@ -71,7 +71,7 @@ DCHOO (dipende da RAW + RAWP + DCHO)
 - [x] Analizzare struttura completa dei CSV per mappare tutti i campi
 - [x] Parsare il TTL esistente per estrarre pattern di URI e lista entità
 - [x] Creare dizionario autori con ORCID (`data/creators_lookup.yaml`, 26 autori)
-- [ ] Configurare account Zenodo e ottenere API token
+- [x] Configurare account Zenodo e ottenere API token
 
 ### Fase 2: Estrazione metadati (meta.ttl)
 - [x] Implementare estrattore di triple dal TTL esistente per entità
@@ -83,14 +83,14 @@ DCHOO (dipende da RAW + RAWP + DCHO)
 ### Fase 3: Generazione provenance (prov.trig)
 - [x] Implementare generatore snapshot PROV-O
   - **Per TUTTE le entità** nel TTL, creare snapshot SE/1
-  - [ ] `prov:specializationOf` → URI entità
+  - [x] `prov:specializationOf` → URI entità
   - [x] `prov:generatedAtTime` → timestamp creazione (da CSV processi)
   - [x] `prov:wasAttributedTo` → ORCID responsible agent
   - [x] `prov:hadPrimarySource` → fonte primaria
   - [x] `prov:description` → "Initial creation"
 - [x] Gestire Named Graphs (un graph per snapshot)
 - [x] Inserire licenza CC0 nei file `prov.trig`
-- [ ] Generare file Turtle unico con tutta la provenance (da inviare a Ivan)
+- [x] Generare file TriG unico con tutta la provenance (da inviare a Ivan)
 
 ### Fase 4: Organizzazione file
 - [x] Attendere accesso Sharepoint per dati effettivi

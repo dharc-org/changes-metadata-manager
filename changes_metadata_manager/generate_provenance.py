@@ -87,7 +87,8 @@ def generate_provenance_snapshots(input_directory: str, output_file: str, input_
         prov_graph = dataset.graph(identifier=prov_graph_uri)
         
         prov_graph.add((snapshot_uri, RDF.type, PROV.Entity))
-        
+        prov_graph.add((snapshot_uri, PROV.specializationOf, subject))
+
         prov_graph.add((snapshot_uri, PROV.generatedAtTime, Literal(generation_time, datatype=XSD.dateTime)))
         
         prov_graph.add((snapshot_uri, PROV.wasAttributedTo, responsible_agent))

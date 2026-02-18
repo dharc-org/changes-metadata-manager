@@ -4,13 +4,14 @@ import tempfile
 
 import pytest
 from pathlib import Path
-from rdflib import Graph
+from rdflib import Dataset, Graph, Namespace
 
 from changes_metadata_manager.folder_metadata_builder import (
     extract_metadata_for_stage,
     extract_id_from_folder_name,
     load_kg,
     load_structure,
+    merge_provenance_files,
     process_all_folders,
     scan_folder_structure,
 )
@@ -153,6 +154,33 @@ class TestProcessAllFolders:
                 prov_file = stage_dir / "prov.trig"
                 assert meta_file.exists(), f"meta.ttl not created for {folder}/{stage_dir.name}"
                 assert prov_file.exists(), f"prov.trig not created for {folder}/{stage_dir.name}"
+
+
+class TestMergeProvenanceFiles:
+    def test_merges_all_prov_trig_files(self, test_folder_structure):
+        root, structure_path = test_folder_structure
+        process_all_folders(
+            root=root,
+            kg_path=REAL_KG_PATH,
+            structure_path=structure_path,
+        )
+
+        output_path = root / "all_provenance.trig"
+        merge_provenance_files(root, output_path)
+
+        assert output_path.exists()
+
+        merged = Dataset()
+        merged.parse(str(output_path), format="trig")
+
+        PROV = Namespace("http://www.w3.org/ns/prov#")
+        prov_entities = set(merged.quads((None, PROV.specializationOf, None, None)))
+        individual_count = sum(
+            1 for _ in root.rglob("prov.trig")
+        )
+
+        assert individual_count == 12
+        assert len(prov_entities) == 212
 
 
 class TestScanFolderStructure:

@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 
 import pyshacl
-from rdflib import Graph, URIRef
+from rdflib import Dataset, Graph, URIRef
 from rdflib.namespace import DCTERMS
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn
@@ -343,6 +343,13 @@ def process_all_folders(
     return validation_errors
 
 
+def merge_provenance_files(root: Path, output_path: Path) -> None:
+    merged = Dataset(default_union=True)
+    for prov_file in sorted(root.rglob("prov.trig")):
+        merged.parse(str(prov_file), format="trig")
+    merged.serialize(destination=str(output_path), format="trig")
+
+
 def parse_arguments():  # pragma: no cover
     parser = argparse.ArgumentParser(
         description="Generate metadata and provenance files for folder structure"
@@ -364,12 +371,20 @@ def parse_arguments():  # pragma: no cover
         action="store_true",
         help="Skip SHACL validation",
     )
+    parser.add_argument(
+        "--merge-provenance",
+        type=Path,
+        default=None,
+        help="Output path for merged provenance file (TriG format)",
+    )
     return parser.parse_args()
 
 
 def main():  # pragma: no cover
     args = parse_arguments()
     process_all_folders(root=args.root, structure_path=args.structure, validate=not args.no_validate)
+    if args.merge_provenance:
+        merge_provenance_files(args.root, args.merge_provenance)
 
 
 if __name__ == "__main__":  # pragma: no cover
