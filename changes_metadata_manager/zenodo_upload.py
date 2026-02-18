@@ -72,7 +72,8 @@ def load_creators_lookup(path: Path) -> dict[str, dict]:
         data = yaml.safe_load(f)
     return {
         creator["name_in_rdf"]: {
-            "name": creator["name"],
+            "family_name": creator["family_name"],
+            "given_name": creator["given_name"],
             "affiliation": creator["affiliation"],
             "orcid": creator["orcid"],
         }
@@ -80,25 +81,79 @@ def load_creators_lookup(path: Path) -> dict[str, dict]:
     }
 
 
+def _format_creator(creator_data: dict, role: str) -> dict:
+    return {
+        "person_or_org": {
+            "type": "personal",
+            "family_name": creator_data["family_name"],
+            "given_name": creator_data["given_name"],
+            "identifiers": [{"scheme": "orcid", "identifier": creator_data["orcid"]}],
+        },
+        "role": {"id": role},
+        "affiliations": [{"name": creator_data["affiliation"]}],
+    }
+
+
+METADATA_STEP = "05"
+
+
+def _extract_actor_names(graph: Graph, act_uri: URIRef) -> set[str]:
+    names = set()
+    for _, _, actor_uri in graph.triples((act_uri, P14_CARRIED_OUT_BY, None)):
+        assert (actor_uri, RDF_TYPE, E21_PERSON) in graph
+        for _, _, apl_uri in graph.triples((actor_uri, P1_IS_IDENTIFIED_BY, None)):
+            for _, _, name in graph.triples((apl_uri, P190_HAS_SYMBOLIC_CONTENT, None)):
+                names.add(str(name))
+    return names
+
+
+def extract_authors_for_entity_stage(graph: Graph, entity_id: str, stage: str) -> set[str]:
+    steps = [s for s in STAGE_STEPS[stage] if s != METADATA_STEP]
+    authors = set()
+    for step in steps:
+        authors |= _extract_actor_names(graph, URIRef(f"{BASE_URI}/act/{entity_id}/{step}/1"))
+    return authors
+
+
+def extract_metadata_authors(graph: Graph, entity_id: str) -> set[str]:
+    return _extract_actor_names(graph, URIRef(f"{BASE_URI}/act/{entity_id}/05/1"))
+
+
 def build_creators_for_entity_stage(
     graph: Graph, entity_id: str, stage: str, creators_lookup: dict[str, dict]
 ) -> list[dict]:
     author_names = extract_authors_for_entity_stage(graph, entity_id, stage)
-    return [creators_lookup[name] for name in sorted(author_names) if name in creators_lookup]
+    return [
+        _format_creator(creators_lookup[name], "datacollector")
+        for name in sorted(author_names)
+        if name in creators_lookup
+    ]
 
 
-def extract_authors_for_entity_stage(graph: Graph, entity_id: str, stage: str) -> set[str]:
-    steps = STAGE_STEPS[stage]
-    authors = set()
-    for step in steps:
-        act_uri = URIRef(f"{BASE_URI}/act/{entity_id}/{step}/1")
-        for _, _, actor_uri in graph.triples((act_uri, P14_CARRIED_OUT_BY, None)):
-            if (actor_uri, RDF_TYPE, E21_PERSON) not in graph:
-                continue
-            for _, _, apl_uri in graph.triples((actor_uri, P1_IS_IDENTIFIED_BY, None)):
-                for _, _, name in graph.triples((apl_uri, P190_HAS_SYMBOLIC_CONTENT, None)):
-                    authors.add(str(name))
-    return authors
+def build_metadata_creators(
+    graph: Graph, entity_id: str, creators_lookup: dict[str, dict]
+) -> list[dict]:
+    author_names = extract_metadata_authors(graph, entity_id)
+    return [
+        _format_creator(creators_lookup[name], "datacurator")
+        for name in sorted(author_names)
+        if name in creators_lookup
+    ]
+
+
+def merge_creators(digitization_creators: list[dict], metadata_creators: list[dict]) -> list[dict]:
+    seen_orcids: set[str] = set()
+    merged: list[dict] = []
+    for creator in digitization_creators:
+        orcid = creator["person_or_org"]["identifiers"][0]["identifier"]
+        seen_orcids.add(orcid)
+        merged.append(creator)
+    for creator in metadata_creators:
+        orcid = creator["person_or_org"]["identifiers"][0]["identifier"]
+        if orcid not in seen_orcids:
+            seen_orcids.add(orcid)
+            merged.append(creator)
+    return merged
 
 
 def extract_licensed_entity_stages(graph: Graph) -> set[tuple[str, str]]:
@@ -121,8 +176,6 @@ def group_folders_by_entity(structure: dict) -> dict[str, list[tuple[str, str, d
             if folder_name in SKIP_FOLDERS:
                 continue
             entity_id = extract_id_from_folder_name(folder_name)
-            # Special IDs (ptb, vetrina_1_alto_n_1, etc.) are kept as-is.
-            # Letter-suffixed IDs (27a, 74b) are grouped by stripping the suffix.
             if entity_id in FOLDER_TO_ID.values():
                 base_id = entity_id
             else:
@@ -182,9 +235,11 @@ def _get_label(graph: Graph, uri: URIRef) -> str | None:
 def extract_keeper_info(graph: Graph, entity_id: str) -> tuple[str | None, str | None]:
     custody_uri = URIRef(f"{BASE_URI}/act/{entity_id}/ob08/1")
     for _, _, keeper_uri in graph.triples((custody_uri, P14_CARRIED_OUT_BY, None)):
+        assert isinstance(keeper_uri, URIRef)
         keeper_name = _get_label(graph, keeper_uri)
         location_name = None
         for _, _, place_uri in graph.triples((keeper_uri, P74_HAS_RESIDENCE, None)):
+            assert isinstance(place_uri, URIRef)
             location_name = _get_label(graph, place_uri)
         return keeper_name, location_name
     return None, None
@@ -221,11 +276,11 @@ STAGE_DESCRIPTIONS = {
 }
 
 PROPAGATED_FIELDS = (
-    'zenodo_url', 'access_token', 'user_agent', 'upload_type',
-    'keywords', 'access_right', 'publication_date',
-    'language', 'version', 'communities', 'grants', 'related_identifiers',
-    'contributors', 'subjects', 'notes',
-    'references', 'locations', 'dates', 'method',
+    "zenodo_url", "access_token", "user_agent",
+    "keywords", "publication_date",
+    "language", "version", "community",
+    "contributors", "subjects",
+    "references", "dates",
 )
 
 
@@ -255,30 +310,28 @@ CC0_DISCLAIMER = (
 )
 
 
+CHAD_AP_URL = "https://w3id.org/dharc/ontology/chad-ap"
+
+
 def build_enhanced_description(
-    entity_id: str,
     stage: str,
     title: str,
-    content_license: str | None = None,
     keeper_name: str | None = None,
     keeper_location: str | None = None,
 ) -> str:
     parts = [
-        f'{STAGE_FULL_NAMES[stage]} for the digitization of "{title}" (entity {entity_id}) from the Aldrovandi Digital Twin.',
+        f'{STAGE_FULL_NAMES[stage]} of "{title}" from the Aldrovandi Digital Twin.',
     ]
     if keeper_name:
-        keeper_line = f"Preserved at {keeper_name}"
+        keeper_line = f"The original object is held by {keeper_name}"
         if keeper_location:
-            keeper_line += f", {keeper_location}"
+            keeper_line += f" ({keeper_location})"
         keeper_line += "."
         parts.append(keeper_line)
     parts.extend([
         STAGE_DESCRIPTIONS[stage],
-        "Includes metadata (meta.ttl) and provenance (prov.trig) files following the CHAD-AP ontology.",
+        f"Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href=\"{CHAD_AP_URL}\">CHAD-AP</a> ontology.",
     ])
-    if content_license == "cc0-1.0":
-        parts.append("")
-        parts.append(CC0_DISCLAIMER)
     return "\n".join(parts) + "\n"
 
 
@@ -339,25 +392,72 @@ def generate_zenodo_config(
     keeper_name: str | None = None,
     keeper_location: str | None = None,
 ) -> dict:
-    config = {
+    description = build_enhanced_description(stage, title, keeper_name, keeper_location)
+
+    config: dict = {
         "title": f"{title} - {STAGE_FULL_NAMES[stage]} - Aldrovandi Digital Twin",
-        "description": build_enhanced_description(entity_id, stage, title, license, keeper_name, keeper_location),
+        "description": description,
+        "resource_type": {"id": "dataset"},
+        "publisher": "Zenodo",
+        "access": {"record": "public", "files": "public"},
         "files": [str(zip_path.absolute())],
         "creators": creators,
         "publication_date": date.today().isoformat(),
         "rights": build_rights(license),
     }
+
+    additional_descriptions = [
+        {
+            "description": base_config["notes"],
+            "type": {"id": "notes"},
+        },
+        {
+            "description": base_config["method"],
+            "type": {"id": "methods"},
+        },
+    ]
+    if license == "cc0-1.0":
+        additional_descriptions.append({
+            "description": CC0_DISCLAIMER,
+            "type": {"id": "notes"},
+        })
+    config["additional_descriptions"] = additional_descriptions
+
+    config["locations"] = {
+        "features": [
+            {
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [loc["lon"], loc["lat"]],
+                },
+                "place": loc["place"],
+                "description": loc["description"],
+            }
+            for loc in base_config["locations"]
+        ]
+    }
+
     for field in PROPAGATED_FIELDS:
         if field in base_config and field not in config:
             config[field] = base_config[field]
+
+    if "related_identifiers" in base_config:
+        converted = []
+        for ri in base_config["related_identifiers"]:
+            entry: dict = {
+                "identifier": ri["identifier"],
+                "relation_type": {"id": ri["relation"]},
+            }
+            if "resource_type" in ri:
+                entry["resource_type"] = {"id": ri["resource_type"]}
+            if "scheme" in ri:
+                entry["scheme"] = ri["scheme"]
+            converted.append(entry)
+        config["related_identifiers"] = converted
+
     if entity_uri:
-        alternate_id = {
-            "identifier": entity_uri,
-            "relation": "isAlternateIdentifier",
-            "scheme": "url",
-        }
-        existing = config.get("related_identifiers", [])
-        config["related_identifiers"] = existing + [alternate_id]
+        config["identifiers"] = [{"identifier": entity_uri, "scheme": "url"}]
+
     return config
 
 
@@ -400,13 +500,15 @@ def prepare_all(
             keeper_name, keeper_location = extract_keeper_info(kg, entity_id)
             sala_slug = slugify(folders[0][0])
             title_slug = slugify(title)
+            metadata_creators = build_metadata_creators(kg, entity_id, creators_lookup)
             for stage in STAGES:
                 progress.update(task, description=f"Entity {entity_id} - {stage}")
                 zip_path = create_stage_zip(entity_id, stage, folders, root, licensed_stages, zips_dir, title)
                 if zip_path is None:
                     progress.advance(task)
                     continue
-                creators = build_creators_for_entity_stage(kg, entity_id, stage, creators_lookup)
+                digitization_creators = build_creators_for_entity_stage(kg, entity_id, stage, creators_lookup)
+                creators = merge_creators(digitization_creators, metadata_creators)
                 license = extract_license_for_entity_stage(kg, entity_id, stage)
                 entity_uri = build_entity_uri(entity_id)
                 config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config, creators, license, entity_uri, keeper_name, keeper_location)

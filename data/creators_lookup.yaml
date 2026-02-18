@@ -1,109 +1,136 @@
 creators:
   - name_in_rdf: Luisa Ammirati
-    name: Ammirati, Luisa
+    family_name: Ammirati
+    given_name: Luisa
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0009-0002-3055-674X
   - name_in_rdf: Sebastian Barzaghi
-    name: Barzaghi, Sebastian
+    family_name: Barzaghi
+    given_name: Sebastian
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0000-0002-0799-1527
   - name_in_rdf: Federica Bonifazi
-    name: Bonifazi, Federica
+    family_name: Bonifazi
+    given_name: Federica
     affiliation: Consiglio Nazionale delle Ricerche, Sapienza Università di Roma, Alma Mater Studiorum - Università di Bologna
     orcid: 0009-0000-8466-5541
   - name_in_rdf: Alice Bordignon
-    name: Bordignon, Alice
+    family_name: Bordignon
+    given_name: Alice
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0009-0008-3556-0493
   - name_in_rdf: Veronica Casadei
-    name: Casadei, Veronica
+    family_name: Casadei
+    given_name: Veronica
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0009-0003-3587-3856
   - name_in_rdf: Luca Cipriani
-    name: Cipriani, Luca
+    family_name: Cipriani
+    given_name: Luca
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0000-0002-9966-9171
   - name_in_rdf: Federica Collina
-    name: Collina, Federica
+    family_name: Collina
+    given_name: Federica
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0000-0002-5759-8109
   - name_in_rdf: Francesca Fabbri
-    name: Fabbri, Francesca
+    family_name: Fabbri
+    given_name: Francesca
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0000-0003-4923-9875
   - name_in_rdf: Filippo Fantini
-    name: Fantini, Filippo
+    family_name: Fantini
+    given_name: Filippo
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0000-0003-4520-5045
   - name_in_rdf: Daniele Ferdani
-    name: Ferdani, Daniele
+    family_name: Ferdani
+    given_name: Daniele
     affiliation: Consiglio Nazionale delle Ricerche
     orcid: 0000-0003-1558-1365
   - name_in_rdf: Giulia Fiorini
-    name: Fiorini, Giulia
+    family_name: Fiorini
+    given_name: Giulia
     affiliation: Sapienza Università di Roma, Alma Mater Studiorum - Università di Bologna
     orcid: 0000-0002-1475-1556
   - name_in_rdf: Anna Forte
-    name: Forte, Anna
+    family_name: Forte
+    given_name: Anna
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0009-0008-8300-9057
   - name_in_rdf: Federica Giacomini
-    name: Giacomini, Federica
+    family_name: Giacomini
+    given_name: Federica
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0009-0002-5840-2769
   - name_in_rdf: Valentina Alena Girelli
-    name: Girelli, Valentina Alena
+    family_name: Girelli
+    given_name: Valentina Alena
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0000-0001-9257-9803
   - name_in_rdf: Marco Lamorte
-    name: Lamorte, Marco
+    family_name: Lamorte
+    given_name: Marco
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0009-0005-3895-6133
   - name_in_rdf: Rachele Manganelli Del Fà
-    name: Manganelli Del Fà, Rachele
+    family_name: Manganelli Del Fà
+    given_name: Rachele
     affiliation: Consiglio Nazionale delle Ricerche
     orcid: 0000-0002-4767-5684
   - name_in_rdf: Arcangelo Massari
-    name: Massari, Arcangelo
+    family_name: Massari
+    given_name: Arcangelo
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0000-0002-8420-0696
   - name_in_rdf: Arianna Moretti
-    name: Moretti, Arianna
+    family_name: Moretti
+    given_name: Arianna
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0000-0001-5486-7070
   - name_in_rdf: Silvio Peroni
-    name: Peroni, Silvio
+    family_name: Peroni
+    given_name: Silvio
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0000-0003-0530-4305
   - name_in_rdf: Sofia Pescarin
-    name: Pescarin, Sofia
+    family_name: Pescarin
+    given_name: Sofia
     affiliation: Consiglio Nazionale delle Ricerche, Alma Mater Studiorum - Università di Bologna
     orcid: 0000-0002-9529-7083
   - name_in_rdf: Maria Felicia Rega
-    name: Rega, Maria Felicia
+    family_name: Rega
+    given_name: Maria Felicia
     affiliation: Consiglio Nazionale delle Ricerche
     orcid: 0000-0001-8404-1640
   - name_in_rdf: Diego Ronchi
-    name: Ronchi, Diego
+    family_name: Ronchi
+    given_name: Diego
     affiliation: Consiglio Nazionale delle Ricerche
     orcid: 0000-0001-7072-0108
   - name_in_rdf: Stefano Sorrentino
-    name: Sorrentino, Stefano
+    family_name: Sorrentino
+    given_name: Stefano
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0009-0001-9166-9396
   - name_in_rdf: Daniele Spedicati
-    name: Spedicati, Daniele
+    family_name: Spedicati
+    given_name: Daniele
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0009-0002-8965-3480
   - name_in_rdf: Mattia Sullini
-    name: Sullini, Mattia
+    family_name: Sullini
+    given_name: Mattia
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0009-0004-0022-4925
   - name_in_rdf: Maria Alessandra Tini
-    name: Tini, Maria Alessandra
+    family_name: Tini
+    given_name: Maria Alessandra
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0000-0001-7745-640X
   - name_in_rdf: Laura Travaglini
-    name: Travaglini, Laura
+    family_name: Travaglini
+    given_name: Laura
     affiliation: Alma Mater Studiorum - Università di Bologna
     orcid: 0009-0008-9055-4344

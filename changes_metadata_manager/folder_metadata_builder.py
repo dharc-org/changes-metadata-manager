@@ -267,13 +267,14 @@ def process_all_folders(
     kg_path: Path = KG_PATH,
     structure_path: Path | None = None,
     shapes_path: Path = SHAPES_PATH,
+    validate: bool = True,
 ) -> list[tuple[str, str]]:
     if structure_path is not None:
         structure = load_structure(structure_path)
     else:
         structure = scan_folder_structure(root)
     kg = load_kg(kg_path)
-    shapes_graph = load_kg(shapes_path)
+    shapes_graph = load_kg(shapes_path) if validate else None
 
     console = Console()
     validation_errors = []
@@ -310,10 +311,11 @@ def process_all_folders(
                 metadata = extract_metadata_for_stage(kg, nr, stage_key)
                 metadata.add((URIRef(""), DCTERMS.license, CC0))
 
-                conforms, results_text = validate_metadata(metadata, shapes_graph)
-                if not conforms:
-                    label = f"{folder_name}/{stage_name}"
-                    validation_errors.append((label, results_text))
+                if shapes_graph is not None:
+                    conforms, results_text = validate_metadata(metadata, shapes_graph)
+                    if not conforms:
+                        label = f"{folder_name}/{stage_name}"
+                        validation_errors.append((label, results_text))
 
                 meta_path = stage_dir / "meta.ttl"
                 metadata.serialize(destination=str(meta_path), format="turtle")
@@ -329,13 +331,14 @@ def process_all_folders(
 
             progress.advance(task)
 
-    if validation_errors:
-        console.print(f"\n[bold red]SHACL validation failed for {len(validation_errors)} stage(s):[/bold red]")
-        for label, results_text in validation_errors:
-            console.print(f"\n[bold yellow]{label}[/bold yellow]")
-            console.print(results_text)
-    else:
-        console.print("\n[bold green]All metadata passed SHACL validation.[/bold green]")
+    if shapes_graph is not None:
+        if validation_errors:
+            console.print(f"\n[bold red]SHACL validation failed for {len(validation_errors)} stage(s):[/bold red]")
+            for label, results_text in validation_errors:
+                console.print(f"\n[bold yellow]{label}[/bold yellow]")
+                console.print(results_text)
+        else:
+            console.print("\n[bold green]All metadata passed SHACL validation.[/bold green]")
 
     return validation_errors
 
@@ -356,12 +359,17 @@ def parse_arguments():  # pragma: no cover
         default=None,
         help="SharePoint JSON structure file (optional, for development)",
     )
+    parser.add_argument(
+        "--no-validate",
+        action="store_true",
+        help="Skip SHACL validation",
+    )
     return parser.parse_args()
 
 
 def main():  # pragma: no cover
     args = parse_arguments()
-    process_all_folders(root=args.root, structure_path=args.structure)
+    process_all_folders(root=args.root, structure_path=args.structure, validate=not args.no_validate)
 
 
 if __name__ == "__main__":  # pragma: no cover

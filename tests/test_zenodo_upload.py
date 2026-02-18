@@ -20,15 +20,18 @@ from changes_metadata_manager.zenodo_upload import (
     build_creators_for_entity_stage,
     build_enhanced_description,
     build_entity_uri,
+    build_metadata_creators,
     create_stage_zip,
     extract_authors_for_entity_stage,
     extract_entity_title,
     extract_keeper_info,
     extract_license_for_entity_stage,
     extract_licensed_entity_stages,
+    extract_metadata_authors,
     generate_zenodo_config,
     group_folders_by_entity,
     load_creators_lookup,
+    merge_creators,
     slugify,
 )
 
@@ -247,7 +250,7 @@ class TestExtractAuthorsForEntityStage:
         authors = extract_authors_for_entity_stage(real_kg, "nonexistent", "raw")
         assert authors == set()
 
-    def test_filters_only_persons(self):
+    def test_extracts_from_synthetic_graph(self):
         g = Graph()
         act_uri = URIRef(f"{BASE_URI}/act/42/00/1")
         actor_uri = URIRef(f"{BASE_URI}/per/42/1")
@@ -259,27 +262,47 @@ class TestExtractAuthorsForEntityStage:
         authors = extract_authors_for_entity_stage(g, "42", "raw")
         assert authors == {"Test Author"}
 
-    def test_ignores_non_person_actors(self):
+
+class TestExtractMetadataAuthors:
+    def test_extracts_step_05_authors(self):
         g = Graph()
-        act_uri = URIRef(f"{BASE_URI}/act/42/00/1")
-        actor_uri = URIRef(f"{BASE_URI}/grp/42/1")
-        apl_uri = URIRef(f"{BASE_URI}/apl/42/1")
+        act_uri = URIRef(f"{BASE_URI}/act/42/05/1")
+        actor_uri = URIRef(f"{BASE_URI}/per/meta/1")
+        apl_uri = URIRef(f"{BASE_URI}/apl/meta/1")
         g.add((act_uri, P14_CARRIED_OUT_BY, actor_uri))
+        g.add((actor_uri, RDF_TYPE, E21_PERSON))
         g.add((actor_uri, P1_IS_IDENTIFIED_BY, apl_uri))
-        g.add((apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal("Test Group")))
-        authors = extract_authors_for_entity_stage(g, "42", "raw")
+        g.add((apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal("Metadata Author")))
+        authors = extract_metadata_authors(g, "42")
+        assert authors == {"Metadata Author"}
+
+    def test_returns_empty_for_missing_entity(self):
+        g = Graph()
+        authors = extract_metadata_authors(g, "nonexistent")
         assert authors == set()
+
+    def test_extracts_from_real_kg(self, real_kg):
+        authors = extract_metadata_authors(real_kg, "1")
+        assert authors == {"Arcangelo Massari", "Arianna Moretti", "Sebastian Barzaghi"}
 
 
 class TestLoadCreatorsLookup:
     def test_loads_creators_as_dict(self):
         with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
-            f.write("creators:\n  - name_in_rdf: Test Author\n    name: Author, Test\n    affiliation: Test Uni\n    orcid: 0000-0001-2345-6789\n")
+            f.write(
+                "creators:\n"
+                "  - name_in_rdf: Test Author\n"
+                "    family_name: Author\n"
+                "    given_name: Test\n"
+                "    affiliation: Test Uni\n"
+                "    orcid: 0000-0001-2345-6789\n"
+            )
             f.flush()
             lookup = load_creators_lookup(Path(f.name))
         assert lookup == {
             "Test Author": {
-                "name": "Author, Test",
+                "family_name": "Author",
+                "given_name": "Test",
                 "affiliation": "Test Uni",
                 "orcid": "0000-0001-2345-6789",
             }
@@ -287,10 +310,11 @@ class TestLoadCreatorsLookup:
 
 
 class TestBuildCreatorsForEntityStage:
-    def test_builds_creators_list(self, real_kg):
+    def test_builds_creators_with_datacollector_role(self, real_kg):
         lookup = {
             "Federica Bonifazi": {
-                "name": "Bonifazi, Federica",
+                "family_name": "Bonifazi",
+                "given_name": "Federica",
                 "affiliation": "CNR-ISPC",
                 "orcid": "0009-0000-8466-5541",
             }
@@ -298,9 +322,14 @@ class TestBuildCreatorsForEntityStage:
         creators = build_creators_for_entity_stage(real_kg, "1", "raw", lookup)
         assert creators == [
             {
-                "name": "Bonifazi, Federica",
-                "affiliation": "CNR-ISPC",
-                "orcid": "0009-0000-8466-5541",
+                "person_or_org": {
+                    "type": "personal",
+                    "family_name": "Bonifazi",
+                    "given_name": "Federica",
+                    "identifiers": [{"scheme": "orcid", "identifier": "0009-0000-8466-5541"}],
+                },
+                "role": {"id": "datacollector"},
+                "affiliations": [{"name": "CNR-ISPC"}],
             }
         ]
 
@@ -311,7 +340,7 @@ class TestBuildCreatorsForEntityStage:
 
     def test_sorts_authors_alphabetically(self):
         g = Graph()
-        for name in ["Zeta, Author", "Alpha, Author"]:
+        for name in ["Zeta Author", "Alpha Author"]:
             act_uri = URIRef(f"{BASE_URI}/act/42/00/1")
             actor_uri = URIRef(f"{BASE_URI}/per/{name}/1")
             apl_uri = URIRef(f"{BASE_URI}/apl/{name}/1")
@@ -320,11 +349,135 @@ class TestBuildCreatorsForEntityStage:
             g.add((actor_uri, P1_IS_IDENTIFIED_BY, apl_uri))
             g.add((apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal(name)))
         lookup = {
-            "Alpha, Author": {"name": "Alpha, Author"},
-            "Zeta, Author": {"name": "Zeta, Author"},
+            "Alpha Author": {
+                "family_name": "Author",
+                "given_name": "Alpha",
+                "affiliation": "Uni",
+                "orcid": "0000-0000-0000-0001",
+            },
+            "Zeta Author": {
+                "family_name": "Author",
+                "given_name": "Zeta",
+                "affiliation": "Uni",
+                "orcid": "0000-0000-0000-0002",
+            },
         }
         creators = build_creators_for_entity_stage(g, "42", "raw", lookup)
-        assert [c["name"] for c in creators] == ["Alpha, Author", "Zeta, Author"]
+        assert [c["person_or_org"]["given_name"] for c in creators] == ["Alpha", "Zeta"]
+
+
+class TestBuildMetadataCreators:
+    def test_builds_creators_with_datacurator_role(self):
+        g = Graph()
+        act_uri = URIRef(f"{BASE_URI}/act/42/05/1")
+        actor_uri = URIRef(f"{BASE_URI}/per/meta/1")
+        apl_uri = URIRef(f"{BASE_URI}/apl/meta/1")
+        g.add((act_uri, P14_CARRIED_OUT_BY, actor_uri))
+        g.add((actor_uri, RDF_TYPE, E21_PERSON))
+        g.add((actor_uri, P1_IS_IDENTIFIED_BY, apl_uri))
+        g.add((apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal("Metadata Author")))
+        lookup = {
+            "Metadata Author": {
+                "family_name": "Author",
+                "given_name": "Metadata",
+                "affiliation": "Test Uni",
+                "orcid": "0000-0001-2345-6789",
+            }
+        }
+        creators = build_metadata_creators(g, "42", lookup)
+        assert creators == [
+            {
+                "person_or_org": {
+                    "type": "personal",
+                    "family_name": "Author",
+                    "given_name": "Metadata",
+                    "identifiers": [{"scheme": "orcid", "identifier": "0000-0001-2345-6789"}],
+                },
+                "role": {"id": "datacurator"},
+                "affiliations": [{"name": "Test Uni"}],
+            }
+        ]
+
+
+class TestMergeCreators:
+    def test_merges_without_duplicates(self):
+        digitization = [
+            {
+                "person_or_org": {
+                    "type": "personal",
+                    "family_name": "Author",
+                    "given_name": "Digit",
+                    "identifiers": [{"scheme": "orcid", "identifier": "0000-0000-0000-0001"}],
+                },
+                "role": {"id": "datacollector"},
+                "affiliations": [{"name": "Uni"}],
+            }
+        ]
+        metadata = [
+            {
+                "person_or_org": {
+                    "type": "personal",
+                    "family_name": "Author",
+                    "given_name": "Meta",
+                    "identifiers": [{"scheme": "orcid", "identifier": "0000-0000-0000-0002"}],
+                },
+                "role": {"id": "datacurator"},
+                "affiliations": [{"name": "Uni"}],
+            }
+        ]
+        merged = merge_creators(digitization, metadata)
+        assert len(merged) == 2
+        assert merged[0]["role"] == {"id": "datacollector"}
+        assert merged[1]["role"] == {"id": "datacurator"}
+
+    def test_deduplicates_by_orcid(self):
+        digitization = [
+            {
+                "person_or_org": {
+                    "type": "personal",
+                    "family_name": "Shared",
+                    "given_name": "Author",
+                    "identifiers": [{"scheme": "orcid", "identifier": "0000-0000-0000-0001"}],
+                },
+                "role": {"id": "datacollector"},
+                "affiliations": [{"name": "Uni"}],
+            }
+        ]
+        metadata = [
+            {
+                "person_or_org": {
+                    "type": "personal",
+                    "family_name": "Shared",
+                    "given_name": "Author",
+                    "identifiers": [{"scheme": "orcid", "identifier": "0000-0000-0000-0001"}],
+                },
+                "role": {"id": "datacurator"},
+                "affiliations": [{"name": "Uni"}],
+            }
+        ]
+        merged = merge_creators(digitization, metadata)
+        assert len(merged) == 1
+        assert merged[0]["role"] == {"id": "datacollector"}
+
+    def test_empty_lists(self):
+        assert merge_creators([], []) == []
+
+    def test_only_metadata_creators(self):
+        metadata = [
+            {
+                "person_or_org": {
+                    "type": "personal",
+                    "family_name": "Author",
+                    "given_name": "Meta",
+                    "identifiers": [{"scheme": "orcid", "identifier": "0000-0000-0000-0001"}],
+                },
+                "role": {"id": "datacurator"},
+                "affiliations": [{"name": "Uni"}],
+            }
+        ]
+        merged = merge_creators([], metadata)
+        assert len(merged) == 1
+        assert merged[0]["role"] == {"id": "datacurator"}
 
 
 class TestBuildEntityUri:
@@ -337,28 +490,51 @@ class TestBuildEntityUri:
         assert result == "https://w3id.org/changes/4/aldrovandi/itm/ptb/ob00/1"
 
 
+SAMPLE_CREATOR = {
+    "person_or_org": {
+        "type": "personal",
+        "family_name": "Author",
+        "given_name": "Test",
+        "identifiers": [{"scheme": "orcid", "identifier": "0000-0001-2345-6789"}],
+    },
+    "role": {"id": "datacollector"},
+    "affiliations": [{"name": "Test Uni"}],
+}
+
+SAMPLE_BASE_CONFIG = {
+    "zenodo_url": "https://sandbox.zenodo.org/api",
+    "access_token": "test_token",
+    "user_agent": "piccione/2.1.0",
+    "keywords": ["test"],
+    "notes": "Test notes content",
+    "method": "Test method content",
+    "locations": [
+        {
+            "lat": 44.497,
+            "lon": 11.353,
+            "place": "Bologna, Italy",
+            "description": "Palazzo Poggi Museum",
+        },
+    ],
+}
+
+
 class TestGenerateZenodoConfig:
     def test_generates_valid_config(self, freezer):
         freezer.move_to("2024-06-15")
-        base_config = {
-            "zenodo_url": "https://sandbox.zenodo.org/api",
-            "access_token": "test_token",
-            "user_agent": "piccione/2.1.0",
-            "upload_type": "dataset",
-            "keywords": ["test"],
-        }
-        creators = [{"name": "Test Author"}]
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", base_config, creators)
+        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR])
 
         assert config == {
             "zenodo_url": "https://sandbox.zenodo.org/api",
             "access_token": "test_token",
             "user_agent": "piccione/2.1.0",
             "title": "Test Title - Raw sensor data - Aldrovandi Digital Twin",
-            "description": 'Raw sensor data for the digitization of "Test Title" (entity 1) from the Aldrovandi Digital Twin.\nThis stage contains the original acquisition output (photos and/or scans) without processing.\nIncludes metadata (meta.ttl) and provenance (prov.trig) files following the CHAD-AP ontology.\n',
-            "upload_type": "dataset",
-            "creators": [{"name": "Test Author"}],
+            "description": 'Raw sensor data of "Test Title" from the Aldrovandi Digital Twin.\nThis stage contains the original acquisition output (photos and/or scans) without processing.\nIncludes metadata (meta.ttl) and provenance (prov.trig) files following the <a href="https://w3id.org/dharc/ontology/chad-ap">CHAD-AP</a> ontology.\n',
+            "resource_type": {"id": "dataset"},
+            "publisher": "Zenodo",
+            "access": {"record": "public", "files": "public"},
+            "creators": [SAMPLE_CREATOR],
             "keywords": ["test"],
             "files": [str(zip_path.absolute())],
             "publication_date": "2024-06-15",
@@ -369,57 +545,97 @@ class TestGenerateZenodoConfig:
                     "link": "https://creativecommons.org/publicdomain/zero/1.0/",
                 },
             ],
+            "additional_descriptions": [
+                {"description": "Test notes content", "type": {"id": "notes"}},
+                {"description": "Test method content", "type": {"id": "methods"}},
+            ],
+            "locations": {
+                "features": [
+                    {
+                        "geometry": {"type": "Point", "coordinates": [11.353, 44.497]},
+                        "place": "Bologna, Italy",
+                        "description": "Palazzo Poggi Museum",
+                    },
+                ]
+            },
         }
 
     def test_adds_entity_uri_as_alternate_identifier(self, freezer):
         freezer.move_to("2024-06-15")
-        base_config = {
-            "zenodo_url": "https://sandbox.zenodo.org/api",
-            "access_token": "test_token",
-        }
-        creators = [{"name": "Test Author"}]
         zip_path = Path("/tmp/27-raw.zip")
         entity_uri = "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1"
-        config = generate_zenodo_config("27", "raw", zip_path, "Test Title", base_config, creators, entity_uri=entity_uri)
+        config = generate_zenodo_config("27", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], entity_uri=entity_uri)
 
-        assert config["related_identifiers"] == [
-            {
-                "identifier": "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1",
-                "relation": "isAlternateIdentifier",
-                "scheme": "url",
-            }
+        assert config["identifiers"] == [
+            {"identifier": "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1", "scheme": "url"}
         ]
 
-    def test_merges_entity_uri_with_existing_related_identifiers(self, freezer):
+    def test_converts_related_identifiers(self, freezer):
         freezer.move_to("2024-06-15")
         base_config = {
-            "zenodo_url": "https://sandbox.zenodo.org/api",
-            "access_token": "test_token",
+            **SAMPLE_BASE_CONFIG,
             "related_identifiers": [
                 {
                     "identifier": "10.3724/2096-7004.di.2024.0061",
-                    "relation": "isDocumentedBy",
+                    "relation": "isdocumentedby",
                     "resource_type": "publication-article",
                 }
             ],
         }
-        creators = [{"name": "Test Author"}]
         zip_path = Path("/tmp/27-raw.zip")
-        entity_uri = "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1"
-        config = generate_zenodo_config("27", "raw", zip_path, "Test Title", base_config, creators, entity_uri=entity_uri)
+        config = generate_zenodo_config("27", "raw", zip_path, "Test Title", base_config, [SAMPLE_CREATOR])
 
         assert config["related_identifiers"] == [
             {
                 "identifier": "10.3724/2096-7004.di.2024.0061",
-                "relation": "isDocumentedBy",
-                "resource_type": "publication-article",
-            },
-            {
-                "identifier": "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1",
-                "relation": "isAlternateIdentifier",
-                "scheme": "url",
+                "relation_type": {"id": "isdocumentedby"},
+                "resource_type": {"id": "publication-article"},
             },
         ]
+
+    def test_converts_notes_and_method_to_additional_descriptions(self, freezer):
+        freezer.move_to("2024-06-15")
+        zip_path = Path("/tmp/1-raw.zip")
+        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR])
+
+        assert config["additional_descriptions"] == [
+            {"description": "Test notes content", "type": {"id": "notes"}},
+            {"description": "Test method content", "type": {"id": "methods"}},
+        ]
+
+    def test_cc0_disclaimer_in_additional_descriptions(self, freezer):
+        freezer.move_to("2024-06-15")
+        zip_path = Path("/tmp/1-raw.zip")
+        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], license="cc0-1.0")
+
+        assert config["additional_descriptions"] == [
+            {"description": "Test notes content", "type": {"id": "notes"}},
+            {"description": "Test method content", "type": {"id": "methods"}},
+            {"description": CC0_DISCLAIMER, "type": {"id": "notes"}},
+        ]
+
+    def test_converts_locations_to_geojson(self, freezer):
+        freezer.move_to("2024-06-15")
+        zip_path = Path("/tmp/1-raw.zip")
+        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR])
+
+        assert config["locations"] == {
+            "features": [
+                {
+                    "geometry": {"type": "Point", "coordinates": [11.353, 44.497]},
+                    "place": "Bologna, Italy",
+                    "description": "Palazzo Poggi Museum",
+                },
+            ]
+        }
+
+    def test_includes_community_field(self, freezer):
+        freezer.move_to("2024-06-15")
+        base_config = {**SAMPLE_BASE_CONFIG, "community": "project-changes"}
+        zip_path = Path("/tmp/1-raw.zip")
+        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", base_config, [SAMPLE_CREATOR])
+
+        assert config["community"] == "project-changes"
 
 
 class TestExtractLicenseForEntityStage:
@@ -501,45 +717,37 @@ class TestExtractKeeperInfo:
 
 class TestBuildEnhancedDescription:
     def test_raw_stage_description(self):
-        result = build_enhanced_description("42", "raw", "Test Object")
+        result = build_enhanced_description("raw", "Test Object")
         assert result == (
-            'Raw sensor data for the digitization of "Test Object" (entity 42) from the Aldrovandi Digital Twin.\n'
+            'Raw sensor data of "Test Object" from the Aldrovandi Digital Twin.\n'
             "This stage contains the original acquisition output (photos and/or scans) without processing.\n"
-            "Includes metadata (meta.ttl) and provenance (prov.trig) files following the CHAD-AP ontology.\n"
+            'Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href="https://w3id.org/dharc/ontology/chad-ap">CHAD-AP</a> ontology.\n'
         )
 
     def test_dcho_stage_description(self):
-        result = build_enhanced_description("1", "dcho", "Museum Specimen")
+        result = build_enhanced_description("dcho", "Museum Specimen")
         assert "Digital Cultural Heritage Object" in result
         assert '"Museum Specimen"' in result
         assert "interpolation, gap filling, and geometry corrections" in result
 
     def test_dchoo_stage_description(self):
-        result = build_enhanced_description("1", "dchoo", "Object Title")
+        result = build_enhanced_description("dchoo", "Object Title")
         assert "Optimized Digital Cultural Heritage Object" in result
         assert "web-ready version optimized for real-time online interaction" in result
 
-    def test_cc0_license_appends_disclaimer(self):
-        result = build_enhanced_description("42", "dcho", "Test Object", content_license="cc0-1.0")
-        assert result.endswith(CC0_DISCLAIMER + "\n")
-
-    def test_non_cc0_license_no_disclaimer(self):
-        result = build_enhanced_description("42", "dcho", "Test Object", content_license="cc-by-4.0")
-        assert CC0_DISCLAIMER not in result
-
-    def test_no_license_no_disclaimer(self):
-        result = build_enhanced_description("42", "dcho", "Test Object")
+    def test_description_never_contains_disclaimer(self):
+        result = build_enhanced_description("dcho", "Test Object")
         assert CC0_DISCLAIMER not in result
 
     def test_includes_keeper_and_location(self):
-        result = build_enhanced_description("42", "raw", "Test Object", keeper_name="Test Museum", keeper_location="Test City")
-        assert "Preserved at Test Museum, Test City." in result
+        result = build_enhanced_description("raw", "Test Object", keeper_name="Test Museum", keeper_location="Test City")
+        assert "The original object is held by Test Museum (Test City)." in result
 
     def test_includes_keeper_without_location(self):
-        result = build_enhanced_description("42", "raw", "Test Object", keeper_name="Test Museum")
-        assert "Preserved at Test Museum." in result
-        assert "Test Museum," not in result
+        result = build_enhanced_description("raw", "Test Object", keeper_name="Test Museum")
+        assert "The original object is held by Test Museum." in result
+        assert "Test Museum (" not in result
 
     def test_no_keeper_line_when_none(self):
-        result = build_enhanced_description("42", "raw", "Test Object")
-        assert "Preserved at" not in result
+        result = build_enhanced_description("raw", "Test Object")
+        assert "held by" not in result

@@ -10,6 +10,7 @@ docs/naming_convention.md
 docs/media
 .env
 data/output
+data/test_output
 output/Sala*
 data/cache
 sharepoint_config.yaml
