@@ -17,6 +17,10 @@ from changes_metadata_manager.zenodo_upload import (
     P70I,
     P74_HAS_RESIDENCE,
     RDF_TYPE,
+    _extract_doi,
+    _extract_entity_id_from_config,
+    _extract_entity_stage_from_config,
+    _extract_record_url,
     build_creators_for_entity_stage,
     build_enhanced_description,
     build_entity_uri,
@@ -751,3 +755,51 @@ class TestBuildEnhancedDescription:
     def test_no_keeper_line_when_none(self):
         result = build_enhanced_description("raw", "Test Object")
         assert "held by" not in result
+
+
+class TestExtractEntityStageFromConfig:
+    def test_extracts_raw_stage(self):
+        config = {"title": "Carta nautica - Raw sensor data - Aldrovandi Digital Twin"}
+        assert _extract_entity_stage_from_config(config) == "raw"
+
+    def test_extracts_dchoo_stage(self):
+        config = {"title": "Carta nautica - Optimized Digital Cultural Heritage Object - Aldrovandi Digital Twin"}
+        assert _extract_entity_stage_from_config(config) == "dchoo"
+
+    def test_raises_for_unknown_stage(self):
+        config = {"title": "Some unknown title format"}
+        with pytest.raises(ValueError, match="Cannot determine stage"):
+            _extract_entity_stage_from_config(config)
+
+
+class TestExtractEntityIdFromConfig:
+    def test_extracts_numeric_id(self):
+        config = {"identifiers": [{"identifier": "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1", "scheme": "url"}]}
+        assert _extract_entity_id_from_config(config) == "27"
+
+    def test_extracts_string_id(self):
+        config = {"identifiers": [{"identifier": "https://w3id.org/changes/4/aldrovandi/itm/ptb/ob00/1", "scheme": "url"}]}
+        assert _extract_entity_id_from_config(config) == "ptb"
+
+    def test_raises_for_invalid_identifier(self):
+        config = {"identifiers": [{"identifier": "https://example.com/invalid", "scheme": "url"}]}
+        with pytest.raises(ValueError, match="Cannot extract entity ID"):
+            _extract_entity_id_from_config(config)
+
+
+class TestExtractDoi:
+    def test_extracts_doi_from_record(self):
+        record = {"pids": {"doi": {"identifier": "10.5281/zenodo.12345"}}}
+        assert _extract_doi(record) == "10.5281/zenodo.12345"
+
+    def test_returns_none_when_no_pids(self):
+        assert _extract_doi({}) is None
+
+    def test_returns_none_when_no_doi(self):
+        assert _extract_doi({"pids": {}}) is None
+
+
+class TestExtractRecordUrl:
+    def test_extracts_url_from_record(self):
+        record = {"links": {"self_html": "https://zenodo.org/records/12345"}}
+        assert _extract_record_url(record) == "https://zenodo.org/records/12345"

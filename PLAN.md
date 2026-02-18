@@ -105,7 +105,7 @@ DCHOO (dipende da RAW + RAWP + DCHO)
   - Metadata Zenodo da RDF (titolo, autori con ORCID, descrizione, keywords)
   - Pubblicazione record
 - [x] Caricare solo oggetti con licenza associata (per ogni sottotipologia RAW, RAWP, DCHO, DCHOO)
-- [ ] Generare tabella di associazione entità → DOI Zenodo
+- [x] Generare tabella di associazione entità → DOI Zenodo
 - [ ] Compilare tabella CSV di Silvio con informazioni sui documenti caricati su Zenodo
 - [ ] Gestire rate limiting e retry logic
 

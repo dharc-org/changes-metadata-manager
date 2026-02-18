@@ -1,4 +1,5 @@
 import argparse
+import csv
 import re
 import unicodedata
 import zipfile
@@ -513,8 +514,36 @@ def prepare_all(
                 progress.advance(task)
 
 
-def upload_all(configs_dir: Path, publish: bool = False) -> None:
+def _extract_entity_stage_from_config(config: dict) -> str:
+    title = config["title"]
+    for stage, full_name in STAGE_FULL_NAMES.items():
+        if f" - {full_name} - " in title:
+            return stage
+    raise ValueError(f"Cannot determine stage from title: {title}")
+
+
+def _extract_entity_id_from_config(config: dict) -> str:
+    identifier = config["identifiers"][0]["identifier"]
+    match = re.search(r"/itm/([^/]+)/ob00/1$", identifier)
+    if match:
+        return match.group(1)
+    raise ValueError(f"Cannot extract entity ID from identifier: {identifier}")
+
+
+def _extract_doi(record: dict) -> str | None:
+    pids = record.get("pids", {})
+    doi_info = pids.get("doi", {})
+    return doi_info.get("identifier")
+
+
+def _extract_record_url(record: dict) -> str:
+    return record["links"]["self_html"]
+
+
+def upload_all(configs_dir: Path, publish: bool = False) -> Path:
     config_files = sorted(configs_dir.glob("*.yaml"))
+    doi_table: list[dict[str, str]] = []
+
     with Progress(
         SpinnerColumn(),
         TextColumn("[progress.description]{task.description}"),
@@ -524,8 +553,34 @@ def upload_all(configs_dir: Path, publish: bool = False) -> None:
         task = progress.add_task("Uploading to Zenodo", total=len(config_files))
         for config_file in config_files:
             progress.update(task, description=f"Uploading {config_file.stem}")
-            piccione_upload(str(config_file), publish=publish)
+            record = piccione_upload(str(config_file), publish=publish)
+            with open(config_file) as f:
+                config = yaml.safe_load(f)
+            entity_id = _extract_entity_id_from_config(config)
+            stage = _extract_entity_stage_from_config(config)
+            row: dict[str, str] = {
+                "entity_id": entity_id,
+                "stage": stage,
+                "title": config["title"],
+                "record_url": _extract_record_url(record),
+            }
+            doi = _extract_doi(record)
+            if doi:
+                row["doi"] = doi
+            doi_table.append(row)
             progress.advance(task)
+
+    csv_path = configs_dir.parent / "doi_table.csv"
+    has_dois = any("doi" in row for row in doi_table)
+    fieldnames = ["entity_id", "stage", "title", "record_url"]
+    if has_dois:
+        fieldnames.append("doi")
+    with open(csv_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(doi_table)
+    print(f"DOI table written to {csv_path}")
+    return csv_path
 
 
 def parse_arguments():  # pragma: no cover
