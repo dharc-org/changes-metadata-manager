@@ -365,6 +365,7 @@ class TestGenerateZenodoConfig:
             "rights": [
                 {
                     "title": {"en": "Creative Commons Zero v1.0 Universal (Metadata license)"},
+                    "description": {"en": "Applies to metadata files: meta.ttl, prov.trig"},
                     "link": "https://creativecommons.org/publicdomain/zero/1.0/",
                 },
             ],

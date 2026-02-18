@@ -314,12 +314,14 @@ def build_rights(content_license: str | None) -> list[dict]:
     metadata_info = LICENSE_INFO["cc0-1.0"]
     rights = [{
         "title": {"en": f"{metadata_info['title']} (Metadata license)"},
+        "description": {"en": "Applies to metadata files: meta.ttl, prov.trig"},
         "link": metadata_info["link"],
     }]
     if content_license and content_license in LICENSE_INFO:
         content_info = LICENSE_INFO[content_license]
         rights.append({
             "title": {"en": f"{content_info['title']} (Content license)"},
+            "description": {"en": "Applies to all data files except meta.ttl and prov.trig"},
             "link": content_info["link"],
         })
     return rights
