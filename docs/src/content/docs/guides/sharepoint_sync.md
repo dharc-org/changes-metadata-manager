@@ -26,27 +26,12 @@ The `fedauth` and `rtfa` values are authentication cookies. You can extract them
 
 These cookies expire after some time, so you may need to refresh them periodically.
 
-## Syncing structure only
+## Syncing files
 
-If you only need the folder hierarchy (no actual files), use the `--structure-only` flag:
-
-```bash
-uv run python -m piccione.download.from_sharepoint config.yaml /output/dir --structure-only
-```
-
-This produces a `structure.json` file describing the full directory tree. You can then pass it to the metadata builder:
-
-```bash
-uv run python -m changes_metadata_manager.folder_metadata_builder /output/dir \
-    --structure /output/dir/structure.json
-```
-
-## Syncing structure and files
-
-To download the actual files as well:
+To download the files from SharePoint:
 
 ```bash
 uv run python -m piccione.download.from_sharepoint config.yaml /output/dir
 ```
 
-This creates a local copy of the folder tree with all files. You can then run the metadata builder directly on it without the `--structure` flag.
+This creates a local copy of the folder tree with all files. You can then run the metadata builder directly on it.

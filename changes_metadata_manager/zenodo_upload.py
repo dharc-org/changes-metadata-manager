@@ -20,7 +20,6 @@ from changes_metadata_manager.folder_metadata_builder import (
     STAGE_STEPS,
     extract_id_from_folder_name,
     load_kg,
-    load_structure,
     scan_folder_structure,
 )
 
@@ -466,12 +465,8 @@ def prepare_all(
     zenodo_base_config_path: Path,
     output_dir: Path,
     kg_path: Path = KG_PATH,
-    structure_path: Path | None = None,
 ) -> None:
-    if structure_path is not None:
-        structure = load_structure(structure_path)
-    else:
-        structure = scan_folder_structure(root)
+    structure = scan_folder_structure(root)
 
     kg = load_kg(kg_path)
     licensed_stages = extract_licensed_entity_stages(kg)
@@ -541,8 +536,6 @@ def parse_arguments():  # pragma: no cover
     prepare_parser.add_argument("root", type=Path, help="Root directory with Sala/Folder/Stage structure")
     prepare_parser.add_argument("zenodo_config", type=Path, help="Base Zenodo configuration YAML")
     prepare_parser.add_argument("--output", "-o", type=Path, default=Path("zenodo_output"), help="Output directory")
-    prepare_parser.add_argument("--structure", "-s", type=Path, default=None, help="Structure JSON file")
-
     upload_parser = subparsers.add_parser("upload", help="Upload to Zenodo")
     upload_parser.add_argument("configs_dir", type=Path, help="Directory containing YAML configs")
     upload_parser.add_argument("--publish", action="store_true", help="Publish after upload")
@@ -557,7 +550,6 @@ def main():  # pragma: no cover
             root=args.root,
             zenodo_base_config_path=args.zenodo_config,
             output_dir=args.output,
-            structure_path=args.structure,
         )
     elif args.command == "upload":
         upload_all(configs_dir=args.configs_dir, publish=args.publish)

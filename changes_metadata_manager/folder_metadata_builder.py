@@ -1,5 +1,4 @@
 import argparse
-import json
 import re
 from pathlib import Path
 
@@ -13,7 +12,6 @@ from changes_metadata_manager.generate_provenance import generate_provenance_sna
 
 
 BASE_URI = "https://w3id.org/changes/4/aldrovandi"
-STRUCTURE_PATH = Path("data/structure.json")
 KG_PATH = Path("data/kg.ttl")
 SHAPES_PATH = Path("data/shapes-chadap.ttl")
 RESP_AGENT = "https://w3id.org/changes/4/agent/morph-kgc-changes-metadata/1.0.1"
@@ -242,11 +240,6 @@ def validate_metadata(data_graph: Graph, shapes_graph: Graph) -> tuple[bool, str
     return bool(conforms), str(results_text)
 
 
-def load_structure(structure_path: Path) -> dict:
-    with open(structure_path) as f:
-        return json.load(f)
-
-
 def scan_folder_structure(root_path: Path) -> dict:
     structure = {}
     for sala_dir in root_path.iterdir():
@@ -265,14 +258,10 @@ def scan_folder_structure(root_path: Path) -> dict:
 def process_all_folders(
     root: Path,
     kg_path: Path = KG_PATH,
-    structure_path: Path | None = None,
     shapes_path: Path = SHAPES_PATH,
     validate: bool = True,
 ) -> list[tuple[str, str]]:
-    if structure_path is not None:
-        structure = load_structure(structure_path)
-    else:
-        structure = scan_folder_structure(root)
+    structure = scan_folder_structure(root)
     kg = load_kg(kg_path)
     shapes_graph = load_kg(shapes_path) if validate else None
 
@@ -360,13 +349,6 @@ def parse_arguments():  # pragma: no cover
         help="Root directory containing Sala/Folder/Stage structure",
     )
     parser.add_argument(
-        "--structure",
-        "-s",
-        type=Path,
-        default=None,
-        help="SharePoint JSON structure file (optional, for development)",
-    )
-    parser.add_argument(
         "--no-validate",
         action="store_true",
         help="Skip SHACL validation",
@@ -382,7 +364,7 @@ def parse_arguments():  # pragma: no cover
 
 def main():  # pragma: no cover
     args = parse_arguments()
-    process_all_folders(root=args.root, structure_path=args.structure, validate=not args.no_validate)
+    process_all_folders(root=args.root, validate=not args.no_validate)
     if args.merge_provenance:
         merge_provenance_files(args.root, args.merge_provenance)
 

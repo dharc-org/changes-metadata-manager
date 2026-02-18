@@ -1,4 +1,3 @@
-import json
 import shutil
 import tempfile
 
@@ -10,7 +9,6 @@ from changes_metadata_manager.folder_metadata_builder import (
     extract_metadata_for_stage,
     extract_id_from_folder_name,
     load_kg,
-    load_structure,
     merge_provenance_files,
     process_all_folders,
     scan_folder_structure,
@@ -20,7 +18,6 @@ from changes_metadata_manager.folder_metadata_builder import (
 DATA_DIR = Path(__file__).parent.parent / "data"
 FIXTURE_DIR = Path(__file__).parent / "fixtures" / "folder_metadata"
 REAL_KG_PATH = DATA_DIR / "kg.ttl"
-REAL_STRUCTURE_PATH = DATA_DIR / "structure.json"
 
 TEST_ITEMS = [
     ("Sala1", "S1-01-CNR_CartaNautica", "1"),
@@ -56,28 +53,20 @@ def real_kg():
     return load_kg(REAL_KG_PATH)
 
 
+STAGES = ["raw", "rawp", "dcho", "dchoo"]
+
+
 @pytest.fixture
 def test_folder_structure():
-    full_structure = load_structure(REAL_STRUCTURE_PATH)
-    subset = {"structure": {}}
-
     tmpdir = tempfile.mkdtemp()
-    tmpdir_path = Path(tmpdir)
-    root_path = tmpdir_path / "root"
+    root_path = Path(tmpdir) / "root"
 
     for sala, folder, _ in TEST_ITEMS:
-        if sala not in subset["structure"]:
-            subset["structure"][sala] = {}
-        subset["structure"][sala][folder] = full_structure["structure"][sala][folder]
-        for stage in full_structure["structure"][sala][folder]:
+        for stage in STAGES:
             stage_dir = root_path / sala / folder / stage
             stage_dir.mkdir(parents=True)
 
-    structure_path = tmpdir_path / "structure_subset.json"
-    with open(structure_path, "w") as f:
-        json.dump(subset, f)
-
-    yield root_path, structure_path
+    yield root_path
 
     shutil.rmtree(tmpdir)
 
@@ -118,27 +107,8 @@ class TestExtractIdFromFolderName:
 
 
 class TestProcessAllFolders:
-    def test_creates_files_in_place_with_structure_json(self, test_folder_structure):
-        root, structure_path = test_folder_structure
-        process_all_folders(
-            root=root,
-            kg_path=REAL_KG_PATH,
-            structure_path=structure_path,
-        )
-
-        for sala, folder, _ in TEST_ITEMS:
-            folder_dir = root / sala / folder
-            stage_dirs = [d for d in folder_dir.iterdir() if d.is_dir()]
-            assert len(stage_dirs) == 4, f"Expected 4 stages for {folder}, got {len(stage_dirs)}"
-
-            for stage_dir in stage_dirs:
-                meta_file = stage_dir / "meta.ttl"
-                prov_file = stage_dir / "prov.trig"
-                assert meta_file.exists(), f"meta.ttl not created for {folder}/{stage_dir.name}"
-                assert prov_file.exists(), f"prov.trig not created for {folder}/{stage_dir.name}"
-
-    def test_creates_files_in_place_without_structure_json(self, test_folder_structure):
-        root, _ = test_folder_structure
+    def test_creates_files_in_place(self, test_folder_structure):
+        root = test_folder_structure
         process_all_folders(
             root=root,
             kg_path=REAL_KG_PATH,
@@ -158,11 +128,10 @@ class TestProcessAllFolders:
 
 class TestMergeProvenanceFiles:
     def test_merges_all_prov_trig_files(self, test_folder_structure):
-        root, structure_path = test_folder_structure
+        root = test_folder_structure
         process_all_folders(
             root=root,
             kg_path=REAL_KG_PATH,
-            structure_path=structure_path,
         )
 
         output_path = root / "all_provenance.trig"

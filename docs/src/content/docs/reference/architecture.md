@@ -41,7 +41,7 @@ morph-kgc-changes-metadata  -->  data/kg.ttl
 The main orchestrator. It:
 
 1. Loads the knowledge graph once into memory
-2. Walks the folder structure (from disk or from a JSON file)
+2. Walks the folder structure on disk
 3. For each `Sala/Folder/Stage` combination, extracts the object NR from the folder name, selects the relevant processing steps, and filters the graph accordingly
 4. Writes `meta.ttl` (the filtered triples) and runs SHACL validation
 5. Calls `generate_provenance_snapshots()` to produce `prov.trig`
@@ -74,7 +74,6 @@ Handles two tasks:
 | `data/kg.ttl` | Knowledge graph with all RDF triples |
 | `data/shapes-chadap.ttl` | SHACL shapes for metadata validation |
 | `data/creators_lookup.yaml` | Maps creator names from RDF to structured InvenioRDM fields (family name, given name, affiliation, ORCID) |
-| `data/structure.json` | SharePoint folder structure export |
 | `zenodo_config.yaml` | Base Zenodo record configuration |
 
 ## SHACL validation

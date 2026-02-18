@@ -21,7 +21,6 @@ uv run python -m changes_metadata_manager.folder_metadata_builder <root_director
 
 | Option | Default | Description |
 |--------|---------|-------------|
-| `--structure`, `-s` | None | Path to a SharePoint JSON structure file. When provided, the script reads the folder hierarchy from this file instead of scanning the filesystem. |
 | `--no-validate` | False | Skip SHACL validation of the generated metadata. By default, each `meta.ttl` is validated against the shapes in `data/shapes-chadap.ttl`. |
 | `--merge-provenance` | None | Output path for a merged provenance file. When set, all individual `prov.trig` files are combined into a single TriG file at the given path. |
 
@@ -68,11 +67,10 @@ Generate metadata for a local folder tree:
 uv run python -m changes_metadata_manager.folder_metadata_builder /data/aldrovandi
 ```
 
-Use a SharePoint structure file and skip validation:
+Skip validation:
 
 ```bash
 uv run python -m changes_metadata_manager.folder_metadata_builder /data/aldrovandi \
-    --structure data/structure.json \
     --no-validate
 ```
 
@@ -80,6 +78,5 @@ Generate everything and also produce a single merged provenance file:
 
 ```bash
 uv run python -m changes_metadata_manager.folder_metadata_builder /data/aldrovandi \
-    --structure data/structure.json \
     --merge-provenance /data/aldrovandi/provenance_all.trig
 ```

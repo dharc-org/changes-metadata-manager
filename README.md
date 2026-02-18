@@ -6,7 +6,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/License-ISC-blue.svg)](LICENSE)
 
-Metadata and provenance generator for digitized cultural heritage objects in the [CHANGES project](https://sites.google.com/uniroma1.it/changes/) (Aldrovandi case study). Processes folder structures from the digitization pipeline and generates RDF metadata and PROV-O provenance snapshots for each processing stage.
+Metadata and provenance generator for digitized cultural heritage objects in the CHANGES project (Aldrovandi case study). Processes folder structures from the digitization pipeline and generates RDF metadata and PROV-O provenance snapshots for each processing stage.
 
 ## Quick start
 

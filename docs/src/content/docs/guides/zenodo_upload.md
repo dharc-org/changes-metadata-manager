@@ -24,7 +24,6 @@ uv run python -m changes_metadata_manager.zenodo_upload prepare \
 | Option | Default | Description |
 |--------|---------|-------------|
 | `--output`, `-o` | `zenodo_output` | Output directory for ZIPs and configs |
-| `--structure`, `-s` | None | SharePoint JSON structure file |
 
 ### What it produces
 
@@ -121,13 +120,11 @@ A typical run looks like this:
 
 ```bash
 # 1. Generate metadata and provenance
-uv run python -m changes_metadata_manager.folder_metadata_builder /data/aldrovandi \
-    --structure data/structure.json
+uv run python -m changes_metadata_manager.folder_metadata_builder /data/aldrovandi
 
 # 2. Package everything for Zenodo
 uv run python -m changes_metadata_manager.zenodo_upload prepare \
-    /data/aldrovandi zenodo_config.yaml \
-    --structure data/structure.json
+    /data/aldrovandi zenodo_config.yaml
 
 # 3. Upload as drafts (review before publishing)
 uv run python -m changes_metadata_manager.zenodo_upload upload zenodo_output/configs
