@@ -62,6 +62,7 @@ P3_HAS_NOTE = URIRef(f"{CRM}P3_has_note")
 P14_CARRIED_OUT_BY = URIRef(f"{CRM}P14_carried_out_by")
 P1_IS_IDENTIFIED_BY = URIRef(f"{CRM}P1_is_identified_by")
 P190_HAS_SYMBOLIC_CONTENT = URIRef(f"{CRM}P190_has_symbolic_content")
+P74_HAS_RESIDENCE = URIRef(f"{CRM}P74_has_current_or_former_residence")
 E21_PERSON = URIRef(f"{CRM}E21_Person")
 RDF_TYPE = URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
 
@@ -171,6 +172,24 @@ def create_stage_zip(
     return zip_path
 
 
+def _get_label(graph: Graph, uri: URIRef) -> str | None:
+    for _, _, apl_uri in graph.triples((uri, P1_IS_IDENTIFIED_BY, None)):
+        for _, _, name in graph.triples((apl_uri, P190_HAS_SYMBOLIC_CONTENT, None)):
+            return str(name)
+    return None
+
+
+def extract_keeper_info(graph: Graph, entity_id: str) -> tuple[str | None, str | None]:
+    custody_uri = URIRef(f"{BASE_URI}/act/{entity_id}/ob08/1")
+    for _, _, keeper_uri in graph.triples((custody_uri, P14_CARRIED_OUT_BY, None)):
+        keeper_name = _get_label(graph, keeper_uri)
+        location_name = None
+        for _, _, place_uri in graph.triples((keeper_uri, P74_HAS_RESIDENCE, None)):
+            location_name = _get_label(graph, place_uri)
+        return keeper_name, location_name
+    return None, None
+
+
 def extract_entity_title(graph: Graph, entity_id: str) -> str:
     item_uri = URIRef(f"{BASE_URI}/itm/{entity_id}/ob00/1")
     for s, p, o in graph.triples((item_uri, P3_HAS_NOTE, None)):
@@ -236,12 +255,27 @@ CC0_DISCLAIMER = (
 )
 
 
-def build_enhanced_description(entity_id: str, stage: str, title: str, content_license: str | None = None) -> str:
+def build_enhanced_description(
+    entity_id: str,
+    stage: str,
+    title: str,
+    content_license: str | None = None,
+    keeper_name: str | None = None,
+    keeper_location: str | None = None,
+) -> str:
     parts = [
         f'{STAGE_FULL_NAMES[stage]} for the digitization of "{title}" (entity {entity_id}) from the Aldrovandi Digital Twin.',
+    ]
+    if keeper_name:
+        keeper_line = f"Preserved at {keeper_name}"
+        if keeper_location:
+            keeper_line += f", {keeper_location}"
+        keeper_line += "."
+        parts.append(keeper_line)
+    parts.extend([
         STAGE_DESCRIPTIONS[stage],
         "Includes metadata (meta.ttl) and provenance (prov.trig) files following the CHAD-AP ontology.",
-    ]
+    ])
     if content_license == "cc0-1.0":
         parts.append("")
         parts.append(CC0_DISCLAIMER)
@@ -300,10 +334,12 @@ def generate_zenodo_config(
     creators: list[dict],
     license: str | None = None,
     entity_uri: str | None = None,
+    keeper_name: str | None = None,
+    keeper_location: str | None = None,
 ) -> dict:
     config = {
         "title": f"{title} - {STAGE_FULL_NAMES[stage]} - Aldrovandi Digital Twin",
-        "description": build_enhanced_description(entity_id, stage, title, license),
+        "description": build_enhanced_description(entity_id, stage, title, license, keeper_name, keeper_location),
         "files": [str(zip_path.absolute())],
         "creators": creators,
         "publication_date": date.today().isoformat(),
@@ -359,6 +395,7 @@ def prepare_all(
 
         for entity_id, folders in entity_groups.items():
             title = extract_entity_title(kg, entity_id)
+            keeper_name, keeper_location = extract_keeper_info(kg, entity_id)
             sala_slug = slugify(folders[0][0])
             title_slug = slugify(title)
             for stage in STAGES:
@@ -370,7 +407,7 @@ def prepare_all(
                 creators = build_creators_for_entity_stage(kg, entity_id, stage, creators_lookup)
                 license = extract_license_for_entity_stage(kg, entity_id, stage)
                 entity_uri = build_entity_uri(entity_id)
-                config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config, creators, license, entity_uri)
+                config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config, creators, license, entity_uri, keeper_name, keeper_location)
                 config_path = configs_dir / f"{sala_slug}-{title_slug}-{stage}.yaml"
                 with open(config_path, "w") as f:
                     yaml.dump(config, f, Dumper=LiteralBlockDumper, default_flow_style=False, allow_unicode=True, sort_keys=False)

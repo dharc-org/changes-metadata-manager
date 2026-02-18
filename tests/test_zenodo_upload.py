@@ -15,6 +15,7 @@ from changes_metadata_manager.zenodo_upload import (
     P1_IS_IDENTIFIED_BY,
     P3_HAS_NOTE,
     P70I,
+    P74_HAS_RESIDENCE,
     RDF_TYPE,
     build_creators_for_entity_stage,
     build_enhanced_description,
@@ -22,6 +23,7 @@ from changes_metadata_manager.zenodo_upload import (
     create_stage_zip,
     extract_authors_for_entity_stage,
     extract_entity_title,
+    extract_keeper_info,
     extract_license_for_entity_stage,
     extract_licensed_entity_stages,
     generate_zenodo_config,
@@ -450,6 +452,52 @@ class TestExtractLicenseForEntityStage:
         assert result == "cc-by-4.0"
 
 
+class TestExtractKeeperInfo:
+    def test_extracts_keeper_from_kg(self, real_kg):
+        keeper_name, keeper_location = extract_keeper_info(real_kg, "1")
+        assert keeper_name == "Biblioteca Universitaria di Bologna"
+        assert keeper_location == "Bologna"
+
+    def test_extracts_non_bologna_keeper(self, real_kg):
+        keeper_name, keeper_location = extract_keeper_info(real_kg, "21")
+        assert keeper_name == "Accademia Carrara"
+        assert keeper_location == "Bergamo"
+
+    def test_returns_none_for_missing_entity(self, real_kg):
+        keeper_name, keeper_location = extract_keeper_info(real_kg, "nonexistent")
+        assert keeper_name is None
+        assert keeper_location is None
+
+    def test_extracts_from_synthetic_graph(self):
+        g = Graph()
+        custody_uri = URIRef(f"{BASE_URI}/act/42/ob08/1")
+        keeper_uri = URIRef(f"{BASE_URI}/acr/test_museum/1")
+        apl_uri = URIRef(f"{BASE_URI}/apl/test_museum/1")
+        place_uri = URIRef(f"{BASE_URI}/plc/test_city/1")
+        place_apl_uri = URIRef(f"{BASE_URI}/apl/test_city/1")
+        g.add((custody_uri, P14_CARRIED_OUT_BY, keeper_uri))
+        g.add((keeper_uri, P1_IS_IDENTIFIED_BY, apl_uri))
+        g.add((apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal("Test Museum")))
+        g.add((keeper_uri, P74_HAS_RESIDENCE, place_uri))
+        g.add((place_uri, P1_IS_IDENTIFIED_BY, place_apl_uri))
+        g.add((place_apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal("Test City")))
+        keeper_name, keeper_location = extract_keeper_info(g, "42")
+        assert keeper_name == "Test Museum"
+        assert keeper_location == "Test City"
+
+    def test_keeper_without_location(self):
+        g = Graph()
+        custody_uri = URIRef(f"{BASE_URI}/act/42/ob08/1")
+        keeper_uri = URIRef(f"{BASE_URI}/acr/test_museum/1")
+        apl_uri = URIRef(f"{BASE_URI}/apl/test_museum/1")
+        g.add((custody_uri, P14_CARRIED_OUT_BY, keeper_uri))
+        g.add((keeper_uri, P1_IS_IDENTIFIED_BY, apl_uri))
+        g.add((apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal("Test Museum")))
+        keeper_name, keeper_location = extract_keeper_info(g, "42")
+        assert keeper_name == "Test Museum"
+        assert keeper_location is None
+
+
 class TestBuildEnhancedDescription:
     def test_raw_stage_description(self):
         result = build_enhanced_description("42", "raw", "Test Object")
@@ -481,3 +529,16 @@ class TestBuildEnhancedDescription:
     def test_no_license_no_disclaimer(self):
         result = build_enhanced_description("42", "dcho", "Test Object")
         assert CC0_DISCLAIMER not in result
+
+    def test_includes_keeper_and_location(self):
+        result = build_enhanced_description("42", "raw", "Test Object", keeper_name="Test Museum", keeper_location="Test City")
+        assert "Preserved at Test Museum, Test City." in result
+
+    def test_includes_keeper_without_location(self):
+        result = build_enhanced_description("42", "raw", "Test Object", keeper_name="Test Museum")
+        assert "Preserved at Test Museum." in result
+        assert "Test Museum," not in result
+
+    def test_no_keeper_line_when_none(self):
+        result = build_enhanced_description("42", "raw", "Test Object")
+        assert "Preserved at" not in result
