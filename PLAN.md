@@ -70,17 +70,18 @@ DCHOO (dipende da RAW + RAWP + DCHO)
 - [x] Creare progetto Python con dipendenze
 - [x] Analizzare struttura completa dei CSV per mappare tutti i campi
 - [x] Parsare il TTL esistente per estrarre pattern di URI e lista entità
-- [ ] Creare dizionario autori con ORCID (da completare manualmente per ~15 persone)
+- [x] Creare dizionario autori con ORCID (`data/creators_lookup.yaml`, 26 autori)
 - [ ] Configurare account Zenodo e ottenere API token
 
-### Fase 2: Estrazione metadati (meta.jsonld)
+### Fase 2: Estrazione metadati (meta.ttl)
 - [x] Implementare estrattore di triple dal TTL esistente per entità
 - [x] Per ogni oggetto (NR), estrarre tutte le triple correlate dal KG
-- [x] Serializzare in `meta.jsonld` per cartella oggetto
-- [ ] Inserire licenza CC0 nei file `meta.jsonld`
+- [x] Serializzare in `meta.ttl` per cartella oggetto
+- [x] Inserire licenza CC0 nei file `meta.ttl`
+- [x] Validare metadati generati contro SHACL shapes (`data/shapes-chadap.ttl`)
 
-### Fase 3: Generazione provenance (prov.jsonld) - OpenCitations Data Model
-- [ ] Implementare generatore snapshot PROV-O
+### Fase 3: Generazione provenance (prov.trig)
+- [x] Implementare generatore snapshot PROV-O
   - **Per TUTTE le entità** nel TTL, creare snapshot SE/1
   - [ ] `prov:specializationOf` → URI entità
   - [x] `prov:generatedAtTime` → timestamp creazione (da CSV processi)
@@ -88,22 +89,22 @@ DCHOO (dipende da RAW + RAWP + DCHO)
   - [x] `prov:hadPrimarySource` → fonte primaria
   - [x] `prov:description` → "Initial creation"
 - [x] Gestire Named Graphs (un graph per snapshot)
-- [ ] Inserire licenza CC0 nei file `prov.jsonld`
+- [x] Inserire licenza CC0 nei file `prov.trig`
 - [ ] Generare file Turtle unico con tutta la provenance (da inviare a Ivan)
 
 ### Fase 4: Organizzazione file
 - [x] Attendere accesso Sharepoint per dati effettivi
-- [x] Implementare script per traversare directory e depositare `meta.jsonld` + `prov.jsonld`
-- [ ] Validare RDF generato
+- [x] Implementare script per traversare directory e depositare `meta.ttl` + `prov.trig`
+- [x] Validare RDF generato (validazione SHACL integrata nel builder)
 
 ### Fase 5: Upload Zenodo automatico
-- [ ] Implementare client API Zenodo
+- [x] Implementare client API Zenodo (via piccione InvenioRDM API)
   - Autenticazione (token API)
-  - Creazione record (POST /api/deposit/depositions)
+  - Creazione record
   - Upload file
   - Metadata Zenodo da RDF (titolo, autori con ORCID, descrizione, keywords)
   - Pubblicazione record
-- [ ] Caricare solo oggetti con licenza associata (per ogni sottotipologia RAW, RAWP, DCHO, DCHOO)
+- [x] Caricare solo oggetti con licenza associata (per ogni sottotipologia RAW, RAWP, DCHO, DCHOO)
 - [ ] Generare tabella di associazione entità → DOI Zenodo
 - [ ] Compilare tabella CSV di Silvio con informazioni sui documenti caricati su Zenodo
 - [ ] Gestire rate limiting e retry logic
