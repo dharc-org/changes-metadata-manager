@@ -277,9 +277,9 @@ STAGE_DESCRIPTIONS = {
 
 PROPAGATED_FIELDS = (
     "zenodo_url", "access_token", "user_agent",
-    "keywords", "publication_date",
-    "language", "version", "community",
-    "contributors", "subjects",
+    "subjects", "publication_date",
+    "version", "community",
+    "contributors",
     "references", "dates",
 )
 

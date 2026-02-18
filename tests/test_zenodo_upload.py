@@ -509,7 +509,7 @@ SAMPLE_BASE_CONFIG = {
     "zenodo_url": "https://sandbox.zenodo.org/api",
     "access_token": "test_token",
     "user_agent": "piccione/2.1.0",
-    "keywords": ["test"],
+    "subjects": [{"subject": "test"}],
     "notes": "Test notes content",
     "method": "Test method content",
     "locations": [
@@ -539,7 +539,7 @@ class TestGenerateZenodoConfig:
             "publisher": "Zenodo",
             "access": {"record": "public", "files": "public"},
             "creators": [SAMPLE_CREATOR],
-            "keywords": ["test"],
+            "subjects": [{"subject": "test"}],
             "files": [str(zip_path.absolute())],
             "publication_date": "2024-06-15",
             "rights": [
