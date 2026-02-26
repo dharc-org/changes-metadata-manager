@@ -195,7 +195,7 @@ def create_stage_zip(
     licensed_stages: set[tuple[str, str]],
     output_dir: Path,
     title: str,
-) -> Path | None:
+) -> tuple[Path, bool] | None:
     sala_name = folders[0][0]
     sala_slug = slugify(sala_name)
     title_slug = slugify(title)
@@ -222,7 +222,7 @@ def create_stage_zip(
     if not has_files:
         zip_path.unlink()
         return None
-    return zip_path
+    return zip_path, (entity_id, stage) in licensed_stages
 
 
 def _get_label(graph: Graph, uri: URIRef) -> str | None:
@@ -312,12 +312,19 @@ CC0_DISCLAIMER = (
 
 CHAD_AP_URL = "https://w3id.org/dharc/ontology/chad-ap"
 
+RESTRICTED_NOTICE = (
+    "<strong>Note:</strong> The digital object files are not included in this dataset "
+    "because the holding institution did not grant permission for their publication. "
+    "Only metadata and provenance files are provided."
+)
+
 
 def build_enhanced_description(
     stage: str,
     title: str,
     keeper_name: str | None = None,
     keeper_location: str | None = None,
+    has_license: bool = True,
 ) -> str:
     parts = [
         f'{STAGE_FULL_NAMES[stage]} of "{title}" from the Aldrovandi Digital Twin.',
@@ -328,10 +335,12 @@ def build_enhanced_description(
             keeper_line += f" ({keeper_location})"
         keeper_line += "."
         parts.append(keeper_line)
-    parts.extend([
-        STAGE_DESCRIPTIONS[stage],
+    parts.append(STAGE_DESCRIPTIONS[stage])
+    if not has_license:
+        parts.append(RESTRICTED_NOTICE)
+    parts.append(
         f"Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href=\"{CHAD_AP_URL}\">CHAD-AP</a> ontology.",
-    ])
+    )
     return "\n".join(parts) + "\n"
 
 
@@ -391,8 +400,9 @@ def generate_zenodo_config(
     entity_uri: str | None = None,
     keeper_name: str | None = None,
     keeper_location: str | None = None,
+    has_license: bool = True,
 ) -> dict:
-    description = build_enhanced_description(stage, title, keeper_name, keeper_location)
+    description = build_enhanced_description(stage, title, keeper_name, keeper_location, has_license)
 
     config: dict = {
         "title": f"{title} - {STAGE_FULL_NAMES[stage]} - Aldrovandi Digital Twin",
@@ -499,15 +509,16 @@ def prepare_all(
             metadata_creators = build_metadata_creators(kg, entity_id, creators_lookup)
             for stage in STAGES:
                 progress.update(task, description=f"Entity {entity_id} - {stage}")
-                zip_path = create_stage_zip(entity_id, stage, folders, root, licensed_stages, zips_dir, title)
-                if zip_path is None:
+                result = create_stage_zip(entity_id, stage, folders, root, licensed_stages, zips_dir, title)
+                if result is None:
                     progress.advance(task)
                     continue
+                zip_path, has_license = result
                 digitization_creators = build_creators_for_entity_stage(kg, entity_id, stage, creators_lookup)
                 creators = merge_creators(digitization_creators, metadata_creators)
                 license = extract_license_for_entity_stage(kg, entity_id, stage)
                 entity_uri = build_entity_uri(entity_id)
-                config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config, creators, license, entity_uri, keeper_name, keeper_location)
+                config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config, creators, license, entity_uri, keeper_name, keeper_location, has_license)
                 config_path = configs_dir / f"{sala_slug}-{title_slug}-{stage}.yaml"
                 with open(config_path, "w") as f:
                     yaml.dump(config, f, Dumper=LiteralBlockDumper, default_flow_style=False, allow_unicode=True, sort_keys=False)

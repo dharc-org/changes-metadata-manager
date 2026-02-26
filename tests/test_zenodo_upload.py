@@ -9,6 +9,7 @@ from changes_metadata_manager.folder_metadata_builder import load_kg
 from changes_metadata_manager.zenodo_upload import (
     BASE_URI,
     CC0_DISCLAIMER,
+    RESTRICTED_NOTICE,
     E21_PERSON,
     P14_CARRIED_OUT_BY,
     P190_HAS_SYMBOLIC_CONTENT,
@@ -150,10 +151,12 @@ class TestCreateStageZip:
             folders = [("Sala1", "S1-01-Test", {"raw": {}})]
             licensed_stages = {("1", "raw")}
 
-            zip_path = create_stage_zip("1", "raw", folders, root, licensed_stages, output_dir, "Test Object")
+            result = create_stage_zip("1", "raw", folders, root, licensed_stages, output_dir, "Test Object")
 
-            assert zip_path is not None
+            assert result is not None
+            zip_path, has_license = result
             assert zip_path.name == "sala1-test-object-raw.zip"
+            assert has_license is True
             with zipfile.ZipFile(zip_path) as zf:
                 names = sorted(zf.namelist())
                 assert names == ["S1-01-Test/raw/meta.ttl", "S1-01-Test/raw/photo.jpg", "S1-01-Test/raw/prov.trig"]
@@ -173,9 +176,11 @@ class TestCreateStageZip:
             folders = [("Sala1", "S1-01-Test", {"raw": {}})]
             licensed_stages = set()
 
-            zip_path = create_stage_zip("1", "raw", folders, root, licensed_stages, output_dir, "Test Object")
+            result = create_stage_zip("1", "raw", folders, root, licensed_stages, output_dir, "Test Object")
 
-            assert zip_path is not None
+            assert result is not None
+            zip_path, has_license = result
+            assert has_license is False
             with zipfile.ZipFile(zip_path) as zf:
                 names = sorted(zf.namelist())
                 assert names == ["S1-01-Test/raw/meta.ttl", "S1-01-Test/raw/prov.trig"]
@@ -197,9 +202,11 @@ class TestCreateStageZip:
                 ("Sala6", "S6-98b-Test", {"raw": {}}),
             ]
 
-            zip_path = create_stage_zip("98", "raw", folders, root, set(), output_dir, "Test Masks")
+            result = create_stage_zip("98", "raw", folders, root, set(), output_dir, "Test Masks")
 
-            assert zip_path is not None
+            assert result is not None
+            zip_path, has_license = result
+            assert has_license is False
             with zipfile.ZipFile(zip_path) as zf:
                 names = zf.namelist()
                 assert names == ["S6-98a-Test/raw/meta.ttl", "S6-98b-Test/raw/meta.ttl"]
@@ -641,6 +648,13 @@ class TestGenerateZenodoConfig:
 
         assert config["community"] == "project-changes"
 
+    def test_includes_restricted_notice_when_no_license(self, freezer):
+        freezer.move_to("2024-06-15")
+        zip_path = Path("/tmp/1-raw.zip")
+        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], has_license=False)
+
+        assert RESTRICTED_NOTICE in config["description"]
+
 
 class TestExtractLicenseForEntityStage:
     def test_extracts_license_from_kg(self):
@@ -755,6 +769,15 @@ class TestBuildEnhancedDescription:
     def test_no_keeper_line_when_none(self):
         result = build_enhanced_description("raw", "Test Object")
         assert "held by" not in result
+
+    def test_includes_restricted_notice_when_no_license(self):
+        result = build_enhanced_description("raw", "Test Object", has_license=False)
+        assert "not included in this dataset" in result
+        assert "did not grant permission" in result
+
+    def test_no_restricted_notice_when_licensed(self):
+        result = build_enhanced_description("raw", "Test Object", has_license=True)
+        assert "not included in this dataset" not in result
 
 
 class TestExtractEntityStageFromConfig:
