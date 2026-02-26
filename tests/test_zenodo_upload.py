@@ -541,7 +541,7 @@ class TestGenerateZenodoConfig:
             "access_token": "test_token",
             "user_agent": "piccione/2.1.0",
             "title": "Test Title - Raw sensor data - Aldrovandi Digital Twin",
-            "description": 'Raw sensor data of "Test Title" from the Aldrovandi Digital Twin.\nThis stage contains the original acquisition output (photos and/or scans) without processing.\nIncludes metadata (meta.ttl) and provenance (prov.trig) files following the <a href="https://w3id.org/dharc/ontology/chad-ap">CHAD-AP</a> ontology.\n',
+            "description": 'Raw sensor data of "Test Title" from the Aldrovandi Digital Twin. This stage contains the original acquisition output (photos and/or scans) without processing. Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href="https://w3id.org/dharc/ontology/chad-ap">CHAD-AP</a> ontology.\n',
             "resource_type": {"id": "dataset"},
             "publisher": "Zenodo",
             "access": {"record": "public", "files": "public"},
@@ -557,8 +557,8 @@ class TestGenerateZenodoConfig:
                 },
             ],
             "additional_descriptions": [
-                {"description": "Test notes content", "type": {"id": "notes"}},
                 {"description": "Test method content", "type": {"id": "methods"}},
+                {"description": "Test notes content", "type": {"id": "notes"}},
             ],
             "locations": {
                 "features": [
@@ -610,8 +610,8 @@ class TestGenerateZenodoConfig:
         config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR])
 
         assert config["additional_descriptions"] == [
-            {"description": "Test notes content", "type": {"id": "notes"}},
             {"description": "Test method content", "type": {"id": "methods"}},
+            {"description": "Test notes content", "type": {"id": "notes"}},
         ]
 
     def test_cc0_disclaimer_in_additional_descriptions(self, freezer):
@@ -620,8 +620,8 @@ class TestGenerateZenodoConfig:
         config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], license="cc0-1.0")
 
         assert config["additional_descriptions"] == [
-            {"description": "Test notes content", "type": {"id": "notes"}},
             {"description": "Test method content", "type": {"id": "methods"}},
+            {"description": "Test notes content", "type": {"id": "notes"}},
             {"description": CC0_DISCLAIMER, "type": {"id": "notes"}},
         ]
 
@@ -653,7 +653,15 @@ class TestGenerateZenodoConfig:
         zip_path = Path("/tmp/1-raw.zip")
         config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], has_license=False)
 
-        assert RESTRICTED_NOTICE in config["description"]
+        assert RESTRICTED_NOTICE not in config["description"]
+        assert {"description": RESTRICTED_NOTICE, "type": {"id": "notes"}} in config["additional_descriptions"]
+
+    def test_no_restricted_notice_when_licensed(self, freezer):
+        freezer.move_to("2024-06-15")
+        zip_path = Path("/tmp/1-raw.zip")
+        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], has_license=True)
+
+        assert {"description": RESTRICTED_NOTICE, "type": {"id": "notes"}} not in config["additional_descriptions"]
 
 
 class TestExtractLicenseForEntityStage:
@@ -737,8 +745,8 @@ class TestBuildEnhancedDescription:
     def test_raw_stage_description(self):
         result = build_enhanced_description("raw", "Test Object")
         assert result == (
-            'Raw sensor data of "Test Object" from the Aldrovandi Digital Twin.\n'
-            "This stage contains the original acquisition output (photos and/or scans) without processing.\n"
+            'Raw sensor data of "Test Object" from the Aldrovandi Digital Twin. '
+            "This stage contains the original acquisition output (photos and/or scans) without processing. "
             'Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href="https://w3id.org/dharc/ontology/chad-ap">CHAD-AP</a> ontology.\n'
         )
 
@@ -770,14 +778,9 @@ class TestBuildEnhancedDescription:
         result = build_enhanced_description("raw", "Test Object")
         assert "held by" not in result
 
-    def test_includes_restricted_notice_when_no_license(self):
-        result = build_enhanced_description("raw", "Test Object", has_license=False)
-        assert "not included in this dataset" in result
-        assert "did not grant permission" in result
-
-    def test_no_restricted_notice_when_licensed(self):
-        result = build_enhanced_description("raw", "Test Object", has_license=True)
-        assert "not included in this dataset" not in result
+    def test_description_is_single_paragraph(self):
+        result = build_enhanced_description("raw", "Test Object", keeper_name="Museum", keeper_location="City")
+        assert "\n" not in result.rstrip("\n")
 
 
 class TestExtractEntityStageFromConfig:

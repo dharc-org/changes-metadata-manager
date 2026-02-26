@@ -243,12 +243,18 @@ def validate_metadata(data_graph: Graph, shapes_graph: Graph) -> tuple[bool, str
 def scan_folder_structure(root_path: Path) -> dict:
     structure = {}
     for sala_dir in root_path.iterdir():
+        if not sala_dir.is_dir():
+            continue
         sala_name = sala_dir.name
         structure[sala_name] = {}
         for folder_dir in sala_dir.iterdir():
+            if not folder_dir.is_dir():
+                continue
             folder_name = folder_dir.name
             structure[sala_name][folder_name] = {}
             for stage_dir in folder_dir.iterdir():
+                if not stage_dir.is_dir():
+                    continue
                 stage_name = stage_dir.name
                 files = [f.name for f in stage_dir.iterdir() if f.is_file()]
                 structure[sala_name][folder_name][stage_name] = {"_files": files}

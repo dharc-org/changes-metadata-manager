@@ -313,7 +313,7 @@ CC0_DISCLAIMER = (
 CHAD_AP_URL = "https://w3id.org/dharc/ontology/chad-ap"
 
 RESTRICTED_NOTICE = (
-    "<strong>Note:</strong> The digital object files are not included in this dataset "
+    "The digital object files are not included in this dataset "
     "because the holding institution did not grant permission for their publication. "
     "Only metadata and provenance files are provided."
 )
@@ -324,7 +324,6 @@ def build_enhanced_description(
     title: str,
     keeper_name: str | None = None,
     keeper_location: str | None = None,
-    has_license: bool = True,
 ) -> str:
     parts = [
         f'{STAGE_FULL_NAMES[stage]} of "{title}" from the Aldrovandi Digital Twin.',
@@ -336,12 +335,10 @@ def build_enhanced_description(
         keeper_line += "."
         parts.append(keeper_line)
     parts.append(STAGE_DESCRIPTIONS[stage])
-    if not has_license:
-        parts.append(RESTRICTED_NOTICE)
     parts.append(
         f"Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href=\"{CHAD_AP_URL}\">CHAD-AP</a> ontology.",
     )
-    return "\n".join(parts) + "\n"
+    return " ".join(parts) + "\n"
 
 
 def build_entity_uri(entity_id: str) -> str:
@@ -402,7 +399,7 @@ def generate_zenodo_config(
     keeper_location: str | None = None,
     has_license: bool = True,
 ) -> dict:
-    description = build_enhanced_description(stage, title, keeper_name, keeper_location, has_license)
+    description = build_enhanced_description(stage, title, keeper_name, keeper_location)
 
     config: dict = {
         "title": f"{title} - {STAGE_FULL_NAMES[stage]} - Aldrovandi Digital Twin",
@@ -416,16 +413,21 @@ def generate_zenodo_config(
         "rights": build_rights(license),
     }
 
-    additional_descriptions = [
-        {
-            "description": base_config["notes"],
-            "type": {"id": "notes"},
-        },
+    additional_descriptions: list[dict] = [
         {
             "description": base_config["method"],
             "type": {"id": "methods"},
         },
+        {
+            "description": base_config["notes"],
+            "type": {"id": "notes"},
+        },
     ]
+    if not has_license:
+        additional_descriptions.append({
+            "description": RESTRICTED_NOTICE,
+            "type": {"id": "notes"},
+        })
     if license == "cc0-1.0":
         additional_descriptions.append({
             "description": CC0_DISCLAIMER,
