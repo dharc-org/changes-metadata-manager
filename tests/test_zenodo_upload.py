@@ -314,7 +314,7 @@ class TestLoadCreatorsLookup:
 
 
 class TestBuildCreatorsForEntityStage:
-    def test_builds_creators_with_datacollector_role(self, real_kg):
+    def test_builds_creators_with_researcher_role(self, real_kg):
         lookup = {
             "Federica Bonifazi": {
                 "family_name": "Bonifazi",
@@ -332,7 +332,7 @@ class TestBuildCreatorsForEntityStage:
                     "given_name": "Federica",
                     "identifiers": [{"scheme": "orcid", "identifier": "0009-0000-8466-5541"}],
                 },
-                "role": {"id": "datacollector"},
+                "role": {"id": "researcher"},
                 "affiliations": [{"name": "CNR-ISPC"}],
             }
         ]
@@ -413,7 +413,7 @@ class TestMergeCreators:
                     "given_name": "Digit",
                     "identifiers": [{"scheme": "orcid", "identifier": "0000-0000-0000-0001"}],
                 },
-                "role": {"id": "datacollector"},
+                "role": {"id": "researcher"},
                 "affiliations": [{"name": "Uni"}],
             }
         ]
@@ -431,7 +431,7 @@ class TestMergeCreators:
         ]
         merged = merge_creators(digitization, metadata)
         assert len(merged) == 2
-        assert merged[0]["role"] == {"id": "datacollector"}
+        assert merged[0]["role"] == {"id": "researcher"}
         assert merged[1]["role"] == {"id": "datacurator"}
 
     def test_deduplicates_by_orcid(self):
@@ -443,7 +443,7 @@ class TestMergeCreators:
                     "given_name": "Author",
                     "identifiers": [{"scheme": "orcid", "identifier": "0000-0000-0000-0001"}],
                 },
-                "role": {"id": "datacollector"},
+                "role": {"id": "researcher"},
                 "affiliations": [{"name": "Uni"}],
             }
         ]
@@ -461,7 +461,7 @@ class TestMergeCreators:
         ]
         merged = merge_creators(digitization, metadata)
         assert len(merged) == 1
-        assert merged[0]["role"] == {"id": "datacollector"}
+        assert merged[0]["role"] == {"id": "researcher"}
 
     def test_empty_lists(self):
         assert merge_creators([], []) == []
@@ -501,7 +501,7 @@ SAMPLE_CREATOR = {
         "given_name": "Test",
         "identifiers": [{"scheme": "orcid", "identifier": "0000-0001-2345-6789"}],
     },
-    "role": {"id": "datacollector"},
+    "role": {"id": "researcher"},
     "affiliations": [{"name": "Test Uni"}],
 }
 

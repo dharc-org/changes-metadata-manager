@@ -81,7 +81,7 @@ Fields like `keywords`, `related_identifiers`, `locations`, `notes`, and `method
 
 Creators are assigned DataCite roles based on their contribution:
 
-- **datacollector**: people who performed the digitization (steps 00-04, 06)
+- **researcher**: people who performed the digitization (steps 00-04, 06)
 - **datacurator**: people who authored the metadata (step 05)
 
 Metadata authors from step 05 appear on every record, regardless of stage. The creator list is resolved against `data/creators_lookup.yaml`, which maps RDF names to structured fields (`family_name`, `given_name`, `affiliation`, `orcid`).

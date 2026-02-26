@@ -124,7 +124,7 @@ def build_creators_for_entity_stage(
 ) -> list[dict]:
     author_names = extract_authors_for_entity_stage(graph, entity_id, stage)
     return [
-        _format_creator(creators_lookup[name], "datacollector")
+        _format_creator(creators_lookup[name], "researcher")
         for name in sorted(author_names)
         if name in creators_lookup
     ]
