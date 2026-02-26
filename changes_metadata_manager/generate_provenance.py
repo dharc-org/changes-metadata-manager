@@ -51,7 +51,7 @@ def generate_provenance_snapshots(input_directory: str, output_file: str, input_
             if ext not in rdf_extensions:
                 continue
             format_name = rdf_extensions[ext]
-        
+
         default_graph.parse(file_path, format=format_name)
         file_count += 1
     
@@ -69,9 +69,10 @@ def generate_provenance_snapshots(input_directory: str, output_file: str, input_
     for prefix, namespace in input_graph.namespace_manager.namespaces():
         dataset.namespace_manager.bind(prefix, namespace)
     
+    license_subjects = {s for s, p, _ in default_graph if p == DCTERMS.license}
     subjects = set()
-    for s, p, o in default_graph:
-        if isinstance(s, URIRef):
+    for s, _, _ in default_graph:
+        if isinstance(s, URIRef) and s not in license_subjects:
             subjects.add(s)
     
     generation_time = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
