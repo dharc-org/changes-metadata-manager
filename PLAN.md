@@ -106,6 +106,7 @@ DCHOO (dipende da RAW + RAWP + DCHO)
   - Pubblicazione record
 - [x] Caricare solo oggetti con licenza associata (per ogni sottotipologia RAW, RAWP, DCHO, DCHOO)
 - [x] Generare tabella di associazione entità → DOI Zenodo
+- [x] Aggiungere finanziamento CHANGES nei record Zenodo (formato InvenioRDM custom, senza OpenAIRE)
 - [ ] Compilare tabella CSV di Silvio con informazioni sui documenti caricati su Zenodo
 - [ ] Gestire rate limiting e retry logic
 

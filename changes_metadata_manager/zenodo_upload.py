@@ -374,7 +374,7 @@ PROPAGATED_FIELDS = (
     "zenodo_url", "access_token", "user_agent",
     "subjects", "publication_date",
     "version", "community",
-    "contributors",
+    "contributors", "funding",
     "references", "dates",
 )
 

@@ -671,6 +671,23 @@ class TestGenerateZenodoConfig:
 
         assert {"description": RESTRICTED_NOTICE, "type": {"id": "notes"}} not in config["additional_descriptions"]
 
+    def test_propagates_funding_field(self, freezer):
+        freezer.move_to("2024-06-15")
+        funding = [
+            {
+                "funder": {"name": "European Union - NextGenerationEU"},
+                "award": {
+                    "title": {"en": "CHANGES"},
+                    "number": "PE 0000020",
+                },
+            }
+        ]
+        base_config = {**SAMPLE_BASE_CONFIG, "funding": funding}
+        zip_path = Path("/tmp/1-raw.zip")
+        config = generate_zenodo_config("raw", zip_path, "Test Title", base_config, [SAMPLE_CREATOR], SAMPLE_METHODS)
+
+        assert config["funding"] == funding
+
 
 class TestExtractLicenseForEntityStage:
     def test_extracts_license_from_kg(self):
