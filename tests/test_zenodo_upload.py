@@ -7,13 +7,16 @@ from rdflib import Graph, Literal, URIRef
 
 from changes_metadata_manager.folder_metadata_builder import load_kg
 from changes_metadata_manager.zenodo_upload import (
+    AAT,
     BASE_URI,
     CC0_DISCLAIMER,
     RESTRICTED_NOTICE,
     E21_PERSON,
     P14_CARRIED_OUT_BY,
+    P16_USED_SPECIFIC_OBJECT,
     P190_HAS_SYMBOLIC_CONTENT,
     P1_IS_IDENTIFIED_BY,
+    P32_USED_GENERAL_TECHNIQUE,
     P3_HAS_NOTE,
     P70I,
     P74_HAS_RESIDENCE,
@@ -26,13 +29,17 @@ from changes_metadata_manager.zenodo_upload import (
     build_enhanced_description,
     build_entity_uri,
     build_metadata_creators,
+    build_methods_description,
     create_stage_zip,
+    extract_acquisition_technique,
     extract_authors_for_entity_stage,
+    extract_devices,
     extract_entity_title,
     extract_keeper_info,
     extract_license_for_entity_stage,
     extract_licensed_entity_stages,
     extract_metadata_authors,
+    extract_software_for_stage,
     generate_zenodo_config,
     group_folders_by_entity,
     load_creators_lookup,
@@ -518,7 +525,6 @@ SAMPLE_BASE_CONFIG = {
     "user_agent": "piccione/2.1.0",
     "subjects": [{"subject": "test"}],
     "notes": "Test notes content",
-    "method": "Test method content",
     "locations": [
         {
             "lat": 44.497,
@@ -529,19 +535,21 @@ SAMPLE_BASE_CONFIG = {
     ],
 }
 
+SAMPLE_METHODS = "Test method content"
+
 
 class TestGenerateZenodoConfig:
     def test_generates_valid_config(self, freezer):
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR])
+        config = generate_zenodo_config("raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], SAMPLE_METHODS)
 
         assert config == {
             "zenodo_url": "https://sandbox.zenodo.org/api",
             "access_token": "test_token",
             "user_agent": "piccione/2.1.0",
-            "title": "Test Title - Raw sensor data - Aldrovandi Digital Twin",
-            "description": 'Raw sensor data of "Test Title" from the Aldrovandi Digital Twin. This stage contains the original acquisition output (photos and/or scans) without processing. Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href="https://w3id.org/dharc/ontology/chad-ap">CHAD-AP</a> ontology.\n',
+            "title": "Test Title - Raw - Aldrovandi Digital Twin",
+            "description": 'Raw acquisition data of "Test Title" from the Aldrovandi Digital Twin. This dataset contains the raw material generated during the acquisition phase. Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href="https://w3id.org/dharc/ontology/chad-ap">CHAD-AP</a> ontology.\n',
             "resource_type": {"id": "dataset"},
             "publisher": "Zenodo",
             "access": {"record": "public", "files": "public"},
@@ -575,7 +583,7 @@ class TestGenerateZenodoConfig:
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/27-raw.zip")
         entity_uri = "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1"
-        config = generate_zenodo_config("27", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], entity_uri=entity_uri)
+        config = generate_zenodo_config("raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], SAMPLE_METHODS, entity_uri=entity_uri)
 
         assert config["identifiers"] == [
             {"identifier": "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1", "scheme": "url"}
@@ -594,7 +602,7 @@ class TestGenerateZenodoConfig:
             ],
         }
         zip_path = Path("/tmp/27-raw.zip")
-        config = generate_zenodo_config("27", "raw", zip_path, "Test Title", base_config, [SAMPLE_CREATOR])
+        config = generate_zenodo_config("raw", zip_path, "Test Title", base_config, [SAMPLE_CREATOR], SAMPLE_METHODS)
 
         assert config["related_identifiers"] == [
             {
@@ -607,7 +615,7 @@ class TestGenerateZenodoConfig:
     def test_converts_notes_and_method_to_additional_descriptions(self, freezer):
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR])
+        config = generate_zenodo_config("raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], SAMPLE_METHODS)
 
         assert config["additional_descriptions"] == [
             {"description": "Test method content", "type": {"id": "methods"}},
@@ -617,7 +625,7 @@ class TestGenerateZenodoConfig:
     def test_cc0_disclaimer_in_additional_descriptions(self, freezer):
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], license="cc0-1.0")
+        config = generate_zenodo_config("raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], SAMPLE_METHODS, license="cc0-1.0")
 
         assert config["additional_descriptions"] == [
             {"description": "Test method content", "type": {"id": "methods"}},
@@ -628,7 +636,7 @@ class TestGenerateZenodoConfig:
     def test_converts_locations_to_geojson(self, freezer):
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR])
+        config = generate_zenodo_config("raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], SAMPLE_METHODS)
 
         assert config["locations"] == {
             "features": [
@@ -644,14 +652,14 @@ class TestGenerateZenodoConfig:
         freezer.move_to("2024-06-15")
         base_config = {**SAMPLE_BASE_CONFIG, "community": "project-changes"}
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", base_config, [SAMPLE_CREATOR])
+        config = generate_zenodo_config("raw", zip_path, "Test Title", base_config, [SAMPLE_CREATOR], SAMPLE_METHODS)
 
         assert config["community"] == "project-changes"
 
     def test_includes_restricted_notice_when_no_license(self, freezer):
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], has_license=False)
+        config = generate_zenodo_config("raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], SAMPLE_METHODS, has_license=False)
 
         assert RESTRICTED_NOTICE not in config["description"]
         assert {"description": RESTRICTED_NOTICE, "type": {"id": "notes"}} in config["additional_descriptions"]
@@ -659,7 +667,7 @@ class TestGenerateZenodoConfig:
     def test_no_restricted_notice_when_licensed(self, freezer):
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("1", "raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], has_license=True)
+        config = generate_zenodo_config("raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], SAMPLE_METHODS, has_license=True)
 
         assert {"description": RESTRICTED_NOTICE, "type": {"id": "notes"}} not in config["additional_descriptions"]
 
@@ -745,8 +753,8 @@ class TestBuildEnhancedDescription:
     def test_raw_stage_description(self):
         result = build_enhanced_description("raw", "Test Object")
         assert result == (
-            'Raw sensor data of "Test Object" from the Aldrovandi Digital Twin. '
-            "This stage contains the original acquisition output (photos and/or scans) without processing. "
+            'Raw acquisition data of "Test Object" from the Aldrovandi Digital Twin. '
+            "This dataset contains the raw material generated during the acquisition phase. "
             'Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href="https://w3id.org/dharc/ontology/chad-ap">CHAD-AP</a> ontology.\n'
         )
 
@@ -754,12 +762,12 @@ class TestBuildEnhancedDescription:
         result = build_enhanced_description("dcho", "Museum Specimen")
         assert "Digital Cultural Heritage Object" in result
         assert '"Museum Specimen"' in result
-        assert "interpolation, gap filling, and geometry corrections" in result
+        assert "interpolation, gap filling, and resolution of geometric issues" in result
 
     def test_dchoo_stage_description(self):
         result = build_enhanced_description("dchoo", "Object Title")
         assert "Optimized Digital Cultural Heritage Object" in result
-        assert "web-ready version optimized for real-time online interaction" in result
+        assert "optimised for real-time online interaction" in result
 
     def test_description_never_contains_disclaimer(self):
         result = build_enhanced_description("dcho", "Test Object")
@@ -785,7 +793,7 @@ class TestBuildEnhancedDescription:
 
 class TestExtractEntityStageFromConfig:
     def test_extracts_raw_stage(self):
-        config = {"title": "Carta nautica - Raw sensor data - Aldrovandi Digital Twin"}
+        config = {"title": "Carta nautica - Raw - Aldrovandi Digital Twin"}
         assert _extract_entity_stage_from_config(config) == "raw"
 
     def test_extracts_dchoo_stage(self):
@@ -829,3 +837,100 @@ class TestExtractRecordUrl:
     def test_extracts_url_from_record(self):
         record = {"links": {"self_html": "https://zenodo.org/records/12345"}}
         assert _extract_record_url(record) == "https://zenodo.org/records/12345"
+
+
+class TestExtractAcquisitionTechnique:
+    def test_extracts_photography_from_kg(self, real_kg):
+        technique = extract_acquisition_technique(real_kg, "1")
+        assert technique == "digital photography"
+
+    def test_extracts_scanning_from_kg(self, real_kg):
+        technique = extract_acquisition_technique(real_kg, "12")
+        assert technique == "optical scanning"
+
+    def test_returns_none_for_missing_entity(self):
+        g = Graph()
+        assert extract_acquisition_technique(g, "nonexistent") is None
+
+    def test_extracts_from_synthetic_graph(self):
+        g = Graph()
+        act_uri = URIRef(f"{BASE_URI}/act/42/00/1")
+        g.add((act_uri, P32_USED_GENERAL_TECHNIQUE, URIRef(f"{AAT}300266792")))
+        assert extract_acquisition_technique(g, "42") == "digital photography"
+
+
+class TestExtractDevices:
+    def test_extracts_devices_from_kg(self, real_kg):
+        devices = extract_devices(real_kg, "1")
+        assert devices == ["Nikkor 50mm", "Nikon D7200"]
+
+    def test_extracts_scanner_device(self, real_kg):
+        devices = extract_devices(real_kg, "12")
+        assert devices == ["Artec Eva"]
+
+    def test_returns_empty_for_missing_entity(self):
+        g = Graph()
+        assert extract_devices(g, "nonexistent") == []
+
+    def test_excludes_item_uris(self):
+        g = Graph()
+        act_uri = URIRef(f"{BASE_URI}/act/42/00/1")
+        g.add((act_uri, P16_USED_SPECIFIC_OBJECT, URIRef(f"{BASE_URI}/dev/nikon_d7200/1")))
+        g.add((act_uri, P16_USED_SPECIFIC_OBJECT, URIRef(f"{BASE_URI}/itm/42/ob00/1")))
+        devices = extract_devices(g, "42")
+        assert devices == ["Nikon D7200"]
+
+
+class TestExtractSoftwareForStage:
+    def test_extracts_raw_software(self, real_kg):
+        software = extract_software_for_stage(real_kg, "1", "raw")
+        assert software == []
+
+    def test_extracts_rawp_software(self, real_kg):
+        software = extract_software_for_stage(real_kg, "1", "rawp")
+        assert "3DF Zephyr" in software
+
+    def test_excludes_metadata_step_software(self, real_kg):
+        software = extract_software_for_stage(real_kg, "1", "dchoo")
+        assert "CHAD-AP" not in software
+        assert "HeriTrace" not in software
+        assert "Morph-KGC" not in software
+
+    def test_includes_step_06_software(self, real_kg):
+        software = extract_software_for_stage(real_kg, "1", "dchoo")
+        assert "ATON" in software
+
+    def test_returns_empty_for_missing_entity(self):
+        g = Graph()
+        assert extract_software_for_stage(g, "nonexistent", "raw") == []
+
+
+class TestBuildMethodsDescription:
+    def test_includes_workflow_reference(self):
+        g = Graph()
+        result = build_methods_description(g, "nonexistent", "raw")
+        assert "doi:10.46298/transformations.14773" in result
+
+    def test_includes_technique_and_devices(self, real_kg):
+        result = build_methods_description(real_kg, "1", "raw")
+        assert "digital photography" in result
+        assert "Nikon D7200" in result
+
+    def test_includes_software_for_rawp(self, real_kg):
+        result = build_methods_description(real_kg, "1", "rawp")
+        assert "Processing software:" in result
+        assert "3DF Zephyr" in result
+
+    def test_no_software_for_raw(self, real_kg):
+        result = build_methods_description(real_kg, "1", "raw")
+        assert "Processing software:" not in result
+
+    def test_includes_chad_ap_reference(self):
+        g = Graph()
+        result = build_methods_description(g, "nonexistent", "raw")
+        assert "CHAD-AP" in result
+
+    def test_scanning_entity(self, real_kg):
+        result = build_methods_description(real_kg, "12", "raw")
+        assert "optical scanning" in result
+        assert "Artec Eva" in result

@@ -57,14 +57,72 @@ STEP_TO_STAGE = {
 }
 
 CRM = "http://www.cidoc-crm.org/cidoc-crm/"
+CRMDIG = "http://www.cidoc-crm.org/extensions/crmdig/"
+AAT = "http://vocab.getty.edu/aat/"
+
 P70I = URIRef(f"{CRM}P70i_is_documented_in")
 P3_HAS_NOTE = URIRef(f"{CRM}P3_has_note")
 P14_CARRIED_OUT_BY = URIRef(f"{CRM}P14_carried_out_by")
 P1_IS_IDENTIFIED_BY = URIRef(f"{CRM}P1_is_identified_by")
 P190_HAS_SYMBOLIC_CONTENT = URIRef(f"{CRM}P190_has_symbolic_content")
 P74_HAS_RESIDENCE = URIRef(f"{CRM}P74_has_current_or_former_residence")
+P32_USED_GENERAL_TECHNIQUE = URIRef(f"{CRM}P32_used_general_technique")
+P16_USED_SPECIFIC_OBJECT = URIRef(f"{CRM}P16_used_specific_object")
 E21_PERSON = URIRef(f"{CRM}E21_Person")
 RDF_TYPE = URIRef("http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+L23_USED_SOFTWARE = URIRef(f"{CRMDIG}L23_used_software_or_firmware")
+
+AAT_TECHNIQUE_LABELS: dict[str, str] = {
+    f"{AAT}300266792": "digital photography",
+    f"{AAT}300429747": "optical scanning",
+}
+
+SLUG_LABELS: dict[str, str] = {
+    "3df_zephyr": "3DF Zephyr",
+    "adobe_photoshop_2023": "Adobe Photoshop 2023",
+    "agisoft_metashape": "Agisoft Metashape",
+    "artec_eva": "Artec Eva",
+    "artec_leo": "Artec Leo",
+    "artec_spider": "Artec Spider",
+    "artec_studio_14": "Artec Studio 14",
+    "artec_studio_15": "Artec Studio 15",
+    "artec_studio_16": "Artec Studio 16",
+    "artec_studio_19": "Artec Studio 19",
+    "aton": "ATON",
+    "blender": "Blender",
+    "canon_eos_6d": "Canon EOS 6D",
+    "chad-ap": "CHAD-AP",
+    "cloudcompare": "CloudCompare",
+    "gestaltor": "Gestaltor",
+    "gimp": "GIMP",
+    "heritrace": "HERITRACE",
+    "instalod": "InstaLOD",
+    "instant_meshes": "Instant Meshes",
+    "lente_24-70_f2_8_l": "Canon EF 24-70mm f/2.8L",
+    "meshlab": "MeshLab",
+    "metashape": "Agisoft Metashape",
+    "microscopio_digitale_bresciani": "Microscopio Digitale Bresciani",
+    "modo": "Modo",
+    "morph-kgc": "Morph-KGC",
+    "nextcloud": "Nextcloud",
+    "nikkor_35mm": "Nikkor 35mm",
+    "nikkor_50mm": "Nikkor 50mm",
+    "nikon_d3300": "Nikon D3300",
+    "nikon_d5200": "Nikon D5200",
+    "nikon_d5600": "Nikon D5600",
+    "nikon_d7200": "Nikon D7200",
+    "nikon_d750": "Nikon D750",
+    "panasonic_dmc-lx100": "Panasonic DMC-LX100",
+    "sony_alpha_6100": "Sony Alpha 6100",
+    "sony_alpha_7_i": "Sony Alpha 7 I",
+    "substance_3d_painter": "Substance 3D Painter",
+    "substance_painter": "Substance Painter",
+    "zbrush": "ZBrush",
+}
+
+
+def _format_slug(slug: str) -> str:
+    return SLUG_LABELS[slug]
 
 
 def load_creators_lookup(path: Path) -> dict[str, dict]:
@@ -253,6 +311,36 @@ def extract_entity_title(graph: Graph, entity_id: str) -> str:
     return f"Entity {entity_id}"
 
 
+def extract_acquisition_technique(graph: Graph, entity_id: str) -> str | None:
+    act_uri = URIRef(f"{BASE_URI}/act/{entity_id}/00/1")
+    for _, _, technique_uri in graph.triples((act_uri, P32_USED_GENERAL_TECHNIQUE, None)):
+        return AAT_TECHNIQUE_LABELS[str(technique_uri)]
+    return None
+
+
+def extract_devices(graph: Graph, entity_id: str) -> list[str]:
+    act_uri = URIRef(f"{BASE_URI}/act/{entity_id}/00/1")
+    devices = []
+    for _, _, obj_uri in graph.triples((act_uri, P16_USED_SPECIFIC_OBJECT, None)):
+        uri_str = str(obj_uri)
+        if "/dev/" in uri_str:
+            slug = uri_str.split("/dev/")[1].split("/")[0]
+            devices.append(_format_slug(slug))
+    return sorted(devices)
+
+
+def extract_software_for_stage(graph: Graph, entity_id: str, stage: str) -> list[str]:
+    steps = [s for s in STAGE_STEPS[stage] if s != METADATA_STEP]
+    software: set[str] = set()
+    for step in steps:
+        act_uri = URIRef(f"{BASE_URI}/act/{entity_id}/{step}/1")
+        for _, _, sfw_uri in graph.triples((act_uri, L23_USED_SOFTWARE, None)):
+            uri_str = str(sfw_uri)
+            slug = uri_str.split("/sfw/")[1].split("/")[0]
+            software.add(_format_slug(slug))
+    return sorted(software)
+
+
 LICENSE_URI_TO_ZENODO = {
     "https://creativecommons.org/publicdomain/zero/1.0/": "cc0-1.0",
     "https://creativecommons.org/licenses/by/4.0/": "cc-by-4.0",
@@ -261,18 +349,25 @@ LICENSE_URI_TO_ZENODO = {
     "https://creativecommons.org/licenses/by-nc-sa/4.0/": "cc-by-nc-sa-4.0",
 }
 
-STAGE_FULL_NAMES = {
-    "raw": "Raw sensor data",
+STAGE_TITLE_NAMES = {
+    "raw": "Raw",
+    "rawp": "Processed raw model",
+    "dcho": "Digital Cultural Heritage Object",
+    "dchoo": "Optimized Digital Cultural Heritage Object",
+}
+
+STAGE_DESCRIPTION_NAMES = {
+    "raw": "Raw acquisition data",
     "rawp": "Processed raw model",
     "dcho": "Digital Cultural Heritage Object",
     "dchoo": "Optimized Digital Cultural Heritage Object",
 }
 
 STAGE_DESCRIPTIONS = {
-    "raw": "This stage contains the original acquisition output (photos and/or scans) without processing.",
-    "rawp": "This stage contains the preliminary output from photogrammetry or scanner software after initial processing, without interpolation or geometry corrections.",
-    "dcho": "This stage contains the refined model with interpolation, gap filling, and geometry corrections.",
-    "dchoo": "This stage contains the web-ready version optimized for real-time online interaction.",
+    "raw": "This dataset contains the raw material generated during the acquisition phase.",
+    "rawp": "This dataset contains the preliminary output from the photogrammetry or scanner software after initial data processing but without any interpolation or geometry corrections.",
+    "dcho": "This dataset contains the version that includes interpolation, gap filling, and resolution of geometric issues, resulting in a refined and improved model.",
+    "dchoo": "This dataset contains the version optimised for real-time online interaction.",
 }
 
 PROPAGATED_FIELDS = (
@@ -326,7 +421,7 @@ def build_enhanced_description(
     keeper_location: str | None = None,
 ) -> str:
     parts = [
-        f'{STAGE_FULL_NAMES[stage]} of "{title}" from the Aldrovandi Digital Twin.',
+        f'{STAGE_DESCRIPTION_NAMES[stage]} of "{title}" from the Aldrovandi Digital Twin.',
     ]
     if keeper_name:
         keeper_line = f"The original object is held by {keeper_name}"
@@ -339,6 +434,36 @@ def build_enhanced_description(
         f"Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href=\"{CHAD_AP_URL}\">CHAD-AP</a> ontology.",
     )
     return " ".join(parts) + "\n"
+
+
+WORKFLOW_DOI_URL = "https://doi.org/10.46298/transformations.14773"
+
+
+def build_methods_description(
+    graph: Graph,
+    entity_id: str,
+    stage: str,
+) -> str:
+    parts = [
+        f'Acquisition and digitization followed the reproducible workflow documented in '
+        f'<a href="{WORKFLOW_DOI_URL}">doi:10.46298/transformations.14773</a>.',
+    ]
+    technique = extract_acquisition_technique(graph, entity_id)
+    devices = extract_devices(graph, entity_id)
+    if technique:
+        line = f"Data was acquired using {technique}"
+        if devices:
+            line += f" ({', '.join(devices)})"
+        line += "."
+        parts.append(line)
+    software = extract_software_for_stage(graph, entity_id, stage)
+    if software:
+        parts.append(f"Processing software: {', '.join(software)}.")
+    parts.append(
+        f'Metadata follows the <a href="{CHAD_AP_URL}">Cultural Heritage Acquisition and '
+        f"Digitisation Application Profile (CHAD-AP)</a> based on CIDOC-CRM.",
+    )
+    return "\n\n".join(parts) + "\n"
 
 
 def build_entity_uri(entity_id: str) -> str:
@@ -387,12 +512,12 @@ def build_rights(content_license: str | None) -> list[dict]:
 
 
 def generate_zenodo_config(
-    entity_id: str,
     stage: str,
     zip_path: Path,
     title: str,
     base_config: dict,
     creators: list[dict],
+    methods_description: str,
     license: str | None = None,
     entity_uri: str | None = None,
     keeper_name: str | None = None,
@@ -402,7 +527,7 @@ def generate_zenodo_config(
     description = build_enhanced_description(stage, title, keeper_name, keeper_location)
 
     config: dict = {
-        "title": f"{title} - {STAGE_FULL_NAMES[stage]} - Aldrovandi Digital Twin",
+        "title": f"{title} - {STAGE_TITLE_NAMES[stage]} - Aldrovandi Digital Twin",
         "description": description,
         "resource_type": {"id": "dataset"},
         "publisher": "Zenodo",
@@ -415,7 +540,7 @@ def generate_zenodo_config(
 
     additional_descriptions: list[dict] = [
         {
-            "description": base_config["method"],
+            "description": methods_description,
             "type": {"id": "methods"},
         },
         {
@@ -520,7 +645,8 @@ def prepare_all(
                 creators = merge_creators(digitization_creators, metadata_creators)
                 license = extract_license_for_entity_stage(kg, entity_id, stage)
                 entity_uri = build_entity_uri(entity_id)
-                config = generate_zenodo_config(entity_id, stage, zip_path, title, base_config, creators, license, entity_uri, keeper_name, keeper_location, has_license)
+                methods_description = build_methods_description(kg, entity_id, stage)
+                config = generate_zenodo_config(stage, zip_path, title, base_config, creators, methods_description, license, entity_uri, keeper_name, keeper_location, has_license)
                 config_path = configs_dir / f"{sala_slug}-{title_slug}-{stage}.yaml"
                 with open(config_path, "w") as f:
                     yaml.dump(config, f, Dumper=LiteralBlockDumper, default_flow_style=False, allow_unicode=True, sort_keys=False)
@@ -529,7 +655,7 @@ def prepare_all(
 
 def _extract_entity_stage_from_config(config: dict) -> str:
     title = config["title"]
-    for stage, full_name in STAGE_FULL_NAMES.items():
+    for stage, full_name in STAGE_TITLE_NAMES.items():
         if f" - {full_name} - " in title:
             return stage
     raise ValueError(f"Cannot determine stage from title: {title}")
