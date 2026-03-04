@@ -22,9 +22,9 @@ from changes_metadata_manager.zenodo_upload import (
     P74_HAS_RESIDENCE,
     RDF_TYPE,
     _extract_doi,
-    _extract_entity_id_from_config,
-    _extract_entity_stage_from_config,
     _extract_record_url,
+    _format_creators_for_table,
+    _format_licenses_for_table,
     build_creators_for_entity_stage,
     build_enhanced_description,
     build_entity_uri,
@@ -808,34 +808,51 @@ class TestBuildEnhancedDescription:
         assert "\n" not in result.rstrip("\n")
 
 
-class TestExtractEntityStageFromConfig:
-    def test_extracts_raw_stage(self):
-        config = {"title": "Carta nautica - Raw - Aldrovandi Digital Twin"}
-        assert _extract_entity_stage_from_config(config) == "raw"
+class TestFormatCreatorsForTable:
+    def test_formats_multiple_creators(self):
+        config = {
+            "creators": [
+                {"person_or_org": {"family_name": "Bordignon", "given_name": "Alice", "identifiers": [{"scheme": "orcid", "identifier": "0009-0008-3556-0493"}]}},
+                {"person_or_org": {"family_name": "Massari", "given_name": "Arcangelo", "identifiers": [{"scheme": "orcid", "identifier": "0000-0002-8420-0696"}]}},
+            ]
+        }
+        assert _format_creators_for_table(config) == "Bordignon, Alice [orcid:0009-0008-3556-0493]; Massari, Arcangelo [orcid:0000-0002-8420-0696]"
 
-    def test_extracts_dchoo_stage(self):
-        config = {"title": "Carta nautica - Optimized Digital Cultural Heritage Object - Aldrovandi Digital Twin"}
-        assert _extract_entity_stage_from_config(config) == "dchoo"
+    def test_formats_single_creator(self):
+        config = {
+            "creators": [
+                {"person_or_org": {"family_name": "Barzaghi", "given_name": "Sebastian", "identifiers": [{"scheme": "orcid", "identifier": "0000-0002-0799-1527"}]}},
+            ]
+        }
+        assert _format_creators_for_table(config) == "Barzaghi, Sebastian [orcid:0000-0002-0799-1527]"
 
-    def test_raises_for_unknown_stage(self):
-        config = {"title": "Some unknown title format"}
-        with pytest.raises(ValueError, match="Cannot determine stage"):
-            _extract_entity_stage_from_config(config)
 
+class TestFormatLicensesForTable:
+    def test_formats_cc0_metadata_and_content(self):
+        config = {
+            "rights": [
+                {"title": {"en": "Creative Commons Zero v1.0 Universal (Metadata license)"}},
+                {"title": {"en": "Creative Commons Zero v1.0 Universal (Content license)"}},
+            ]
+        }
+        assert _format_licenses_for_table(config) == "cc0-1.0 (Metadata license); cc0-1.0 (Content license)"
 
-class TestExtractEntityIdFromConfig:
-    def test_extracts_numeric_id(self):
-        config = {"identifiers": [{"identifier": "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1", "scheme": "url"}]}
-        assert _extract_entity_id_from_config(config) == "27"
+    def test_formats_mixed_licenses(self):
+        config = {
+            "rights": [
+                {"title": {"en": "Creative Commons Zero v1.0 Universal (Metadata license)"}},
+                {"title": {"en": "Creative Commons Attribution Non Commercial Share Alike 4.0 International (Content license)"}},
+            ]
+        }
+        assert _format_licenses_for_table(config) == "cc0-1.0 (Metadata license); cc-by-nc-sa-4.0 (Content license)"
 
-    def test_extracts_string_id(self):
-        config = {"identifiers": [{"identifier": "https://w3id.org/changes/4/aldrovandi/itm/ptb/ob00/1", "scheme": "url"}]}
-        assert _extract_entity_id_from_config(config) == "ptb"
-
-    def test_raises_for_invalid_identifier(self):
-        config = {"identifiers": [{"identifier": "https://example.com/invalid", "scheme": "url"}]}
-        with pytest.raises(ValueError, match="Cannot extract entity ID"):
-            _extract_entity_id_from_config(config)
+    def test_formats_metadata_only(self):
+        config = {
+            "rights": [
+                {"title": {"en": "Creative Commons Zero v1.0 Universal (Metadata license)"}},
+            ]
+        }
+        assert _format_licenses_for_table(config) == "cc0-1.0 (Metadata license)"
 
 
 class TestExtractDoi:
@@ -843,11 +860,9 @@ class TestExtractDoi:
         record = {"pids": {"doi": {"identifier": "10.5281/zenodo.12345"}}}
         assert _extract_doi(record) == "10.5281/zenodo.12345"
 
-    def test_returns_none_when_no_pids(self):
-        assert _extract_doi({}) is None
-
-    def test_returns_none_when_no_doi(self):
-        assert _extract_doi({"pids": {}}) is None
+    def test_returns_empty_string_on_sandbox(self):
+        assert _extract_doi({}) == ""
+        assert _extract_doi({"pids": {}}) == ""
 
 
 class TestExtractRecordUrl:

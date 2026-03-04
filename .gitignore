@@ -6,6 +6,7 @@ htmlcov
 coverage.xml
 data/aldrovandi_obj.csv
 data/aldrovandi_pro.csv
+data/spoke4_dati.csv
 docs/node_modules
 docs/dist
 docs/.astro

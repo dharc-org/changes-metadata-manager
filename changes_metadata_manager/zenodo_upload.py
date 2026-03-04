@@ -653,30 +653,56 @@ def prepare_all(
                 progress.advance(task)
 
 
-def _extract_entity_stage_from_config(config: dict) -> str:
-    title = config["title"]
-    for stage, full_name in STAGE_TITLE_NAMES.items():
-        if f" - {full_name} - " in title:
-            return stage
-    raise ValueError(f"Cannot determine stage from title: {title}")
-
-
-def _extract_entity_id_from_config(config: dict) -> str:
-    identifier = config["identifiers"][0]["identifier"]
-    match = re.search(r"/itm/([^/]+)/ob00/1$", identifier)
-    if match:
-        return match.group(1)
-    raise ValueError(f"Cannot extract entity ID from identifier: {identifier}")
-
-
-def _extract_doi(record: dict) -> str | None:
+def _extract_doi(record: dict) -> str:
     pids = record.get("pids", {})
     doi_info = pids.get("doi", {})
-    return doi_info.get("identifier")
+    return doi_info.get("identifier", "")
 
 
 def _extract_record_url(record: dict) -> str:
     return record["links"]["self_html"]
+
+
+LICENSE_TITLE_TO_SHORT: dict[str, str] = {
+    info["title"]: short_name for short_name, info in LICENSE_INFO.items()
+}
+
+
+def _format_creators_for_table(config: dict) -> str:
+    creators = config["creators"]
+    parts: list[str] = []
+    for c in creators:
+        org = c["person_or_org"]
+        orcid = org["identifiers"][0]["identifier"]
+        parts.append(f"{org['family_name']}, {org['given_name']} [orcid:{orcid}]")
+    return "; ".join(parts)
+
+
+def _format_licenses_for_table(config: dict) -> str:
+    parts: list[str] = []
+    for right in config["rights"]:
+        title_en = right["title"]["en"]
+        for full_name, short_name in LICENSE_TITLE_TO_SHORT.items():
+            if title_en.startswith(full_name):
+                context = title_en.removeprefix(full_name).strip(" ()")
+                parts.append(f"{short_name} ({context})")
+                break
+    return "; ".join(parts)
+
+
+DOI_TABLE_FIELDNAMES = [
+    "Numero su DMP",
+    "Caso di studio",
+    "Autore/i",
+    "Tipo",
+    "Titolo",
+    "Data pubblicazione",
+    "DOI",
+    "URL",
+    "Repository",
+    "Licenza",
+    "Note",
+]
 
 
 def upload_all(configs_dir: Path, publish: bool = False) -> Path:
@@ -695,27 +721,25 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
             record = piccione_upload(str(config_file), publish=publish)
             with open(config_file) as f:
                 config = yaml.safe_load(f)
-            entity_id = _extract_entity_id_from_config(config)
-            stage = _extract_entity_stage_from_config(config)
             row: dict[str, str] = {
-                "entity_id": entity_id,
-                "stage": stage,
-                "title": config["title"],
-                "record_url": _extract_record_url(record),
+                "Numero su DMP": "",
+                "Caso di studio": "Aldrovandi",
+                "Autore/i": _format_creators_for_table(config),
+                "Tipo": "Dataset",
+                "Titolo": config["title"],
+                "Data pubblicazione": config["publication_date"],
+                "DOI": _extract_doi(record),
+                "URL": _extract_record_url(record),
+                "Repository": "Zenodo",
+                "Licenza": _format_licenses_for_table(config),
+                "Note": "",
             }
-            doi = _extract_doi(record)
-            if doi:
-                row["doi"] = doi
             doi_table.append(row)
             progress.advance(task)
 
     csv_path = configs_dir.parent / "doi_table.csv"
-    has_dois = any("doi" in row for row in doi_table)
-    fieldnames = ["entity_id", "stage", "title", "record_url"]
-    if has_dois:
-        fieldnames.append("doi")
     with open(csv_path, "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=DOI_TABLE_FIELDNAMES)
         writer.writeheader()
         writer.writerows(doi_table)
     print(f"DOI table written to {csv_path}")
