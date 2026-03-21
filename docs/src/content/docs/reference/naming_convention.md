@@ -1,4 +1,8 @@
 ---
+# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
+#
+# SPDX-License-Identifier: ISC
+
 title: Naming convention
 description: Folder and file naming rules for the Aldrovandi digitization project
 ---

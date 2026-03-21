@@ -1,4 +1,8 @@
 ---
+# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
+#
+# SPDX-License-Identifier: ISC
+
 title: SharePoint sync
 description: Sync the folder structure from SharePoint using piccione
 ---

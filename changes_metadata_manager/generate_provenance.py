@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
+#
+# SPDX-License-Identifier: ISC
+
 """
 Module to generate provenance snapshots from RDF data.
 Loads RDF data in various formats from all files in a directory,

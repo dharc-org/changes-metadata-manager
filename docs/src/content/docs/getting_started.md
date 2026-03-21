@@ -1,4 +1,8 @@
 ---
+# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
+#
+# SPDX-License-Identifier: ISC
+
 title: Getting started
 description: How to install and set up the CHANGES Metadata Manager
 ---

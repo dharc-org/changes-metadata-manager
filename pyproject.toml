@@ -16,6 +16,7 @@ dev = [
     "pytest>=9.0.1",
     "pytest-cov>=7.0.0",
     "pytest-freezer>=0.4.9",
+    "reuse>=6.2.0",
 ]
 
 [tool.coverage.report]
