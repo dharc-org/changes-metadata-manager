@@ -7,7 +7,7 @@ SPDX-License-Identifier: ISC
 # CHANGES Metadata Manager
 
 [![Tests](https://github.com/dharc-org/changes-metadata-manager/actions/workflows/run-tests.yml/badge.svg)](https://github.com/dharc-org/changes-metadata-manager/actions/workflows/run-tests.yml)
-[![Coverage](https://byob.yarr.is/arcangelo7/badges/dharc-org-changes-metadata-manager-coverage-master)](https://dharc-org.github.io/changes-metadata-manager/coverage/)
+[![Coverage](https://dharc-org.github.io/changes-metadata-manager/coverage/coverage-badge.svg)](https://dharc-org.github.io/changes-metadata-manager/coverage/)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/License-ISC-blue.svg)](LICENSE)

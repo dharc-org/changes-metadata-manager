@@ -20,6 +20,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read
 
 jobs:
   build:
@@ -30,26 +31,36 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Find latest successful test run
+        id: find-run
+        run: |
+          RUN_ID=$(gh run list --workflow "Run tests" --branch master --status success --limit 1 --json databaseId --jq '.[0].databaseId')
+          echo "run-id=$RUN_ID" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
       - name: Download coverage report
-        if: github.event_name == 'workflow_run'
-        uses: actions/download-artifact@v4
+        if: steps.find-run.outputs.run-id != ''
+        uses: actions/download-artifact@v8
         with:
           name: coverage-report
           path: docs/public/coverage
-          run-id: ${{ github.event.workflow_run.id }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.find-run.outputs.run-id }}
+          github-token: ${{ github.token }}
+        continue-on-error: true
 
       - name: Download coverage badge
-        if: github.event_name == 'workflow_run'
-        uses: actions/download-artifact@v7
+        if: steps.find-run.outputs.run-id != ''
+        uses: actions/download-artifact@v8
         with:
           name: coverage-badge
           path: docs/public/coverage
-          run-id: ${{ github.event.workflow_run.id }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.find-run.outputs.run-id }}
+          github-token: ${{ github.token }}
+        continue-on-error: true
 
       - name: Build docs
-        uses: withastro/action@v5
+        uses: withastro/action@v6
         with:
           path: ./docs
 
