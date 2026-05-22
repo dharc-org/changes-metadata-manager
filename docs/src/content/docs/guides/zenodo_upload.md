@@ -118,9 +118,15 @@ uv run python -m changes_metadata_manager.zenodo_upload upload \
 
 The upload command iterates over all YAML files in the directory (sorted alphabetically) and calls piccione's `on_zenodo` module for each one. Each config points to its ZIP file and contains the full InvenioRDM metadata, so no further input is needed.
 
-When uploading without `--publish`, a `drafts.json` file is saved alongside `doi_table.csv`. It contains the draft IDs and credentials needed to publish later.
+A `drafts.json` file is written after every successful upload, regardless of `--publish`. Each entry tracks the record status (`uploaded`, `published`, or `failed`), the draft ID, and Zenodo credentials. A 2-second pause between each upload keeps request rates within Zenodo's API limits.
 
-A 2-second pause between each upload keeps request rates well within Zenodo's API limits (100 requests/minute for authenticated users).
+### Resume after interruption
+
+Both `upload` and `publish-drafts` support automatic resume. If the process is interrupted (crash, network failure, manual stop), re-running the same command picks up where it left off: records already completed are skipped, and previously failed records are retried.
+
+State is persisted to `drafts.json` atomically after each record, so even a hard crash loses at most one in-progress upload.
+
+If an upload fails, the error is recorded in `drafts.json` and the batch continues with the remaining configs. A summary at the end reports how many succeeded, were skipped, and failed.
 
 ## Publishing drafts
 
@@ -137,7 +143,7 @@ uv run python -m changes_metadata_manager.zenodo_upload publish-drafts \
 |----------|----------|-------------|
 | `drafts_file` | Yes | Path to `drafts.json` produced by a previous `upload` run |
 
-This reads the saved draft IDs and publishes each one through the Zenodo API. On completion, `doi_table.csv` is regenerated with the final DOIs and record URLs.
+This reads the saved draft IDs and publishes each one through the Zenodo API. Already-published records are skipped, and records that failed during a previous publish attempt are retried. On completion, `doi_table.csv` is regenerated with the final DOIs and record URLs.
 
 ## Full workflow
 

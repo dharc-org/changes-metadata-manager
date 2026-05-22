@@ -5,7 +5,9 @@
 import argparse
 import csv
 import json
+import os
 import re
+import tempfile
 import time
 import unicodedata
 import zipfile
@@ -722,10 +724,58 @@ DOI_TABLE_FIELDNAMES = [
 ]
 
 
+def _atomic_write_json(path: Path, data: list) -> None:
+    fd, tmp_path = tempfile.mkstemp(dir=path.parent, suffix=".tmp")
+    with os.fdopen(fd, "w") as f:
+        json.dump(data, f, indent=2)
+    os.replace(tmp_path, path)
+
+
+def _write_doi_table(drafts: list[dict], output_dir: Path) -> Path:
+    rows: list[dict[str, str]] = []
+    for draft in drafts:
+        if draft["status"] == "failed":
+            continue
+        with open(draft["config_file"]) as f:
+            config = yaml.safe_load(f)
+        rows.append({
+            "Numero su DMP": "",
+            "Caso di studio": "Aldrovandi",
+            "Autore/i": _format_creators_for_table(config),
+            "Tipo": "Dataset",
+            "Titolo": config["title"],
+            "Data pubblicazione": config["publication_date"],
+            "DOI": draft["doi"],
+            "URL": draft["record_url"],
+            "Repository": "Zenodo",
+            "Licenza": _format_licenses_for_table(config),
+            "Note": "",
+        })
+    csv_path = output_dir / "doi_table.csv"
+    with open(csv_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=DOI_TABLE_FIELDNAMES)
+        writer.writeheader()
+        writer.writerows(rows)
+    return csv_path
+
+
 def upload_all(configs_dir: Path, publish: bool = False) -> Path:
     config_files = sorted(configs_dir.glob("*.yaml"))
-    doi_table: list[dict[str, str]] = []
-    drafts: list[dict[str, str]] = []
+    drafts_path = configs_dir.parent / "drafts.json"
+
+    drafts: list[dict] = []
+    if drafts_path.exists():
+        with open(drafts_path) as f:
+            drafts = json.load(f)
+
+    completed_stems = {
+        Path(d["config_file"]).stem for d in drafts
+        if d["status"] in ("uploaded", "published")
+    }
+
+    skipped = 0
+    failed = 0
+    uploaded = 0
 
     with Progress(
         SpinnerColumn(),
@@ -735,12 +785,19 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
     ) as progress:
         task = progress.add_task("Uploading to Zenodo", total=len(config_files))
         for config_file in config_files:
+            if config_file.stem in completed_stems:
+                skipped += 1
+                progress.update(task, description=f"Skipped {config_file.stem}")
+                progress.advance(task)
+                continue
+
             progress.update(task, description=f"Uploading {config_file.stem}")
-            record = piccione_upload(str(config_file), publish=publish)
-            time.sleep(2)
-            with open(config_file) as f:
-                config = yaml.safe_load(f)
-            if not publish:
+            try:
+                record = piccione_upload(str(config_file), publish=publish)
+                time.sleep(2)
+                with open(config_file) as f:
+                    config = yaml.safe_load(f)
+                drafts = [d for d in drafts if not (Path(d["config_file"]).stem == config_file.stem and d["status"] == "failed")]
                 drafts.append({
                     "draft_id": record["id"],
                     "config_file": str(config_file),
@@ -748,44 +805,44 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
                     "zenodo_url": config["zenodo_url"],
                     "access_token": config["access_token"],
                     "user_agent": config["user_agent"],
+                    "status": "published" if publish else "uploaded",
+                    "doi": _extract_doi(record),
+                    "record_url": _extract_record_url(record),
                 })
-            row: dict[str, str] = {
-                "Numero su DMP": "",
-                "Caso di studio": "Aldrovandi",
-                "Autore/i": _format_creators_for_table(config),
-                "Tipo": "Dataset",
-                "Titolo": config["title"],
-                "Data pubblicazione": config["publication_date"],
-                "DOI": _extract_doi(record),
-                "URL": _extract_record_url(record),
-                "Repository": "Zenodo",
-                "Licenza": _format_licenses_for_table(config),
-                "Note": "",
-            }
-            doi_table.append(row)
+                uploaded += 1
+            except Exception as exc:
+                drafts.append({
+                    "draft_id": "",
+                    "config_file": str(config_file),
+                    "title": config_file.stem,
+                    "zenodo_url": "",
+                    "access_token": "",
+                    "user_agent": "",
+                    "status": "failed",
+                    "doi": "",
+                    "record_url": "",
+                    "error": str(exc),
+                })
+                failed += 1
+                print(f"\n[FAILED] {config_file.stem}: {exc}")
+
+            _atomic_write_json(drafts_path, drafts)
             progress.advance(task)
 
-    csv_path = configs_dir.parent / "doi_table.csv"
-    with open(csv_path, "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=DOI_TABLE_FIELDNAMES)
-        writer.writeheader()
-        writer.writerows(doi_table)
+    csv_path = _write_doi_table(drafts, configs_dir.parent)
     print(f"DOI table written to {csv_path}")
-
-    if not publish and drafts:
-        drafts_path = configs_dir.parent / "drafts.json"
-        with open(drafts_path, "w") as f:
-            json.dump(drafts, f, indent=2)
-        print(f"Draft IDs saved to {drafts_path}")
-
+    print(f"Drafts saved to {drafts_path}")
+    print(f"Summary: {uploaded} uploaded, {skipped} skipped, {failed} failed (of {len(config_files)} total)")
     return csv_path
 
 
 def publish_all_drafts(drafts_path: Path) -> Path:
     with open(drafts_path) as f:
-        drafts: list[dict[str, str]] = json.load(f)
+        drafts: list[dict] = json.load(f)
 
-    doi_table: list[dict[str, str]] = []
+    publishable = [d for d in drafts if d["status"] in ("uploaded", "publish_failed")]
+    published = 0
+    failed = 0
 
     with Progress(
         SpinnerColumn(),
@@ -793,38 +850,34 @@ def publish_all_drafts(drafts_path: Path) -> Path:
         BarColumn(),
         MofNCompleteColumn(),
     ) as progress:
-        task = progress.add_task("Publishing drafts", total=len(drafts))
-        for draft in drafts:
+        task = progress.add_task("Publishing drafts", total=len(publishable))
+        for draft in publishable:
             progress.update(task, description=f"Publishing {draft['title']}")
-            base_url = draft["zenodo_url"].rstrip("/")
-            published = piccione_publish_draft(
-                base_url, draft["access_token"], draft["draft_id"], draft["user_agent"],
-            )
-            time.sleep(2)
-            with open(draft["config_file"]) as f:
-                config = yaml.safe_load(f)
-            row: dict[str, str] = {
-                "Numero su DMP": "",
-                "Caso di studio": "Aldrovandi",
-                "Autore/i": _format_creators_for_table(config),
-                "Tipo": "Dataset",
-                "Titolo": config["title"],
-                "Data pubblicazione": config["publication_date"],
-                "DOI": _extract_doi(published),
-                "URL": _extract_record_url(published),
-                "Repository": "Zenodo",
-                "Licenza": _format_licenses_for_table(config),
-                "Note": "",
-            }
-            doi_table.append(row)
+            try:
+                base_url = draft["zenodo_url"].rstrip("/")
+                record = piccione_publish_draft(
+                    base_url, draft["access_token"], draft["draft_id"], draft["user_agent"],
+                )
+                time.sleep(2)
+                draft["status"] = "published"
+                draft["doi"] = _extract_doi(record)
+                draft["record_url"] = _extract_record_url(record)
+                if "error" in draft:
+                    del draft["error"]
+                published += 1
+            except Exception as exc:
+                draft["status"] = "publish_failed"
+                draft["error"] = str(exc)
+                failed += 1
+                print(f"\n[FAILED] {draft['title']}: {exc}")
+
+            _atomic_write_json(drafts_path, drafts)
             progress.advance(task)
 
-    csv_path = drafts_path.parent / "doi_table.csv"
-    with open(csv_path, "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=DOI_TABLE_FIELDNAMES)
-        writer.writeheader()
-        writer.writerows(doi_table)
+    skipped = len(drafts) - len(publishable)
+    csv_path = _write_doi_table(drafts, drafts_path.parent)
     print(f"DOI table written to {csv_path}")
+    print(f"Summary: {published} published, {skipped} skipped, {failed} failed")
     return csv_path
 
 

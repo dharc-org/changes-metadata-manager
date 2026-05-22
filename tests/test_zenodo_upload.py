@@ -2,9 +2,14 @@
 #
 # SPDX-License-Identifier: ISC
 
+import csv
+import json
 import tempfile
 import zipfile
 from pathlib import Path
+from unittest.mock import patch
+
+import yaml
 
 import pytest
 from rdflib import Graph, Literal, URIRef
@@ -25,11 +30,13 @@ from changes_metadata_manager.zenodo_upload import (
     P70I,
     P74_HAS_RESIDENCE,
     RDF_TYPE,
+    _atomic_write_json,
     _extract_doi,
     _extract_license_from_meta,
     _extract_record_url,
     _format_creators_for_table,
     _format_licenses_for_table,
+    _write_doi_table,
     build_creators_for_entity_stage,
     build_enhanced_description,
     build_entity_uri,
@@ -49,7 +56,9 @@ from changes_metadata_manager.zenodo_upload import (
     group_folders_by_entity,
     load_creators_lookup,
     merge_creators,
+    publish_all_drafts,
     slugify,
+    upload_all,
 )
 
 
@@ -1066,3 +1075,433 @@ class TestBuildMethodsDescription:
         result = build_methods_description(real_kg, "12", "raw")
         assert "optical scanning" in result
         assert "Artec Eva" in result
+
+
+MINIMAL_CONFIG = {
+    "title": "Test Object - Raw - Aldrovandi Digital Twin",
+    "zenodo_url": "https://sandbox.zenodo.org/api",
+    "access_token": "fake-token",
+    "user_agent": "test/1.0",
+    "publication_date": "2026-05-22",
+    "creators": [{
+        "person_or_org": {
+            "type": "personal",
+            "family_name": "Rossi",
+            "given_name": "Mario",
+            "identifiers": [{"scheme": "orcid", "identifier": "0000-0001-0000-0001"}],
+        },
+        "role": {"id": "researcher"},
+        "affiliations": [{"name": "University of Bologna"}],
+    }],
+    "rights": [{"title": {"en": "Creative Commons Zero v1.0 Universal (Metadata license)"}, "link": "https://creativecommons.org/publicdomain/zero/1.0/"}],
+}
+
+MOCK_RECORD = {
+    "id": "999001",
+    "pids": {"doi": {"identifier": "10.5281/zenodo.999001"}},
+    "links": {"self_html": "https://sandbox.zenodo.org/records/999001"},
+}
+
+
+def _write_config(path: Path, overrides: dict | None = None) -> Path:
+    if overrides is None:
+        overrides = {}
+    config = {**MINIMAL_CONFIG, **overrides}
+    with open(path, "w") as f:
+        yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
+    return path
+
+
+class TestAtomicWriteJson:
+    def test_writes_json(self, tmp_path):
+        path = tmp_path / "data.json"
+        _atomic_write_json(path, [{"a": 1}])
+        with open(path) as f:
+            assert json.load(f) == [{"a": 1}]
+
+    def test_overwrites_existing(self, tmp_path):
+        path = tmp_path / "data.json"
+        _atomic_write_json(path, [{"old": True}])
+        _atomic_write_json(path, [{"new": True}])
+        with open(path) as f:
+            assert json.load(f) == [{"new": True}]
+
+
+class TestWriteDoiTable:
+    def test_generates_csv_from_drafts(self, tmp_path):
+        config_path = _write_config(tmp_path / "test-raw.yaml")
+        drafts = [{
+            "draft_id": "100",
+            "config_file": str(config_path),
+            "title": "Test",
+            "zenodo_url": "https://sandbox.zenodo.org/api",
+            "access_token": "tok",
+            "user_agent": "ua",
+            "status": "uploaded",
+            "doi": "10.5281/zenodo.100",
+            "record_url": "https://sandbox.zenodo.org/records/100",
+        }]
+        csv_path = _write_doi_table(drafts, tmp_path)
+        with open(csv_path) as f:
+            rows = list(csv.DictReader(f))
+        assert len(rows) == 1
+        assert rows[0]["DOI"] == "10.5281/zenodo.100"
+        assert rows[0]["Titolo"] == "Test Object - Raw - Aldrovandi Digital Twin"
+
+    def test_skips_failed_entries(self, tmp_path):
+        config_path = _write_config(tmp_path / "test-raw.yaml")
+        drafts = [
+            {
+                "draft_id": "100",
+                "config_file": str(config_path),
+                "title": "Good",
+                "zenodo_url": "",
+                "access_token": "",
+                "user_agent": "",
+                "status": "uploaded",
+                "doi": "10.5281/zenodo.100",
+                "record_url": "https://sandbox.zenodo.org/records/100",
+            },
+            {
+                "draft_id": "",
+                "config_file": str(config_path),
+                "title": "Bad",
+                "zenodo_url": "",
+                "access_token": "",
+                "user_agent": "",
+                "status": "failed",
+                "doi": "",
+                "record_url": "",
+                "error": "boom",
+            },
+        ]
+        csv_path = _write_doi_table(drafts, tmp_path)
+        with open(csv_path) as f:
+            rows = list(csv.DictReader(f))
+        assert len(rows) == 1
+
+
+class TestUploadAllResume:
+    def _setup_configs(self, tmp_path):
+        configs_dir = tmp_path / "configs"
+        configs_dir.mkdir()
+        _write_config(configs_dir / "entity-a-raw.yaml", {"title": "Entity A - Raw"})
+        _write_config(configs_dir / "entity-b-raw.yaml", {"title": "Entity B - Raw"})
+        _write_config(configs_dir / "entity-c-raw.yaml", {"title": "Entity C - Raw"})
+        return configs_dir
+
+    @patch("changes_metadata_manager.zenodo_upload.time.sleep")
+    @patch("changes_metadata_manager.zenodo_upload.piccione_upload")
+    def test_fresh_upload(self, mock_upload, mock_sleep, tmp_path):
+        configs_dir = self._setup_configs(tmp_path)
+        call_count = 0
+
+        def side_effect(config_file, publish=False):
+            nonlocal call_count
+            call_count += 1
+            return {
+                "id": f"draft-{call_count}",
+                "pids": {},
+                "links": {"self_html": f"https://sandbox.zenodo.org/records/draft-{call_count}"},
+            }
+
+        mock_upload.side_effect = side_effect
+        upload_all(configs_dir, publish=False)
+
+        drafts_path = tmp_path / "drafts.json"
+        with open(drafts_path) as f:
+            drafts = json.load(f)
+        assert len(drafts) == 3
+        assert all(d["status"] == "uploaded" for d in drafts)
+        assert mock_upload.call_count == 3
+
+    @patch("changes_metadata_manager.zenodo_upload.time.sleep")
+    @patch("changes_metadata_manager.zenodo_upload.piccione_upload")
+    def test_resume_skips_completed(self, mock_upload, mock_sleep, tmp_path):
+        configs_dir = self._setup_configs(tmp_path)
+        drafts_path = tmp_path / "drafts.json"
+        _atomic_write_json(drafts_path, [{
+            "draft_id": "existing-1",
+            "config_file": str(configs_dir / "entity-a-raw.yaml"),
+            "title": "Entity A - Raw",
+            "zenodo_url": "https://sandbox.zenodo.org/api",
+            "access_token": "tok",
+            "user_agent": "ua",
+            "status": "uploaded",
+            "doi": "",
+            "record_url": "https://sandbox.zenodo.org/uploads/existing-1",
+        }])
+
+        mock_upload.return_value = {
+            "id": "new-draft",
+            "pids": {},
+            "links": {"self_html": "https://sandbox.zenodo.org/records/new-draft"},
+        }
+
+        upload_all(configs_dir, publish=False)
+
+        with open(drafts_path) as f:
+            drafts = json.load(f)
+        assert len(drafts) == 3
+        assert mock_upload.call_count == 2
+        stems = {Path(d["config_file"]).stem for d in drafts if d["status"] == "uploaded"}
+        assert "entity-a-raw" in stems
+        assert "entity-b-raw" in stems
+        assert "entity-c-raw" in stems
+
+    @patch("changes_metadata_manager.zenodo_upload.time.sleep")
+    @patch("changes_metadata_manager.zenodo_upload.piccione_upload")
+    def test_failure_continues_and_records_error(self, mock_upload, mock_sleep, tmp_path):
+        configs_dir = self._setup_configs(tmp_path)
+        call_count = 0
+
+        def side_effect(config_file, publish=False):
+            nonlocal call_count
+            call_count += 1
+            if call_count == 2:
+                raise RuntimeError("Zenodo is down")
+            return {
+                "id": f"draft-{call_count}",
+                "pids": {},
+                "links": {"self_html": f"https://sandbox.zenodo.org/records/draft-{call_count}"},
+            }
+
+        mock_upload.side_effect = side_effect
+        upload_all(configs_dir, publish=False)
+
+        drafts_path = tmp_path / "drafts.json"
+        with open(drafts_path) as f:
+            drafts = json.load(f)
+        assert len(drafts) == 3
+        statuses = [d["status"] for d in drafts]
+        assert statuses.count("uploaded") == 2
+        assert statuses.count("failed") == 1
+        failed = [d for d in drafts if d["status"] == "failed"][0]
+        assert failed["error"] == "Zenodo is down"
+
+    @patch("changes_metadata_manager.zenodo_upload.time.sleep")
+    @patch("changes_metadata_manager.zenodo_upload.piccione_upload")
+    def test_failed_entry_retried_on_rerun(self, mock_upload, mock_sleep, tmp_path):
+        configs_dir = self._setup_configs(tmp_path)
+        drafts_path = tmp_path / "drafts.json"
+        _atomic_write_json(drafts_path, [
+            {
+                "draft_id": "existing-1",
+                "config_file": str(configs_dir / "entity-a-raw.yaml"),
+                "title": "Entity A - Raw",
+                "zenodo_url": "https://sandbox.zenodo.org/api",
+                "access_token": "tok",
+                "user_agent": "ua",
+                "status": "uploaded",
+                "doi": "",
+                "record_url": "",
+            },
+            {
+                "draft_id": "",
+                "config_file": str(configs_dir / "entity-b-raw.yaml"),
+                "title": "entity-b-raw",
+                "zenodo_url": "",
+                "access_token": "",
+                "user_agent": "",
+                "status": "failed",
+                "doi": "",
+                "record_url": "",
+                "error": "previous failure",
+            },
+            {
+                "draft_id": "existing-3",
+                "config_file": str(configs_dir / "entity-c-raw.yaml"),
+                "title": "Entity C - Raw",
+                "zenodo_url": "https://sandbox.zenodo.org/api",
+                "access_token": "tok",
+                "user_agent": "ua",
+                "status": "uploaded",
+                "doi": "",
+                "record_url": "",
+            },
+        ])
+
+        mock_upload.return_value = {
+            "id": "retried-draft",
+            "pids": {},
+            "links": {"self_html": "https://sandbox.zenodo.org/records/retried-draft"},
+        }
+
+        upload_all(configs_dir, publish=False)
+
+        assert mock_upload.call_count == 1
+        with open(drafts_path) as f:
+            drafts = json.load(f)
+        assert len(drafts) == 3
+        assert all(d["status"] == "uploaded" for d in drafts)
+        retried = [d for d in drafts if Path(d["config_file"]).stem == "entity-b-raw"][0]
+        assert retried["draft_id"] == "retried-draft"
+        assert "error" not in retried
+
+    @patch("changes_metadata_manager.zenodo_upload.time.sleep")
+    @patch("changes_metadata_manager.zenodo_upload.piccione_upload")
+    def test_drafts_json_written_after_each_upload(self, mock_upload, mock_sleep, tmp_path):
+        configs_dir = self._setup_configs(tmp_path)
+        drafts_path = tmp_path / "drafts.json"
+        snapshots: list[int] = []
+
+        def counting_upload(config_file, publish=False):
+            return {
+                "id": f"draft-{len(snapshots) + 1}",
+                "pids": {},
+                "links": {"self_html": f"https://sandbox.zenodo.org/records/draft-{len(snapshots) + 1}"},
+            }
+
+        mock_upload.side_effect = counting_upload
+
+        def tracking_write(path, data):
+            snapshots.append(len(data))
+            fd, tmp = tempfile.mkstemp(dir=path.parent, suffix=".tmp")
+            import os
+            with os.fdopen(fd, "w") as f:
+                json.dump(data, f, indent=2)
+            os.replace(tmp, path)
+
+        with patch("changes_metadata_manager.zenodo_upload._atomic_write_json", side_effect=tracking_write):
+            upload_all(configs_dir, publish=False)
+
+        assert snapshots == [1, 2, 3]
+
+    @patch("changes_metadata_manager.zenodo_upload.time.sleep")
+    @patch("changes_metadata_manager.zenodo_upload.piccione_upload")
+    def test_publish_flag_sets_published_status(self, mock_upload, mock_sleep, tmp_path):
+        configs_dir = self._setup_configs(tmp_path)
+        mock_upload.return_value = {
+            "id": "pub-1",
+            "pids": {"doi": {"identifier": "10.5281/zenodo.pub1"}},
+            "links": {"self_html": "https://zenodo.org/records/pub-1"},
+        }
+
+        upload_all(configs_dir, publish=True)
+
+        drafts_path = tmp_path / "drafts.json"
+        with open(drafts_path) as f:
+            drafts = json.load(f)
+        assert all(d["status"] == "published" for d in drafts)
+        assert all(d["doi"] == "10.5281/zenodo.pub1" for d in drafts)
+
+
+class TestPublishAllDraftsResume:
+    def _make_drafts(self, tmp_path, statuses):
+        configs_dir = tmp_path / "configs"
+        configs_dir.mkdir(exist_ok=True)
+        drafts = []
+        for i, status in enumerate(statuses):
+            config_path = _write_config(configs_dir / f"entity-{i}-raw.yaml", {"title": f"Entity {i}"})
+            entry = {
+                "draft_id": f"draft-{i}",
+                "config_file": str(config_path),
+                "title": f"Entity {i}",
+                "zenodo_url": "https://sandbox.zenodo.org/api",
+                "access_token": "tok",
+                "user_agent": "ua",
+                "status": status,
+                "doi": "10.5281/existing" if status == "published" else "",
+                "record_url": f"https://sandbox.zenodo.org/records/draft-{i}" if status == "published" else "",
+            }
+            if status in ("failed", "publish_failed"):
+                entry["error"] = "old error"
+            drafts.append(entry)
+        drafts_path = tmp_path / "drafts.json"
+        _atomic_write_json(drafts_path, drafts)
+        return drafts_path
+
+    @patch("changes_metadata_manager.zenodo_upload.time.sleep")
+    @patch("changes_metadata_manager.zenodo_upload.piccione_publish_draft")
+    def test_publishes_uploaded_drafts(self, mock_publish, mock_sleep, tmp_path):
+        drafts_path = self._make_drafts(tmp_path, ["uploaded", "uploaded"])
+        mock_publish.return_value = {
+            "pids": {"doi": {"identifier": "10.5281/zenodo.pub"}},
+            "links": {"self_html": "https://zenodo.org/records/pub"},
+        }
+
+        publish_all_drafts(drafts_path)
+
+        with open(drafts_path) as f:
+            drafts = json.load(f)
+        assert all(d["status"] == "published" for d in drafts)
+        assert all(d["doi"] == "10.5281/zenodo.pub" for d in drafts)
+        assert mock_publish.call_count == 2
+
+    @patch("changes_metadata_manager.zenodo_upload.time.sleep")
+    @patch("changes_metadata_manager.zenodo_upload.piccione_publish_draft")
+    def test_skips_already_published(self, mock_publish, mock_sleep, tmp_path):
+        drafts_path = self._make_drafts(tmp_path, ["published", "uploaded"])
+        mock_publish.return_value = {
+            "pids": {"doi": {"identifier": "10.5281/zenodo.new"}},
+            "links": {"self_html": "https://zenodo.org/records/new"},
+        }
+
+        publish_all_drafts(drafts_path)
+
+        assert mock_publish.call_count == 1
+        with open(drafts_path) as f:
+            drafts = json.load(f)
+        assert drafts[0]["doi"] == "10.5281/existing"
+        assert drafts[1]["doi"] == "10.5281/zenodo.new"
+
+    @patch("changes_metadata_manager.zenodo_upload.time.sleep")
+    @patch("changes_metadata_manager.zenodo_upload.piccione_publish_draft")
+    def test_failure_continues(self, mock_publish, mock_sleep, tmp_path):
+        drafts_path = self._make_drafts(tmp_path, ["uploaded", "uploaded"])
+        call_count = 0
+
+        def side_effect(*args, **kwargs):
+            nonlocal call_count
+            call_count += 1
+            if call_count == 1:
+                raise RuntimeError("publish error")
+            return {
+                "pids": {"doi": {"identifier": "10.5281/zenodo.ok"}},
+                "links": {"self_html": "https://zenodo.org/records/ok"},
+            }
+
+        mock_publish.side_effect = side_effect
+        publish_all_drafts(drafts_path)
+
+        with open(drafts_path) as f:
+            drafts = json.load(f)
+        assert drafts[0]["status"] == "publish_failed"
+        assert drafts[0]["error"] == "publish error"
+        assert drafts[1]["status"] == "published"
+        assert drafts[1]["doi"] == "10.5281/zenodo.ok"
+
+    @patch("changes_metadata_manager.zenodo_upload.time.sleep")
+    @patch("changes_metadata_manager.zenodo_upload.piccione_publish_draft")
+    def test_retries_publish_failed(self, mock_publish, mock_sleep, tmp_path):
+        drafts_path = self._make_drafts(tmp_path, ["published", "publish_failed"])
+        mock_publish.return_value = {
+            "pids": {"doi": {"identifier": "10.5281/zenodo.retried"}},
+            "links": {"self_html": "https://zenodo.org/records/retried"},
+        }
+
+        publish_all_drafts(drafts_path)
+
+        assert mock_publish.call_count == 1
+        with open(drafts_path) as f:
+            drafts = json.load(f)
+        assert drafts[1]["status"] == "published"
+        assert drafts[1]["doi"] == "10.5281/zenodo.retried"
+        assert "error" not in drafts[1]
+
+    @patch("changes_metadata_manager.zenodo_upload.time.sleep")
+    @patch("changes_metadata_manager.zenodo_upload.piccione_publish_draft")
+    def test_skips_upload_failed_entries(self, mock_publish, mock_sleep, tmp_path):
+        drafts_path = self._make_drafts(tmp_path, ["uploaded", "failed"])
+        mock_publish.return_value = {
+            "pids": {"doi": {"identifier": "10.5281/zenodo.ok"}},
+            "links": {"self_html": "https://zenodo.org/records/ok"},
+        }
+
+        publish_all_drafts(drafts_path)
+
+        assert mock_publish.call_count == 1
+        with open(drafts_path) as f:
+            drafts = json.load(f)
+        assert drafts[0]["status"] == "published"
+        assert drafts[1]["status"] == "failed"
