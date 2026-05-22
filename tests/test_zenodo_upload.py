@@ -347,34 +347,34 @@ class TestCreateStageZip:
 
 class TestExtractEntityTitle:
     def test_extracts_title_from_kg(self, real_kg):
-        title = extract_entity_title(real_kg, "1")
+        title = extract_entity_title(real_kg, ["1"])
         assert title == "Carta nautica"
 
     def test_returns_default_for_missing(self):
         g = Graph()
-        title = extract_entity_title(g, "nonexistent")
+        title = extract_entity_title(g, ["nonexistent"])
         assert title == "Entity nonexistent"
 
     def test_takes_first_line(self):
         g = Graph()
         item_uri = URIRef(f"{BASE_URI}/itm/42/ob00/1")
         g.add((item_uri, P3_HAS_NOTE, Literal("First line\nSecond line")))
-        title = extract_entity_title(g, "42")
+        title = extract_entity_title(g, ["42"])
         assert title == "First line"
 
 
 class TestExtractAuthorsForEntityStage:
     def test_extracts_author_from_kg(self, real_kg):
-        authors = extract_authors_for_entity_stage(real_kg, "1", "raw")
+        authors = extract_authors_for_entity_stage(real_kg, ["1"], "raw")
         assert authors == {"Federica Bonifazi"}
 
     def test_accumulates_authors_across_steps(self, real_kg):
-        authors = extract_authors_for_entity_stage(real_kg, "1", "dchoo")
+        authors = extract_authors_for_entity_stage(real_kg, ["1"], "dchoo")
         assert "Federica Bonifazi" in authors
         assert len(authors) > 1
 
     def test_returns_empty_for_missing_entity(self, real_kg):
-        authors = extract_authors_for_entity_stage(real_kg, "nonexistent", "raw")
+        authors = extract_authors_for_entity_stage(real_kg, ["nonexistent"], "raw")
         assert authors == set()
 
     def test_extracts_from_synthetic_graph(self):
@@ -386,7 +386,7 @@ class TestExtractAuthorsForEntityStage:
         g.add((actor_uri, RDF_TYPE, E21_PERSON))
         g.add((actor_uri, P1_IS_IDENTIFIED_BY, apl_uri))
         g.add((apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal("Test Author")))
-        authors = extract_authors_for_entity_stage(g, "42", "raw")
+        authors = extract_authors_for_entity_stage(g, ["42"], "raw")
         assert authors == {"Test Author"}
 
 
@@ -400,16 +400,16 @@ class TestExtractMetadataAuthors:
         g.add((actor_uri, RDF_TYPE, E21_PERSON))
         g.add((actor_uri, P1_IS_IDENTIFIED_BY, apl_uri))
         g.add((apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal("Metadata Author")))
-        authors = extract_metadata_authors(g, "42")
+        authors = extract_metadata_authors(g, ["42"])
         assert authors == {"Metadata Author"}
 
     def test_returns_empty_for_missing_entity(self):
         g = Graph()
-        authors = extract_metadata_authors(g, "nonexistent")
+        authors = extract_metadata_authors(g, ["nonexistent"])
         assert authors == set()
 
     def test_extracts_from_real_kg(self, real_kg):
-        authors = extract_metadata_authors(real_kg, "1")
+        authors = extract_metadata_authors(real_kg, ["1"])
         assert authors == {"Arcangelo Massari", "Arianna Moretti", "Sebastian Barzaghi"}
 
 
@@ -446,7 +446,7 @@ class TestBuildCreatorsForEntityStage:
                 "orcid": "0009-0000-8466-5541",
             }
         }
-        creators = build_creators_for_entity_stage(real_kg, "1", "raw", lookup)
+        creators = build_creators_for_entity_stage(real_kg, ["1"], "raw", lookup)
         assert creators == [
             {
                 "person_or_org": {
@@ -462,7 +462,7 @@ class TestBuildCreatorsForEntityStage:
 
     def test_ignores_authors_not_in_lookup(self, real_kg):
         lookup = {}
-        creators = build_creators_for_entity_stage(real_kg, "1", "raw", lookup)
+        creators = build_creators_for_entity_stage(real_kg, ["1"], "raw", lookup)
         assert creators == []
 
     def test_sorts_authors_alphabetically(self):
@@ -489,7 +489,7 @@ class TestBuildCreatorsForEntityStage:
                 "orcid": "0000-0000-0000-0002",
             },
         }
-        creators = build_creators_for_entity_stage(g, "42", "raw", lookup)
+        creators = build_creators_for_entity_stage(g, ["42"], "raw", lookup)
         assert [c["person_or_org"]["given_name"] for c in creators] == ["Alpha", "Zeta"]
 
 
@@ -511,7 +511,7 @@ class TestBuildMetadataCreators:
                 "orcid": "0000-0001-2345-6789",
             }
         }
-        creators = build_metadata_creators(g, "42", lookup)
+        creators = build_metadata_creators(g, ["42"], lookup)
         assert creators == [
             {
                 "person_or_org": {
@@ -609,11 +609,11 @@ class TestMergeCreators:
 
 class TestBuildEntityUri:
     def test_builds_uri_for_numeric_id(self):
-        result = build_entity_uri("27")
+        result = build_entity_uri(["27"])
         assert result == "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1"
 
     def test_builds_uri_for_string_id(self):
-        result = build_entity_uri("ptb")
+        result = build_entity_uri(["ptb"])
         assert result == "https://w3id.org/changes/4/aldrovandi/itm/ptb/ob00/1"
 
 
@@ -831,17 +831,17 @@ class TestExtractLicenseForEntityStage:
 
 class TestExtractKeeperInfo:
     def test_extracts_keeper_from_kg(self, real_kg):
-        keeper_name, keeper_location = extract_keeper_info(real_kg, "1")
+        keeper_name, keeper_location = extract_keeper_info(real_kg, ["1"])
         assert keeper_name == "Biblioteca Universitaria di Bologna"
         assert keeper_location == "Bologna"
 
     def test_extracts_non_bologna_keeper(self, real_kg):
-        keeper_name, keeper_location = extract_keeper_info(real_kg, "21")
+        keeper_name, keeper_location = extract_keeper_info(real_kg, ["21"])
         assert keeper_name == "Accademia Carrara"
         assert keeper_location == "Bergamo"
 
     def test_returns_none_for_missing_entity(self, real_kg):
-        keeper_name, keeper_location = extract_keeper_info(real_kg, "nonexistent")
+        keeper_name, keeper_location = extract_keeper_info(real_kg, ["nonexistent"])
         assert keeper_name is None
         assert keeper_location is None
 
@@ -858,7 +858,7 @@ class TestExtractKeeperInfo:
         g.add((keeper_uri, P74_HAS_RESIDENCE, place_uri))
         g.add((place_uri, P1_IS_IDENTIFIED_BY, place_apl_uri))
         g.add((place_apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal("Test City")))
-        keeper_name, keeper_location = extract_keeper_info(g, "42")
+        keeper_name, keeper_location = extract_keeper_info(g, ["42"])
         assert keeper_name == "Test Museum"
         assert keeper_location == "Test City"
 
@@ -870,7 +870,7 @@ class TestExtractKeeperInfo:
         g.add((custody_uri, P14_CARRIED_OUT_BY, keeper_uri))
         g.add((keeper_uri, P1_IS_IDENTIFIED_BY, apl_uri))
         g.add((apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal("Test Museum")))
-        keeper_name, keeper_location = extract_keeper_info(g, "42")
+        keeper_name, keeper_location = extract_keeper_info(g, ["42"])
         assert keeper_name == "Test Museum"
         assert keeper_location is None
 
@@ -982,97 +982,97 @@ class TestExtractRecordUrl:
 
 class TestExtractAcquisitionTechnique:
     def test_extracts_photography_from_kg(self, real_kg):
-        technique = extract_acquisition_technique(real_kg, "1")
+        technique = extract_acquisition_technique(real_kg, ["1"])
         assert technique == "digital photography"
 
     def test_extracts_scanning_from_kg(self, real_kg):
-        technique = extract_acquisition_technique(real_kg, "12")
+        technique = extract_acquisition_technique(real_kg, ["12"])
         assert technique == "optical scanning"
 
     def test_returns_none_for_missing_entity(self):
         g = Graph()
-        assert extract_acquisition_technique(g, "nonexistent") is None
+        assert extract_acquisition_technique(g, ["nonexistent"]) is None
 
     def test_extracts_from_synthetic_graph(self):
         g = Graph()
         act_uri = URIRef(f"{BASE_URI}/act/42/00/1")
         g.add((act_uri, P32_USED_GENERAL_TECHNIQUE, URIRef(f"{AAT}300266792")))
-        assert extract_acquisition_technique(g, "42") == "digital photography"
+        assert extract_acquisition_technique(g, ["42"]) == "digital photography"
 
 
 class TestExtractDevices:
     def test_extracts_devices_from_kg(self, real_kg):
-        devices = extract_devices(real_kg, "1")
+        devices = extract_devices(real_kg, ["1"])
         assert devices == ["Nikkor 50mm", "Nikon D7200"]
 
     def test_extracts_scanner_device(self, real_kg):
-        devices = extract_devices(real_kg, "12")
+        devices = extract_devices(real_kg, ["12"])
         assert devices == ["Artec Eva"]
 
     def test_returns_empty_for_missing_entity(self):
         g = Graph()
-        assert extract_devices(g, "nonexistent") == []
+        assert extract_devices(g, ["nonexistent"]) == []
 
     def test_excludes_item_uris(self):
         g = Graph()
         act_uri = URIRef(f"{BASE_URI}/act/42/00/1")
         g.add((act_uri, P16_USED_SPECIFIC_OBJECT, URIRef(f"{BASE_URI}/dev/nikon_d7200/1")))
         g.add((act_uri, P16_USED_SPECIFIC_OBJECT, URIRef(f"{BASE_URI}/itm/42/ob00/1")))
-        devices = extract_devices(g, "42")
+        devices = extract_devices(g, ["42"])
         assert devices == ["Nikon D7200"]
 
 
 class TestExtractSoftwareForStage:
     def test_extracts_raw_software(self, real_kg):
-        software = extract_software_for_stage(real_kg, "1", "raw")
+        software = extract_software_for_stage(real_kg, ["1"], "raw")
         assert software == []
 
     def test_extracts_rawp_software(self, real_kg):
-        software = extract_software_for_stage(real_kg, "1", "rawp")
+        software = extract_software_for_stage(real_kg, ["1"], "rawp")
         assert "3DF Zephyr" in software
 
     def test_excludes_metadata_step_software(self, real_kg):
-        software = extract_software_for_stage(real_kg, "1", "dchoo")
+        software = extract_software_for_stage(real_kg, ["1"], "dchoo")
         assert "CHAD-AP" not in software
         assert "HeriTrace" not in software
         assert "Morph-KGC" not in software
 
     def test_includes_step_06_software(self, real_kg):
-        software = extract_software_for_stage(real_kg, "1", "dchoo")
+        software = extract_software_for_stage(real_kg, ["1"], "dchoo")
         assert "ATON" in software
 
     def test_returns_empty_for_missing_entity(self):
         g = Graph()
-        assert extract_software_for_stage(g, "nonexistent", "raw") == []
+        assert extract_software_for_stage(g, ["nonexistent"], "raw") == []
 
 
 class TestBuildMethodsDescription:
     def test_includes_workflow_reference(self):
         g = Graph()
-        result = build_methods_description(g, "nonexistent", "raw")
+        result = build_methods_description(g, ["nonexistent"], "raw")
         assert "doi:10.46298/transformations.14773" in result
 
     def test_includes_technique_and_devices(self, real_kg):
-        result = build_methods_description(real_kg, "1", "raw")
+        result = build_methods_description(real_kg, ["1"], "raw")
         assert "digital photography" in result
         assert "Nikon D7200" in result
 
     def test_includes_software_for_rawp(self, real_kg):
-        result = build_methods_description(real_kg, "1", "rawp")
+        result = build_methods_description(real_kg, ["1"], "rawp")
         assert "Processing software:" in result
         assert "3DF Zephyr" in result
 
     def test_no_software_for_raw(self, real_kg):
-        result = build_methods_description(real_kg, "1", "raw")
+        result = build_methods_description(real_kg, ["1"], "raw")
         assert "Processing software:" not in result
 
     def test_includes_chad_ap_reference(self):
         g = Graph()
-        result = build_methods_description(g, "nonexistent", "raw")
+        result = build_methods_description(g, ["nonexistent"], "raw")
         assert "CHAD-AP" in result
 
     def test_scanning_entity(self, real_kg):
-        result = build_methods_description(real_kg, "12", "raw")
+        result = build_methods_description(real_kg, ["12"], "raw")
         assert "optical scanning" in result
         assert "Artec Eva" in result
 

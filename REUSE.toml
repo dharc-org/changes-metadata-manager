@@ -11,7 +11,6 @@ path = [
     "data/kg.ttl",
     "data/prov.trig",
     "data/shapes-chadap.ttl",
-    "data/structure.json",
     "docs/package.json",
     "docs/package-lock.json",
     "docs/tsconfig.json",
