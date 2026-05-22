@@ -106,6 +106,18 @@
     crm:P16_used_specific_object <https://w3id.org/changes/4/aldrovandi/itm/1/ob00/1> ;
     crm:P2_has_type aat:300054277 .
 
+<https://w3id.org/changes/4/aldrovandi/lic/1/00/1> a crm:E73_Information_Object ;
+    crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl-lic/1/00/1> ;
+    crm:P2_has_type aat:300435434 ;
+    crm:P67_refers_to <https://w3id.org/changes/4/aldrovandi/mdl/1/00/1> ;
+    crm:P70i_is_documented_in <https://creativecommons.org/licenses/by-nc/4.0/> .
+
+<https://w3id.org/changes/4/aldrovandi/lic/1/01/1> a crm:E73_Information_Object ;
+    crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl-lic/1/01/1> ;
+    crm:P2_has_type aat:300435434 ;
+    crm:P67_refers_to <https://w3id.org/changes/4/aldrovandi/mdl/1/01/1> ;
+    crm:P70i_is_documented_in <https://creativecommons.org/licenses/by-nc/4.0/> .
+
 <https://w3id.org/changes/4/aldrovandi/lic/1/02/1> a crm:E73_Information_Object ;
     crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl-lic/1/02/1> ;
     crm:P2_has_type aat:300435434 ;
@@ -161,32 +173,175 @@
 <https://w3id.org/changes/4/aldrovandi/act/1/ob07/1> a crm:E7_Activity ;
     crm:P2_has_type aat:300404386 .
 
+<https://w3id.org/changes/4/aldrovandi/apl-lic/1/00/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "CC BY-NC 4.0 (Attribution-NonCommercial 4.0 International)" ;
+    crm:P2_has_type aat:300435434 .
+
+<https://w3id.org/changes/4/aldrovandi/apl-lic/1/01/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "CC BY-NC 4.0 (Attribution-NonCommercial 4.0 International)" ;
+    crm:P2_has_type aat:300435434 .
+
 <https://w3id.org/changes/4/aldrovandi/apl-lic/1/02/1> a crm:E41_Appellation ;
-    crm:P190_has_symbolic_content "CC0 1.0 Universal (Public Domain Dedication)" .
+    crm:P190_has_symbolic_content "CC0 1.0 Universal (Public Domain Dedication)" ;
+    crm:P2_has_type aat:300435434 .
 
 <https://w3id.org/changes/4/aldrovandi/apl-lic/1/03/1> a crm:E41_Appellation ;
-    crm:P190_has_symbolic_content "CC0 1.0 Universal (Public Domain Dedication)" .
+    crm:P190_has_symbolic_content "CC0 1.0 Universal (Public Domain Dedication)" ;
+    crm:P2_has_type aat:300435434 .
 
 <https://w3id.org/changes/4/aldrovandi/apl/1/00/1> a crm:E41_Appellation ;
-    crm:P190_has_symbolic_content "Modello Digitale 00 oggetto 1" .
+    crm:P190_has_symbolic_content "Modello Digitale 00 oggetto 1" ;
+    crm:P2_has_type aat:300404663 .
 
 <https://w3id.org/changes/4/aldrovandi/apl/1/01/1> a crm:E41_Appellation ;
-    crm:P190_has_symbolic_content "Modello Digitale 01 oggetto 1" .
+    crm:P190_has_symbolic_content "Modello Digitale 01 oggetto 1" ;
+    crm:P2_has_type aat:300404663 .
 
 <https://w3id.org/changes/4/aldrovandi/apl/1/02/1> a crm:E41_Appellation ;
-    crm:P190_has_symbolic_content "Modello Digitale 02 oggetto 1" .
+    crm:P190_has_symbolic_content "Modello Digitale 02 oggetto 1" ;
+    crm:P2_has_type aat:300404663 .
 
 <https://w3id.org/changes/4/aldrovandi/apl/1/03/1> a crm:E41_Appellation ;
-    crm:P190_has_symbolic_content "Modello Digitale 03 oggetto 1" .
+    crm:P190_has_symbolic_content "Modello Digitale 03 oggetto 1" ;
+    crm:P2_has_type aat:300404663 .
 
 <https://w3id.org/changes/4/aldrovandi/apl/1/04/1> a crm:E41_Appellation ;
-    crm:P190_has_symbolic_content "Modello Digitale 04 oggetto 1" .
+    crm:P190_has_symbolic_content "Modello Digitale 04 oggetto 1" ;
+    crm:P2_has_type aat:300404663 .
 
 <https://w3id.org/changes/4/aldrovandi/apl/1/05/1> a crm:E41_Appellation ;
-    crm:P190_has_symbolic_content "Modello Digitale 05 oggetto 1" .
+    crm:P190_has_symbolic_content "Modello Digitale 05 oggetto 1" ;
+    crm:P2_has_type aat:300404663 .
 
 <https://w3id.org/changes/4/aldrovandi/apl/1/06/1> a crm:E41_Appellation ;
-    crm:P190_has_symbolic_content "Modello Digitale 06 oggetto 1" .
+    crm:P190_has_symbolic_content "Modello Digitale 06 oggetto 1" ;
+    crm:P2_has_type aat:300404663 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/1/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "1" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/3df_zephyr/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "3df Zephyr" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/africa/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Africa"@en,
+        "Africa"@it ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/alice_bordignon/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Alice Bordignon" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/arcangelo_massari/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Arcangelo Massari" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/arianna_moretti/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Arianna Moretti" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/asia/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Asia"@en,
+        "Asia"@it ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/aton/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Aton" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/biblioteca_universitaria_di_bologna/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Biblioteca Universitaria di Bologna" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/blender/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Blender" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/bologna/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Bologna",
+        "Bologna"@en,
+        "Bologna"@it ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/chad-ap/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "CHAD-AP" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/consiglio_nazionale_delle_ricerche/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Consiglio Nazionale delle Ricerche" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/dipartimento_di_beni_culturali/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Dipartimento di Beni Culturali" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/dipartimento_di_filologia_classica/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Dipartimento di Filologia Classica" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/europa/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Europe"@en,
+        "Europa"@it ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/federica_bonifazi/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Federica Bonifazi" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/gimp/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Gimp" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/grazioso_benincasa/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Grazioso Benincasa (ulan:500114874)" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/heritrace/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Heritrace" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/instant_meshes/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Instant Meshes" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/istituto_di_scienze_del_patrimonio_culturale/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Istituto di Scienze del Patrimonio Culturale" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/italianistica/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Italianistica" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/mar_mediterraneo/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Mediterranean Sea"@en,
+        "Mar Mediterraneo"@it ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/morph-kgc/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Morph-KGC" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/nextcloud/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Nextcloud" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/nikkor_50mm/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Nikkor 50mm" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/nikon_d7200/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Nikon D7200" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/raffaelo_riario/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Raffaelo Riario (viaf:25474452)" ;
+    crm:P2_has_type aat:300404670 .
+
+<https://w3id.org/changes/4/aldrovandi/apl/sebastian_barzaghi/1> a crm:E41_Appellation ;
+    crm:P190_has_symbolic_content "Sebastian Barzaghi" ;
+    crm:P2_has_type aat:300404670 .
 
 <https://w3id.org/changes/4/aldrovandi/dev/nikkor_50mm/1> a crmdig:D8_Digital_Device ;
     crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl/nikkor_50mm/1> ;
@@ -202,9 +357,6 @@
 
 <https://w3id.org/changes/4/aldrovandi/idf/1/ob00/1> a crm:E42_Identifier ;
     crm:P190_has_symbolic_content "1" ;
-    crm:P2_has_type aat:300312355 .
-
-<https://w3id.org/changes/4/aldrovandi/idf/1/ob01/1> a crm:E42_Identifier ;
     crm:P2_has_type aat:300312355 .
 
 <https://w3id.org/changes/4/aldrovandi/idf/1/ob02/1> a crm:E42_Identifier ;
@@ -237,17 +389,7 @@
         <https://w3id.org/changes/4/aldrovandi/itm/6/ob00/1>,
         <https://w3id.org/changes/4/aldrovandi/itm/7/ob00/1>,
         <https://w3id.org/changes/4/aldrovandi/itm/8/ob00/1>,
-        <https://w3id.org/changes/4/aldrovandi/itm/9/ob00/1>,
-        <https://w3id.org/changes/4/aldrovandi/itm/v2_1/ob00/1>,
-        <https://w3id.org/changes/4/aldrovandi/itm/v2_10/ob00/1>,
-        <https://w3id.org/changes/4/aldrovandi/itm/v2_2/ob00/1>,
-        <https://w3id.org/changes/4/aldrovandi/itm/v2_3/ob00/1>,
-        <https://w3id.org/changes/4/aldrovandi/itm/v2_4/ob00/1>,
-        <https://w3id.org/changes/4/aldrovandi/itm/v2_5/ob00/1>,
-        <https://w3id.org/changes/4/aldrovandi/itm/v2_6/ob00/1>,
-        <https://w3id.org/changes/4/aldrovandi/itm/v2_7/ob00/1>,
-        <https://w3id.org/changes/4/aldrovandi/itm/v2_8/ob00/1>,
-        <https://w3id.org/changes/4/aldrovandi/itm/v2_9/ob00/1> .
+        <https://w3id.org/changes/4/aldrovandi/itm/9/ob00/1> .
 
 <https://w3id.org/changes/4/aldrovandi/sfw/3df_zephyr/1> a crmdig:D14_Software ;
     crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl/3df_zephyr/1> ;
@@ -366,9 +508,6 @@
         <https://w3id.org/changes/4/aldrovandi/sub/asia/1>,
         <https://w3id.org/changes/4/aldrovandi/sub/europa/1>,
         <https://w3id.org/changes/4/aldrovandi/sub/mar_mediterraneo/1> .
-
-<https://w3id.org/changes/4/aldrovandi/mdl/1/01/1> a crmdig:D9_Data_Object ;
-    crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl/1/01/1> .
 
 <https://w3id.org/changes/4/aldrovandi/mdl/1/04/1> a crmdig:D9_Data_Object ;
     crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl/1/04/1> .
@@ -506,8 +645,8 @@
         <https://w3id.org/changes/4/aldrovandi/acr/orto_botanico_ed_erbario_di_bologna/1>,
         <https://w3id.org/changes/4/aldrovandi/acr/sistema_museale_di_ateneo_di_bologna/1> .
 
-<https://w3id.org/changes/4/aldrovandi/mdl/1/00/1> a crmdig:D9_Data_Object ;
-    crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl/1/00/1> .
+<https://w3id.org/changes/4/aldrovandi/mdl/1/01/1> a crmdig:D9_Data_Object ;
+    crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl/1/01/1> .
 
 <https://w3id.org/changes/4/aldrovandi/mdl/1/02/1> a crmdig:D9_Data_Object ;
     crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl/1/02/1> .
@@ -522,25 +661,23 @@
 <https://w3id.org/changes/4/aldrovandi/acr/alice_bordignon/1> a crm:E21_Person ;
     crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl/alice_bordignon/1> .
 
+<https://w3id.org/changes/4/aldrovandi/mdl/1/00/1> a crmdig:D9_Data_Object ;
+    crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl/1/00/1> .
+
 <https://w3id.org/changes/4/aldrovandi/acr/dipartimento_di_filologia_classica/1> a crm:E74_Group ;
     crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl/dipartimento_di_filologia_classica/1> .
 
 <https://w3id.org/changes/4/aldrovandi/acr/italianistica/1> a crm:E74_Group ;
     crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl/italianistica/1> .
 
-<https://w3id.org/changes/4/aldrovandi/acr/universita_di_bologna/1> a crm:E74_Group ;
-    crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/apl/universita_di_bologna/1> .
+<https://w3id.org/changes/4/aldrovandi/acr/universita_di_bologna/1> a crm:E74_Group .
 
 <https://w3id.org/changes/4/aldrovandi/itm/1/ob00/1> a lrmoo:F5_Item ;
     crm:P130i_features_are_also_found_on <https://w3id.org/changes/4/aldrovandi/mdl/1/00/1> ;
     crm:P138i_has_representation <https://w3id.org/changes/4/aldrovandi/mdl/1/06/1> ;
     crm:P1_is_identified_by <https://w3id.org/changes/4/aldrovandi/idf/1/ob00/1>,
-        <https://w3id.org/changes/4/aldrovandi/idf/1/ob01/1>,
         <https://w3id.org/changes/4/aldrovandi/idf/1/ob02/1> ;
-    crm:P3_has_note """Carta nautica
- Nautical chart
- Grazioso Benincasa, sec. XV
- BUB, Rotulo 3""" ;
+    crm:P3_has_note "Carta nautica\\n Nautical chart\\n Grazioso Benincasa, sec. XV\\n BUB, Rotulo 3" ;
     crm:P53_has_former_or_current_location <https://w3id.org/changes/4/aldrovandi/plc/1/1>,
         <https://w3id.org/changes/4/aldrovandi/plc/bologna/1> .
 

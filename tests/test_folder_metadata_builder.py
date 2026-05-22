@@ -153,7 +153,7 @@ class TestMergeProvenanceFiles:
         )
 
         assert individual_count == 12
-        assert len(prov_entities) == 200
+        assert len(prov_entities) == 249
 
 
 class TestScanFolderStructure:

@@ -19,7 +19,7 @@ BASE_URI = "https://w3id.org/changes/4/aldrovandi"
 KG_PATH = Path("data/kg.ttl")
 SHAPES_PATH = Path("data/shapes-chadap.ttl")
 RESP_AGENT = "https://w3id.org/changes/4/agent/morph-kgc-changes-metadata/1.0.1"
-PRIMARY_SOURCE = "https://doi.org/10.5281/zenodo.18190642"
+PRIMARY_SOURCE = "https://doi.org/10.5281/zenodo.19898905"
 CC0 = URIRef("https://creativecommons.org/publicdomain/zero/1.0/")
 
 STAGE_STEPS = {
@@ -177,9 +177,9 @@ FOLDER_TO_ID = {
     "S5-Vetrina 8 alto S.3-DA-Lophius piscatorius (Linnaeus, 1758), apparato boccale rana pescatrice": "vetrina_8_alto_s_3",
     "S5-Vetrina 8 basso  - t1-DICAM_MatricePesce7_DentiPesceSega": "vetrina_8_basso_t1",
     "S5-Vetrina 8 basso  - t2-DICAM_MatricePesce5_PesceSega": "vetrina_8_basso_t2",
-    "S5-Vetrina 8 basso-DA-Pesce Martello": "vetrina_8_basso",
     "S5-Vetrina 8 basso-DA-Preparati zoologici, Pescecane": "vetrina_8_basso",
-    "S5-Vetrina 8 basso-DA-Preparati zoologici, pesce sega": "vetrina_8_basso",
+    "S5-Vetrina 8 basso_2_DA-Preparati zoologici, pesce sega": "vetrina_8_basso_2",
+    "S5-Vetrina 8 basso_3_DA-Pesce Martello": "vetrina_8_basso_3",
     # Manoscritti
     "S5-Manoscritto-FICLIT_AdnotationesVariaePraesertimDeAnimalibus": "m1",
     "S5-Manoscritto-FICLIT_VulgataProverbia": "m2",
@@ -207,6 +207,9 @@ def extract_id_from_folder_name(folder_name: str) -> str:
     return match.group(1).lstrip("0") or "0"
 
 
+P1_IS_IDENTIFIED_BY = URIRef("http://www.cidoc-crm.org/cidoc-crm/P1_is_identified_by")
+
+
 def extract_metadata_for_stage(graph: Graph, nr: str, stage: str) -> Graph:
     result = Graph()
     for prefix, namespace in graph.namespace_manager.namespaces():
@@ -232,6 +235,11 @@ def extract_metadata_for_stage(graph: Graph, nr: str, stage: str) -> Graph:
             if isinstance(o, URIRef):
                 for s2, p2, o2 in graph.triples((o, None, None)):
                     result.add((s2, p2, o2))
+
+    appellation_uris = {o for _, p, o in result if p == P1_IS_IDENTIFIED_BY and isinstance(o, URIRef)}
+    for uri in appellation_uris:
+        for s2, p2, o2 in graph.triples((uri, None, None)):
+            result.add((s2, p2, o2))
 
     return result
 

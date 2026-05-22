@@ -311,7 +311,7 @@ def extract_entity_title(graph: Graph, entity_id: str) -> str:
     item_uri = URIRef(f"{BASE_URI}/itm/{entity_id}/ob00/1")
     for s, p, o in graph.triples((item_uri, P3_HAS_NOTE, None)):
         note = str(o)
-        return note.split("\n")[0].strip()
+        return re.split(r"\n|\\n", note)[0].strip()
     return f"Entity {entity_id}"
 
 
