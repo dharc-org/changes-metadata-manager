@@ -5,6 +5,7 @@
 import argparse
 import csv
 import re
+import time
 import unicodedata
 import zipfile
 from collections import defaultdict
@@ -249,42 +250,54 @@ def group_folders_by_entity(structure: dict) -> dict[str, list[tuple[str, str, d
 STAGES = ("raw", "rawp", "dcho", "dchoo")
 
 
+def _extract_license_from_meta(stage_dir: Path) -> str | None:
+    g = Graph()
+    g.parse(stage_dir / "meta.ttl", format="turtle")
+    for s, _, o in g.triples((None, P70I, None)):
+        if "/lic/" in str(s):
+            zenodo_license = LICENSE_URI_TO_ZENODO.get(str(o))
+            if zenodo_license:
+                return zenodo_license
+    return None
+
+
 def create_stage_zip(
     entity_id: str,
     stage: str,
     folders: list[tuple[str, str, dict]],
     root: Path,
-    licensed_stages: set[tuple[str, str]],
     output_dir: Path,
     title: str,
-) -> tuple[Path, bool] | None:
-    sala_name = folders[0][0]
-    sala_slug = slugify(sala_name)
+) -> tuple[Path, str | None] | None:
+    stage_dirs: list[tuple[str, str, Path]] = []
+    license_id: str | None = None
+    for sala_name, folder_name, stages_dict in folders:
+        stage_name_in_folder = None
+        for name in stages_dict:
+            if name.lower() == stage:
+                stage_name_in_folder = name
+                break
+        if stage_name_in_folder is None:
+            continue
+        stage_dir = root / sala_name / folder_name / stage_name_in_folder
+        stage_dirs.append((folder_name, stage_name_in_folder, stage_dir))
+        folder_license = _extract_license_from_meta(stage_dir)
+        if folder_license:
+            license_id = folder_license
+    if not stage_dirs:
+        return None
+    sala_slug = slugify(folders[0][0])
     title_slug = slugify(title)
     zip_path = output_dir / f"{sala_slug}-{title_slug}-{stage}.zip"
-    has_files = False
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
-        for sala_name, folder_name, stages_dict in folders:
-            stage_name_in_folder = None
-            for name in stages_dict:
-                if name.lower() == stage:
-                    stage_name_in_folder = name
-                    break
-            if stage_name_in_folder is None:
-                continue
-            stage_dir = root / sala_name / folder_name / stage_name_in_folder
-            has_license = (entity_id, stage) in licensed_stages
+        for folder_name, stage_name_in_folder, stage_dir in stage_dirs:
             for file_path in stage_dir.iterdir():
                 if not file_path.is_file():
                     continue
-                if has_license or file_path.name in ("meta.ttl", "prov.trig"):
+                if license_id or file_path.name in ("meta.ttl", "prov.trig"):
                     arc_name = f"{folder_name}/{stage_name_in_folder}/{file_path.name}"
                     zf.write(file_path, arc_name)
-                    has_files = True
-    if not has_files:
-        zip_path.unlink()
-        return None
-    return zip_path, (entity_id, stage) in licensed_stages
+    return zip_path, license_id
 
 
 def _get_label(graph: Graph, uri: URIRef) -> str | None:
@@ -611,7 +624,6 @@ def prepare_all(
     structure = scan_folder_structure(root)
 
     kg = load_kg(kg_path)
-    licensed_stages = extract_licensed_entity_stages(kg)
     entity_groups = group_folders_by_entity(structure)
 
     with open(zenodo_base_config_path) as f:
@@ -640,14 +652,14 @@ def prepare_all(
             metadata_creators = build_metadata_creators(kg, entity_id, creators_lookup)
             for stage in STAGES:
                 progress.update(task, description=f"Entity {entity_id} - {stage}")
-                result = create_stage_zip(entity_id, stage, folders, root, licensed_stages, zips_dir, title)
+                result = create_stage_zip(entity_id, stage, folders, root, zips_dir, title)
                 if result is None:
                     progress.advance(task)
                     continue
-                zip_path, has_license = result
+                zip_path, license = result
+                has_license = license is not None
                 digitization_creators = build_creators_for_entity_stage(kg, entity_id, stage, creators_lookup)
                 creators = merge_creators(digitization_creators, metadata_creators)
-                license = extract_license_for_entity_stage(kg, entity_id, stage)
                 entity_uri = build_entity_uri(entity_id)
                 methods_description = build_methods_description(kg, entity_id, stage)
                 config = generate_zenodo_config(stage, zip_path, title, base_config, creators, methods_description, license, entity_uri, keeper_name, keeper_location, has_license)
@@ -723,6 +735,7 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
         for config_file in config_files:
             progress.update(task, description=f"Uploading {config_file.stem}")
             record = piccione_upload(str(config_file), publish=publish)
+            time.sleep(2)
             with open(config_file) as f:
                 config = yaml.safe_load(f)
             row: dict[str, str] = {

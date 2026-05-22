@@ -26,6 +26,7 @@ from changes_metadata_manager.zenodo_upload import (
     P74_HAS_RESIDENCE,
     RDF_TYPE,
     _extract_doi,
+    _extract_license_from_meta,
     _extract_record_url,
     _format_creators_for_table,
     _format_licenses_for_table,
@@ -146,13 +147,42 @@ class TestSlugify:
         assert slugify("  trimmed  ") == "trimmed"
 
 
+LICENSED_META_TTL = """\
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+
+<https://w3id.org/changes/4/aldrovandi/lic/1/00/1>
+    crm:P70i_is_documented_in <https://creativecommons.org/publicdomain/zero/1.0/> .
+"""
+
+UNLICENSED_META_TTL = """\
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+
+<https://w3id.org/changes/4/aldrovandi/itm/1/ob00/1>
+    crm:P3_has_note "Test object" .
+"""
+
+
+class TestExtractLicenseFromMeta:
+    def test_returns_license_id_when_present(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            stage_dir = Path(tmpdir)
+            (stage_dir / "meta.ttl").write_text(LICENSED_META_TTL)
+            assert _extract_license_from_meta(stage_dir) == "cc0-1.0"
+
+    def test_returns_none_when_no_license(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            stage_dir = Path(tmpdir)
+            (stage_dir / "meta.ttl").write_text(UNLICENSED_META_TTL)
+            assert _extract_license_from_meta(stage_dir) is None
+
+
 class TestCreateStageZip:
     def test_includes_all_files_for_licensed_stage(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir) / "root"
             stage_dir = root / "Sala1" / "S1-01-Test" / "raw"
             stage_dir.mkdir(parents=True)
-            (stage_dir / "meta.ttl").write_text("{}")
+            (stage_dir / "meta.ttl").write_text(LICENSED_META_TTL)
             (stage_dir / "prov.trig").write_text("{}")
             (stage_dir / "photo.jpg").write_text("image")
 
@@ -160,14 +190,13 @@ class TestCreateStageZip:
             output_dir.mkdir()
 
             folders = [("Sala1", "S1-01-Test", {"raw": {}})]
-            licensed_stages = {("1", "raw")}
 
-            result = create_stage_zip("1", "raw", folders, root, licensed_stages, output_dir, "Test Object")
+            result = create_stage_zip("1", "raw", folders, root, output_dir, "Test Object")
 
             assert result is not None
-            zip_path, has_license = result
+            zip_path, license_id = result
             assert zip_path.name == "sala1-test-object-raw.zip"
-            assert has_license is True
+            assert license_id == "cc0-1.0"
             with zipfile.ZipFile(zip_path) as zf:
                 names = sorted(zf.namelist())
                 assert names == ["S1-01-Test/raw/meta.ttl", "S1-01-Test/raw/photo.jpg", "S1-01-Test/raw/prov.trig"]
@@ -177,7 +206,7 @@ class TestCreateStageZip:
             root = Path(tmpdir) / "root"
             stage_dir = root / "Sala1" / "S1-01-Test" / "raw"
             stage_dir.mkdir(parents=True)
-            (stage_dir / "meta.ttl").write_text("{}")
+            (stage_dir / "meta.ttl").write_text(UNLICENSED_META_TTL)
             (stage_dir / "prov.trig").write_text("{}")
             (stage_dir / "photo.jpg").write_text("image")
 
@@ -185,25 +214,25 @@ class TestCreateStageZip:
             output_dir.mkdir()
 
             folders = [("Sala1", "S1-01-Test", {"raw": {}})]
-            licensed_stages = set()
 
-            result = create_stage_zip("1", "raw", folders, root, licensed_stages, output_dir, "Test Object")
+            result = create_stage_zip("1", "raw", folders, root, output_dir, "Test Object")
 
             assert result is not None
-            zip_path, has_license = result
-            assert has_license is False
+            zip_path, license_id = result
+            assert license_id is None
             with zipfile.ZipFile(zip_path) as zf:
                 names = sorted(zf.namelist())
                 assert names == ["S1-01-Test/raw/meta.ttl", "S1-01-Test/raw/prov.trig"]
 
-    def test_multiple_folders_in_zip(self):
+    def test_multiple_folders_grouped_entity_license(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir) / "root"
 
             for variant in ["a", "b"]:
                 stage_dir = root / "Sala6" / f"S6-98{variant}-Test" / "raw"
                 stage_dir.mkdir(parents=True)
-                (stage_dir / "meta.ttl").write_text("{}")
+                (stage_dir / "meta.ttl").write_text(LICENSED_META_TTL)
+                (stage_dir / "photo.jpg").write_text("image")
 
             output_dir = Path(tmpdir) / "output"
             output_dir.mkdir()
@@ -213,28 +242,95 @@ class TestCreateStageZip:
                 ("Sala6", "S6-98b-Test", {"raw": {}}),
             ]
 
-            result = create_stage_zip("98", "raw", folders, root, set(), output_dir, "Test Masks")
+            result = create_stage_zip("98", "raw", folders, root, output_dir, "Test Masks")
 
             assert result is not None
-            zip_path, has_license = result
-            assert has_license is False
+            zip_path, license_id = result
+            assert license_id == "cc0-1.0"
+            with zipfile.ZipFile(zip_path) as zf:
+                names = sorted(zf.namelist())
+                assert names == [
+                    "S6-98a-Test/raw/meta.ttl",
+                    "S6-98a-Test/raw/photo.jpg",
+                    "S6-98b-Test/raw/meta.ttl",
+                    "S6-98b-Test/raw/photo.jpg",
+                ]
+
+    def test_multiple_folders_unlicensed(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir) / "root"
+
+            for variant in ["a", "b"]:
+                stage_dir = root / "Sala6" / f"S6-98{variant}-Test" / "raw"
+                stage_dir.mkdir(parents=True)
+                (stage_dir / "meta.ttl").write_text(UNLICENSED_META_TTL)
+
+            output_dir = Path(tmpdir) / "output"
+            output_dir.mkdir()
+
+            folders = [
+                ("Sala6", "S6-98a-Test", {"raw": {}}),
+                ("Sala6", "S6-98b-Test", {"raw": {}}),
+            ]
+
+            result = create_stage_zip("98", "raw", folders, root, output_dir, "Test Masks")
+
+            assert result is not None
+            zip_path, license_id = result
+            assert license_id is None
             with zipfile.ZipFile(zip_path) as zf:
                 names = zf.namelist()
                 assert names == ["S6-98a-Test/raw/meta.ttl", "S6-98b-Test/raw/meta.ttl"]
+
+    def test_license_in_later_folder_includes_all_data(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir) / "root"
+
+            stage_dir_a = root / "Sala6" / "S6-98a-Test" / "raw"
+            stage_dir_a.mkdir(parents=True)
+            (stage_dir_a / "meta.ttl").write_text(UNLICENSED_META_TTL)
+            (stage_dir_a / "photo.jpg").write_text("image_a")
+
+            stage_dir_b = root / "Sala6" / "S6-98b-Test" / "raw"
+            stage_dir_b.mkdir(parents=True)
+            (stage_dir_b / "meta.ttl").write_text(LICENSED_META_TTL)
+            (stage_dir_b / "photo.jpg").write_text("image_b")
+
+            output_dir = Path(tmpdir) / "output"
+            output_dir.mkdir()
+
+            folders = [
+                ("Sala6", "S6-98a-Test", {"raw": {}}),
+                ("Sala6", "S6-98b-Test", {"raw": {}}),
+            ]
+
+            result = create_stage_zip("98", "raw", folders, root, output_dir, "Test Masks")
+
+            assert result is not None
+            zip_path, license_id = result
+            assert license_id == "cc0-1.0"
+            with zipfile.ZipFile(zip_path) as zf:
+                names = sorted(zf.namelist())
+                assert names == [
+                    "S6-98a-Test/raw/meta.ttl",
+                    "S6-98a-Test/raw/photo.jpg",
+                    "S6-98b-Test/raw/meta.ttl",
+                    "S6-98b-Test/raw/photo.jpg",
+                ]
 
     def test_returns_none_for_missing_stage(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir) / "root"
             stage_dir = root / "Sala1" / "S1-01-Test" / "raw"
             stage_dir.mkdir(parents=True)
-            (stage_dir / "meta.ttl").write_text("{}")
+            (stage_dir / "meta.ttl").write_text(UNLICENSED_META_TTL)
 
             output_dir = Path(tmpdir) / "output"
             output_dir.mkdir()
 
             folders = [("Sala1", "S1-01-Test", {"raw": {}})]
 
-            result = create_stage_zip("1", "dcho", folders, root, set(), output_dir, "Test Object")
+            result = create_stage_zip("1", "dcho", folders, root, output_dir, "Test Object")
 
             assert result is None
             assert not (output_dir / "sala1-test-object-dcho.zip").exists()
