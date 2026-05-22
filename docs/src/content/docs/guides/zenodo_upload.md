@@ -118,6 +118,27 @@ uv run python -m changes_metadata_manager.zenodo_upload upload \
 
 The upload command iterates over all YAML files in the directory (sorted alphabetically) and calls piccione's `on_zenodo` module for each one. Each config points to its ZIP file and contains the full InvenioRDM metadata, so no further input is needed.
 
+When uploading without `--publish`, a `drafts.json` file is saved alongside `doi_table.csv`. It contains the draft IDs and credentials needed to publish later.
+
+A 2-second pause between each upload keeps request rates well within Zenodo's API limits (100 requests/minute for authenticated users).
+
+## Publishing drafts
+
+To publish records that were previously uploaded as drafts:
+
+```bash
+uv run python -m changes_metadata_manager.zenodo_upload publish-drafts \
+    <drafts_file>
+```
+
+### Arguments
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `drafts_file` | Yes | Path to `drafts.json` produced by a previous `upload` run |
+
+This reads the saved draft IDs and publishes each one through the Zenodo API. On completion, `doi_table.csv` is regenerated with the final DOIs and record URLs.
+
 ## Full workflow
 
 A typical run looks like this:
@@ -130,9 +151,15 @@ uv run python -m changes_metadata_manager.folder_metadata_builder /data/aldrovan
 uv run python -m changes_metadata_manager.zenodo_upload prepare \
     /data/aldrovandi zenodo_config.yaml
 
-# 3. Upload as drafts (review before publishing)
+# 3. Upload as drafts
 uv run python -m changes_metadata_manager.zenodo_upload upload zenodo_output/configs
 
-# 4. Or upload and publish directly
+# 4. Review drafts on Zenodo, then publish
+uv run python -m changes_metadata_manager.zenodo_upload publish-drafts zenodo_output/drafts.json
+```
+
+Alternatively, pass `--publish` at step 3 to upload and publish in one go:
+
+```bash
 uv run python -m changes_metadata_manager.zenodo_upload upload zenodo_output/configs --publish
 ```

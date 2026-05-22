@@ -4,6 +4,7 @@
 
 import argparse
 import csv
+import json
 import re
 import time
 import unicodedata
@@ -16,7 +17,7 @@ import yaml
 from rdflib import Graph, URIRef
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn
 
-from piccione.upload.on_zenodo import main as piccione_upload
+from piccione.upload.on_zenodo import main as piccione_upload, publish_draft as piccione_publish_draft
 
 from changes_metadata_manager.folder_metadata_builder import (
     BASE_URI,
@@ -724,6 +725,7 @@ DOI_TABLE_FIELDNAMES = [
 def upload_all(configs_dir: Path, publish: bool = False) -> Path:
     config_files = sorted(configs_dir.glob("*.yaml"))
     doi_table: list[dict[str, str]] = []
+    drafts: list[dict[str, str]] = []
 
     with Progress(
         SpinnerColumn(),
@@ -738,6 +740,15 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
             time.sleep(2)
             with open(config_file) as f:
                 config = yaml.safe_load(f)
+            if not publish:
+                drafts.append({
+                    "draft_id": record["id"],
+                    "config_file": str(config_file),
+                    "title": config["title"],
+                    "zenodo_url": config["zenodo_url"],
+                    "access_token": config["access_token"],
+                    "user_agent": config["user_agent"],
+                })
             row: dict[str, str] = {
                 "Numero su DMP": "",
                 "Caso di studio": "Aldrovandi",
@@ -760,6 +771,60 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
         writer.writeheader()
         writer.writerows(doi_table)
     print(f"DOI table written to {csv_path}")
+
+    if not publish and drafts:
+        drafts_path = configs_dir.parent / "drafts.json"
+        with open(drafts_path, "w") as f:
+            json.dump(drafts, f, indent=2)
+        print(f"Draft IDs saved to {drafts_path}")
+
+    return csv_path
+
+
+def publish_all_drafts(drafts_path: Path) -> Path:
+    with open(drafts_path) as f:
+        drafts: list[dict[str, str]] = json.load(f)
+
+    doi_table: list[dict[str, str]] = []
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        MofNCompleteColumn(),
+    ) as progress:
+        task = progress.add_task("Publishing drafts", total=len(drafts))
+        for draft in drafts:
+            progress.update(task, description=f"Publishing {draft['title']}")
+            base_url = draft["zenodo_url"].rstrip("/")
+            published = piccione_publish_draft(
+                base_url, draft["access_token"], draft["draft_id"], draft["user_agent"],
+            )
+            time.sleep(2)
+            with open(draft["config_file"]) as f:
+                config = yaml.safe_load(f)
+            row: dict[str, str] = {
+                "Numero su DMP": "",
+                "Caso di studio": "Aldrovandi",
+                "Autore/i": _format_creators_for_table(config),
+                "Tipo": "Dataset",
+                "Titolo": config["title"],
+                "Data pubblicazione": config["publication_date"],
+                "DOI": _extract_doi(published),
+                "URL": _extract_record_url(published),
+                "Repository": "Zenodo",
+                "Licenza": _format_licenses_for_table(config),
+                "Note": "",
+            }
+            doi_table.append(row)
+            progress.advance(task)
+
+    csv_path = drafts_path.parent / "doi_table.csv"
+    with open(csv_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=DOI_TABLE_FIELDNAMES)
+        writer.writeheader()
+        writer.writerows(doi_table)
+    print(f"DOI table written to {csv_path}")
     return csv_path
 
 
@@ -774,6 +839,8 @@ def parse_arguments():  # pragma: no cover
     upload_parser = subparsers.add_parser("upload", help="Upload to Zenodo")
     upload_parser.add_argument("configs_dir", type=Path, help="Directory containing YAML configs")
     upload_parser.add_argument("--publish", action="store_true", help="Publish after upload")
+    publish_parser = subparsers.add_parser("publish-drafts", help="Publish previously uploaded drafts")
+    publish_parser.add_argument("drafts_file", type=Path, help="Path to drafts.json from a previous upload")
 
     return parser.parse_args()
 
@@ -788,6 +855,8 @@ def main():  # pragma: no cover
         )
     elif args.command == "upload":
         upload_all(configs_dir=args.configs_dir, publish=args.publish)
+    elif args.command == "publish-drafts":
+        publish_all_drafts(drafts_path=args.drafts_file)
 
 
 if __name__ == "__main__":  # pragma: no cover
