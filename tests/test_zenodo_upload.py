@@ -204,7 +204,7 @@ class TestCreateStageZip:
 
             assert result is not None
             zip_path, license_id = result
-            assert zip_path.name == "sala1-test-object-raw.zip"
+            assert zip_path.name == "sala1-test-object-1-raw.zip"
             assert license_id == "cc0-1.0"
             with zipfile.ZipFile(zip_path) as zf:
                 names = sorted(zf.namelist())
@@ -342,7 +342,7 @@ class TestCreateStageZip:
             result = create_stage_zip("1", "dcho", folders, root, output_dir, "Test Object")
 
             assert result is None
-            assert not (output_dir / "sala1-test-object-dcho.zip").exists()
+            assert not (output_dir / "sala1-test-object-1-dcho.zip").exists()
 
 
 class TestExtractEntityTitle:

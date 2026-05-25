@@ -12,12 +12,13 @@ import time
 import unicodedata
 import zipfile
 from collections import defaultdict
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import date
 from pathlib import Path
 
 import yaml
 from rdflib import Graph, URIRef
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn, TimeElapsedColumn, TimeRemainingColumn
 
 from piccione.upload.on_zenodo import main as piccione_upload, publish_draft as piccione_publish_draft
 
@@ -295,7 +296,7 @@ def create_stage_zip(
         return None
     sala_slug = slugify(folders[0][0])
     title_slug = slugify(title)
-    zip_path = output_dir / f"{sala_slug}-{title_slug}-{stage}.zip"
+    zip_path = output_dir / f"{sala_slug}-{title_slug}-{entity_id}-{stage}.zip"
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         for folder_name, stage_name_in_folder, stage_dir in stage_dirs:
             for file_path in stage_dir.rglob("*"):
@@ -639,6 +640,50 @@ def _get_sub_entity_ids(folders: list[tuple[str, str, dict]]) -> list[str]:
     return ids
 
 
+_worker_kg: Graph
+_worker_base_config: dict
+_worker_creators_lookup: dict
+
+
+def _init_worker(kg_path: Path, base_config: dict, creators_lookup: dict) -> None:
+    global _worker_kg, _worker_base_config, _worker_creators_lookup
+    _worker_kg = load_kg(kg_path)
+    _worker_base_config = base_config
+    _worker_creators_lookup = creators_lookup
+
+
+def _process_entity(
+    entity_id: str,
+    folders: list[tuple[str, str, dict]],
+    root: Path,
+    zips_dir: Path,
+    configs_dir: Path,
+) -> None:
+    kg = _worker_kg
+    base_config = _worker_base_config
+    creators_lookup = _worker_creators_lookup
+    sub_ids = _get_sub_entity_ids(folders)
+    title = extract_entity_title(kg, sub_ids)
+    keeper_name, keeper_location = extract_keeper_info(kg, sub_ids)
+    sala_slug = slugify(folders[0][0])
+    title_slug = slugify(title)
+    metadata_creators = build_metadata_creators(kg, sub_ids, creators_lookup)
+    for stage in STAGES:
+        result = create_stage_zip(entity_id, stage, folders, root, zips_dir, title)
+        if result is None:
+            continue
+        zip_path, license = result
+        has_license = license is not None
+        digitization_creators = build_creators_for_entity_stage(kg, sub_ids, stage, creators_lookup)
+        creators = merge_creators(digitization_creators, metadata_creators)
+        entity_uri = build_entity_uri(sub_ids)
+        methods_description = build_methods_description(kg, sub_ids, stage)
+        config = generate_zenodo_config(stage, zip_path, title, base_config, creators, methods_description, license, entity_uri, keeper_name, keeper_location, has_license)
+        config_path = configs_dir / f"{sala_slug}-{title_slug}-{entity_id}-{stage}.yaml"
+        with open(config_path, "w") as f:
+            yaml.dump(config, f, Dumper=LiteralBlockDumper, default_flow_style=False, allow_unicode=True, sort_keys=False)
+
+
 def prepare_all(
     root: Path,
     zenodo_base_config_path: Path,
@@ -646,8 +691,6 @@ def prepare_all(
     kg_path: Path = KG_PATH,
 ) -> None:
     structure = scan_folder_structure(root)
-
-    kg = load_kg(kg_path)
     entity_groups = group_folders_by_entity(structure)
 
     with open(zenodo_base_config_path) as f:
@@ -660,37 +703,27 @@ def prepare_all(
     zips_dir.mkdir(parents=True, exist_ok=True)
     configs_dir.mkdir(parents=True, exist_ok=True)
 
-    with Progress(
-        SpinnerColumn(),
-        TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
-        MofNCompleteColumn(),
-    ) as progress:
-        task = progress.add_task("Creating stage packages", total=len(entity_groups) * len(STAGES))
-
-        for entity_id, folders in entity_groups.items():
-            sub_ids = _get_sub_entity_ids(folders)
-            title = extract_entity_title(kg, sub_ids)
-            keeper_name, keeper_location = extract_keeper_info(kg, sub_ids)
-            sala_slug = slugify(folders[0][0])
-            title_slug = slugify(title)
-            metadata_creators = build_metadata_creators(kg, sub_ids, creators_lookup)
-            for stage in STAGES:
-                progress.update(task, description=f"Entity {entity_id} - {stage}")
-                result = create_stage_zip(entity_id, stage, folders, root, zips_dir, title)
-                if result is None:
-                    progress.advance(task)
-                    continue
-                zip_path, license = result
-                has_license = license is not None
-                digitization_creators = build_creators_for_entity_stage(kg, sub_ids, stage, creators_lookup)
-                creators = merge_creators(digitization_creators, metadata_creators)
-                entity_uri = build_entity_uri(sub_ids)
-                methods_description = build_methods_description(kg, sub_ids, stage)
-                config = generate_zenodo_config(stage, zip_path, title, base_config, creators, methods_description, license, entity_uri, keeper_name, keeper_location, has_license)
-                config_path = configs_dir / f"{sala_slug}-{title_slug}-{stage}.yaml"
-                with open(config_path, "w") as f:
-                    yaml.dump(config, f, Dumper=LiteralBlockDumper, default_flow_style=False, allow_unicode=True, sort_keys=False)
+    with ProcessPoolExecutor(
+        initializer=_init_worker,
+        initargs=(kg_path, base_config, creators_lookup),
+    ) as executor:
+        futures = {
+            executor.submit(_process_entity, entity_id, folders, root, zips_dir, configs_dir): entity_id
+            for entity_id, folders in entity_groups.items()
+        }
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            MofNCompleteColumn(),
+            TimeElapsedColumn(),
+            TimeRemainingColumn(),
+        ) as progress:
+            task = progress.add_task("Creating stage packages", total=len(futures))
+            for future in as_completed(futures):
+                entity_id = futures[future]
+                future.result()
+                progress.update(task, description=f"Completed entity {entity_id}")
                 progress.advance(task)
 
 
