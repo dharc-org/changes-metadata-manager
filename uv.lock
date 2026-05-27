@@ -78,7 +78,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "piccione", specifier = "==3.1.0" },
+    { name = "piccione", specifier = ">=3.1.2" },
     { name = "pyshacl", specifier = ">=0.31.0" },
     { name = "rdflib", specifier = ">=7.6.0" },
     { name = "rich", specifier = ">=14.2.0" },
@@ -635,7 +635,7 @@ wheels = [
 
 [[package]]
 name = "piccione"
-version = "3.1.0"
+version = "3.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
@@ -647,9 +647,9 @@ dependencies = [
     { name = "sparqlite" },
     { name = "tqdm" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ee/64/e80a63cb9902337b545650dcd4c2cfbc0ba8eeac999d33e6cf9b6af2e0e6/piccione-3.1.0.tar.gz", hash = "sha256:4667dcccd813c4d707875a3f8dc113ef0622b8ae6bbd0dcf68e2af09d6b44bad", size = 649742, upload-time = "2026-02-28T16:53:41.221Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e8/f1/61605c28fa057c913a012ad0da3be3753138c29d19ab779f19ff875d00e5/piccione-3.1.2.tar.gz", hash = "sha256:c157c3d33fcc1c5b817844e0cefa6560b2abe2dcb0e4f3f3271acd71766d4406", size = 664988, upload-time = "2026-05-27T20:22:03.938Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/19/4e/1dd468b8166eabe29f361b2b25e19e35130cc54cfcc9b39ec71025980842/piccione-3.1.0-py3-none-any.whl", hash = "sha256:c9c581c673ffaec07c185b1adbaa2d2469977c2d76fd8c7f203285b718a59891", size = 15664, upload-time = "2026-02-28T16:53:42.162Z" },
+    { url = "https://files.pythonhosted.org/packages/79/09/74fbe2e735a81838b9607d2e2d3ecfb6abcf6f67f767b20cc1a8ede620ec/piccione-3.1.2-py3-none-any.whl", hash = "sha256:5259a7355ff765d6bdd5fcae3e21de4f4eadb8ce05e7f8151cb70cc6f1164ab5", size = 18377, upload-time = "2026-05-27T20:22:02.574Z" },
 ]
 
 [[package]]
