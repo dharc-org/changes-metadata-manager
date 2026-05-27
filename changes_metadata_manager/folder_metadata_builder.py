@@ -32,6 +32,11 @@ STAGE_STEPS = {
 SKIP_FOLDERS = {
     "S1-CNR_SoffittoSala1",
     "S5-B basso-DICAM_FanoneBalenaAlto",
+    "S5-Vetrina_2_alto_n2_BezoarGazzella",
+    "S5-Vetrina_2_alto_s_3_ghiandoleCastoroeCapra",
+    "S5-vetrina_6_alto_s_1_Chamaleo",
+    "S5-vetrina_6_alto_s_1_Scincus_Pescedellesabbie",
+    "S5-Vetrina 3 alto N-4- DA- Apice vegetativo di palma",
     "materials",
     "sala 4",
     "_files",
@@ -93,12 +98,9 @@ FOLDER_TO_ID = {
     "S5-Vetrina 2 alto S-2-t-DBC_Tavoletta_con_cervo": "vetrina_2_alto_s_2_t",
     "S5-Vetrina 2 basso t-DICAM_MatriceRinoceronte": "vetrina_2_basso_t",
     "S5-Vetrina 2 basso-DICAM_Alce": "vetrina_2_basso",
-    "S5-Vetrina_2_alto_n2_BezoarGazzella": "vetrina_2_alto_n_2",
-    "S5-Vetrina_2_alto_s_3_ghiandoleCastoroeCapra": "vetrina_2_alto_s_3",
     # Vetrina 3
     "S5-Vetrina 3 alto N - 1-DICAM_UovaDiStruzzo": "vetrina_3_alto_n_1",
     "S5-Vetrina 3 alto N - 3-DA_Graminacea Subfossile": "vetrina_3_alto_n_3",
-    "S5-Vetrina 3 alto N-4- DA- Apice vegetativo di palma": "vetrina_3_alto_n_4",
     "S5-Vetrina 3 alto S-1-t-TavolettaConBaccelli": "vetrina_3_alto_s_1_t",
     "S5-Vetrina 3 alto S-2-t-DBC_Tavoletta_con_nido": "vetrina_3_alto_s_2_t",
     "S5-Vetrina 3 alto S-4-FICLIT_NidoDiPendolino": "vetrina_3_alto_s_4",
@@ -149,8 +151,6 @@ FOLDER_TO_ID = {
     "S5-Vetrina 6 basso 2-ScheletroDiDelfino": "vetrina_6_basso_2",
     "S5-Vetrina 6 basso 2-t-TavolettaConDelfino": "vetrina_6_basso_2_t",
     "S5-Vetrina 6 basso-DBC_Scapola di balena": "vetrina_6_basso_1",
-    "S5-vetrina_6_alto_s_1_Chamaleo": "vetrina_6_alto_s_1",
-    "S5-vetrina_6_alto_s_1_Scincus_Pescedellesabbie": "vetrina_6_alto_s_1",
     # Vetrina 7
     "S5-Vetrina 7 alto N - 1 - t-DICAM_MatricePesce6_PesceForca": "vetrina_7_alto_n_1_t",
     "S5-Vetrina 7 alto N 1-FICLIT_PesceForca": "vetrina_7_alto_n_1",
