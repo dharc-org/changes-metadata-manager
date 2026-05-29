@@ -7,12 +7,14 @@ import csv
 import json
 import os
 import re
+import signal
 import tempfile
 import time
 import unicodedata
 import zipfile
 from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from contextlib import contextmanager
 from datetime import date
 from pathlib import Path
 
@@ -261,12 +263,19 @@ STAGES = ("raw", "rawp", "dcho", "dchoo")
 def _extract_license_from_meta(stage_dir: Path) -> str | None:
     g = Graph()
     g.parse(stage_dir / "meta.ttl", format="turtle")
+    best_step = ""
+    best_license: str | None = None
     for s, _, o in g.triples((None, P70I, None)):
-        if "/lic/" in str(s):
-            zenodo_license = LICENSE_URI_TO_ZENODO.get(str(o))
-            if zenodo_license:
-                return zenodo_license
-    return None
+        s_str = str(s)
+        if "/lic/" in s_str:
+            step_match = re.search(r"/(\d{2})/\d+$", s_str)
+            if step_match:
+                step = step_match.group(1)
+                zenodo_license = LICENSE_URI_TO_ZENODO.get(str(o))
+                if zenodo_license and step > best_step:
+                    best_step = step
+                    best_license = zenodo_license
+    return best_license
 
 
 def create_stage_zip(
@@ -411,8 +420,7 @@ PROPAGATED_FIELDS = (
 
 
 def extract_license_for_entity_stage(graph: Graph, entity_id: str, stage: str) -> str | None:
-    steps = STAGE_STEPS[stage]
-    for step in steps:
+    for step in reversed(STAGE_STEPS[stage]):
         lic_uri = URIRef(f"{BASE_URI}/lic/{entity_id}/{step}/1")
         for _, _, license_url in graph.triples((lic_uri, P70I, None)):
             zenodo_license = LICENSE_URI_TO_ZENODO.get(str(license_url))
@@ -786,6 +794,23 @@ def _atomic_write_json(path: Path, data: list) -> None:
     os.replace(tmp_path, path)
 
 
+@contextmanager
+def _graceful_shutdown():
+    stop = [False]
+    original = signal.getsignal(signal.SIGINT)
+    def handler(signum, frame):
+        if stop[0]:
+            signal.signal(signal.SIGINT, original)
+            raise KeyboardInterrupt
+        stop[0] = True
+        print("Finishing current record, then stopping...")
+    signal.signal(signal.SIGINT, handler)
+    try:
+        yield stop
+    finally:
+        signal.signal(signal.SIGINT, original)
+
+
 def _write_doi_table(drafts: list[dict], output_dir: Path) -> Path:
     rows: list[dict[str, str]] = []
     for draft in drafts:
@@ -832,7 +857,7 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
     failed = 0
     uploaded = 0
 
-    with Progress(
+    with _graceful_shutdown() as shutdown, Progress(
         SpinnerColumn(),
         TextColumn("[progress.description]{task.description}"),
         BarColumn(),
@@ -840,6 +865,9 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
     ) as progress:
         task = progress.add_task("Uploading to Zenodo", total=len(config_files))
         for config_file in config_files:
+            if shutdown[0]:
+                print("\nGraceful shutdown: stopping after last completed record.")
+                break
             if config_file.stem in completed_stems:
                 skipped += 1
                 progress.update(task, description=f"Skipped {config_file.stem}")
@@ -849,7 +877,6 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
             progress.update(task, description=f"Uploading {config_file.stem}")
             try:
                 record = piccione_upload(str(config_file), publish=publish)
-                time.sleep(2)
                 with open(config_file) as f:
                     config = yaml.safe_load(f)
                 drafts = [d for d in drafts if not (Path(d["config_file"]).stem == config_file.stem and d["status"] == "failed")]
@@ -882,6 +909,7 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
                 print(f"\n[FAILED] {config_file.stem}: {exc}")
 
             _atomic_write_json(drafts_path, drafts)
+            time.sleep(2)
             progress.advance(task)
 
     csv_path = _write_doi_table(drafts, configs_dir.parent)
@@ -899,7 +927,7 @@ def publish_all_drafts(drafts_path: Path) -> Path:
     published = 0
     failed = 0
 
-    with Progress(
+    with _graceful_shutdown() as shutdown, Progress(
         SpinnerColumn(),
         TextColumn("[progress.description]{task.description}"),
         BarColumn(),
@@ -907,13 +935,15 @@ def publish_all_drafts(drafts_path: Path) -> Path:
     ) as progress:
         task = progress.add_task("Publishing drafts", total=len(publishable))
         for draft in publishable:
+            if shutdown[0]:
+                print("\nGraceful shutdown: stopping after last completed record.")
+                break
             progress.update(task, description=f"Publishing {draft['title']}")
             try:
                 base_url = draft["zenodo_url"].rstrip("/")
                 record = piccione_publish_draft(
                     base_url, draft["access_token"], draft["draft_id"], draft["user_agent"],
                 )
-                time.sleep(2)
                 draft["status"] = "published"
                 draft["doi"] = _extract_doi(record)
                 draft["record_url"] = _extract_record_url(record)
@@ -927,6 +957,7 @@ def publish_all_drafts(drafts_path: Path) -> Path:
                 print(f"\n[FAILED] {draft['title']}: {exc}")
 
             _atomic_write_json(drafts_path, drafts)
+            time.sleep(2)
             progress.advance(task)
 
     skipped = len(drafts) - len(publishable)

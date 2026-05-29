@@ -163,6 +163,17 @@ LICENSED_META_TTL = """\
     crm:P70i_is_documented_in <https://creativecommons.org/publicdomain/zero/1.0/> .
 """
 
+MIXED_LICENSE_META_TTL = """\
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+
+<https://w3id.org/changes/4/aldrovandi/lic/1/00/1>
+    crm:P70i_is_documented_in <https://creativecommons.org/licenses/by-nc/4.0/> .
+<https://w3id.org/changes/4/aldrovandi/lic/1/01/1>
+    crm:P70i_is_documented_in <https://creativecommons.org/licenses/by-nc/4.0/> .
+<https://w3id.org/changes/4/aldrovandi/lic/1/02/1>
+    crm:P70i_is_documented_in <https://creativecommons.org/publicdomain/zero/1.0/> .
+"""
+
 UNLICENSED_META_TTL = """\
 @prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
 
@@ -183,6 +194,12 @@ class TestExtractLicenseFromMeta:
             stage_dir = Path(tmpdir)
             (stage_dir / "meta.ttl").write_text(UNLICENSED_META_TTL)
             assert _extract_license_from_meta(stage_dir) is None
+
+    def test_picks_highest_step_license(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            stage_dir = Path(tmpdir)
+            (stage_dir / "meta.ttl").write_text(MIXED_LICENSE_META_TTL)
+            assert _extract_license_from_meta(stage_dir) == "cc0-1.0"
 
 
 class TestCreateStageZip:
@@ -827,6 +844,22 @@ class TestExtractLicenseForEntityStage:
         g.add((lic_uri, P70I, license_url))
         result = extract_license_for_entity_stage(g, "42", "raw")
         assert result == "cc-by-4.0"
+
+    def test_picks_highest_step_with_mixed_licenses(self):
+        g = Graph()
+        g.add((URIRef(f"{BASE_URI}/lic/42/00/1"), P70I, URIRef("https://creativecommons.org/licenses/by-nc/4.0/")))
+        g.add((URIRef(f"{BASE_URI}/lic/42/01/1"), P70I, URIRef("https://creativecommons.org/licenses/by-nc/4.0/")))
+        g.add((URIRef(f"{BASE_URI}/lic/42/02/1"), P70I, URIRef("https://creativecommons.org/publicdomain/zero/1.0/")))
+        assert extract_license_for_entity_stage(g, "42", "dcho") == "cc0-1.0"
+
+    def test_picks_highest_step_real_kg(self, real_kg):
+        assert extract_license_for_entity_stage(real_kg, "vetrina_2_basso", "dcho") == "cc0-1.0"
+
+    def test_raw_still_returns_first_step_license(self):
+        g = Graph()
+        g.add((URIRef(f"{BASE_URI}/lic/42/00/1"), P70I, URIRef("https://creativecommons.org/licenses/by-nc/4.0/")))
+        g.add((URIRef(f"{BASE_URI}/lic/42/02/1"), P70I, URIRef("https://creativecommons.org/publicdomain/zero/1.0/")))
+        assert extract_license_for_entity_stage(g, "42", "raw") == "cc-by-nc-4.0"
 
 
 class TestExtractKeeperInfo:
