@@ -187,19 +187,33 @@ class TestExtractLicenseFromMeta:
         with tempfile.TemporaryDirectory() as tmpdir:
             stage_dir = Path(tmpdir)
             (stage_dir / "meta.ttl").write_text(LICENSED_META_TTL)
-            assert _extract_license_from_meta(stage_dir) == "cc0-1.0"
+            assert _extract_license_from_meta(stage_dir, "raw") == "cc0-1.0"
 
     def test_returns_none_when_no_license(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             stage_dir = Path(tmpdir)
             (stage_dir / "meta.ttl").write_text(UNLICENSED_META_TTL)
-            assert _extract_license_from_meta(stage_dir) is None
+            assert _extract_license_from_meta(stage_dir, "raw") is None
 
-    def test_picks_highest_step_license(self):
+    def test_picks_defining_step_license(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             stage_dir = Path(tmpdir)
             (stage_dir / "meta.ttl").write_text(MIXED_LICENSE_META_TTL)
-            assert _extract_license_from_meta(stage_dir) == "cc0-1.0"
+            assert _extract_license_from_meta(stage_dir, "dcho") == "cc0-1.0"
+
+    def test_returns_none_when_defining_step_missing(self):
+        ttl = """\
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+
+<https://w3id.org/changes/4/aldrovandi/lic/1/00/1>
+    crm:P70i_is_documented_in <https://creativecommons.org/licenses/by-nc/4.0/> .
+<https://w3id.org/changes/4/aldrovandi/lic/1/01/1>
+    crm:P70i_is_documented_in <https://creativecommons.org/licenses/by-nc/4.0/> .
+"""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            stage_dir = Path(tmpdir)
+            (stage_dir / "meta.ttl").write_text(ttl)
+            assert _extract_license_from_meta(stage_dir, "dcho") is None
 
 
 class TestCreateStageZip:
@@ -845,21 +859,27 @@ class TestExtractLicenseForEntityStage:
         result = extract_license_for_entity_stage(g, "42", "raw")
         assert result == "cc-by-4.0"
 
-    def test_picks_highest_step_with_mixed_licenses(self):
+    def test_picks_defining_step_license(self):
         g = Graph()
         g.add((URIRef(f"{BASE_URI}/lic/42/00/1"), P70I, URIRef("https://creativecommons.org/licenses/by-nc/4.0/")))
         g.add((URIRef(f"{BASE_URI}/lic/42/01/1"), P70I, URIRef("https://creativecommons.org/licenses/by-nc/4.0/")))
         g.add((URIRef(f"{BASE_URI}/lic/42/02/1"), P70I, URIRef("https://creativecommons.org/publicdomain/zero/1.0/")))
         assert extract_license_for_entity_stage(g, "42", "dcho") == "cc0-1.0"
 
-    def test_picks_highest_step_real_kg(self, real_kg):
+    def test_picks_defining_step_real_kg(self, real_kg):
         assert extract_license_for_entity_stage(real_kg, "vetrina_2_basso", "dcho") == "cc0-1.0"
 
-    def test_raw_still_returns_first_step_license(self):
+    def test_raw_returns_defining_step_license(self):
         g = Graph()
         g.add((URIRef(f"{BASE_URI}/lic/42/00/1"), P70I, URIRef("https://creativecommons.org/licenses/by-nc/4.0/")))
         g.add((URIRef(f"{BASE_URI}/lic/42/02/1"), P70I, URIRef("https://creativecommons.org/publicdomain/zero/1.0/")))
         assert extract_license_for_entity_stage(g, "42", "raw") == "cc-by-nc-4.0"
+
+    def test_returns_none_when_defining_step_missing(self):
+        g = Graph()
+        g.add((URIRef(f"{BASE_URI}/lic/42/00/1"), P70I, URIRef("https://creativecommons.org/licenses/by-nc/4.0/")))
+        g.add((URIRef(f"{BASE_URI}/lic/42/01/1"), P70I, URIRef("https://creativecommons.org/licenses/by-nc/4.0/")))
+        assert extract_license_for_entity_stage(g, "42", "dcho") is None
 
 
 class TestExtractKeeperInfo:
@@ -1375,7 +1395,6 @@ class TestUploadAllResume:
     @patch("changes_metadata_manager.zenodo_upload.piccione_upload")
     def test_drafts_json_written_after_each_upload(self, mock_upload, mock_sleep, tmp_path):
         configs_dir = self._setup_configs(tmp_path)
-        drafts_path = tmp_path / "drafts.json"
         snapshots: list[int] = []
 
         def counting_upload(config_file, publish=False):

@@ -13,6 +13,7 @@ import time
 import unicodedata
 import zipfile
 from collections import defaultdict
+from collections.abc import Mapping
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from contextlib import contextmanager
 from datetime import date
@@ -66,6 +67,13 @@ STEP_TO_STAGE = {
     "04": "dchoo",
     "05": "dchoo",
     "06": "dchoo",
+}
+
+STAGE_LICENSE_STEP: dict[str, str] = {
+    "raw": "00",
+    "rawp": "01",
+    "dcho": "02",
+    "dchoo": "03",
 }
 
 CRM = "http://www.cidoc-crm.org/cidoc-crm/"
@@ -261,22 +269,17 @@ def group_folders_by_entity(structure: dict) -> dict[str, list[tuple[str, str, d
 STAGES = ("raw", "rawp", "dcho", "dchoo")
 
 
-def _extract_license_from_meta(stage_dir: Path) -> str | None:
+def _extract_license_from_meta(stage_dir: Path, stage: str) -> str | None:
     g = Graph()
     g.parse(stage_dir / "meta.ttl", format="turtle")
-    best_step = ""
-    best_license: str | None = None
+    expected_step = STAGE_LICENSE_STEP[stage]
     for s, _, o in g.triples((None, P70I, None)):
         s_str = str(s)
         if "/lic/" in s_str:
             step_match = re.search(r"/(\d{2})/\d+$", s_str)
-            if step_match:
-                step = step_match.group(1)
-                zenodo_license = LICENSE_URI_TO_ZENODO.get(str(o))
-                if zenodo_license and step > best_step:
-                    best_step = step
-                    best_license = zenodo_license
-    return best_license
+            if step_match and step_match.group(1) == expected_step:
+                return LICENSE_URI_TO_ZENODO.get(str(o))
+    return None
 
 
 def create_stage_zip(
@@ -299,7 +302,7 @@ def create_stage_zip(
             continue
         stage_dir = root / sala_name / folder_name / stage_name_in_folder
         stage_dirs.append((folder_name, stage_name_in_folder, stage_dir))
-        folder_license = _extract_license_from_meta(stage_dir)
+        folder_license = _extract_license_from_meta(stage_dir, stage)
         if folder_license:
             license_id = folder_license
     if not stage_dirs:
@@ -421,12 +424,10 @@ PROPAGATED_FIELDS = (
 
 
 def extract_license_for_entity_stage(graph: Graph, entity_id: str, stage: str) -> str | None:
-    for step in reversed(STAGE_STEPS[stage]):
-        lic_uri = URIRef(f"{BASE_URI}/lic/{entity_id}/{step}/1")
-        for _, _, license_url in graph.triples((lic_uri, P70I, None)):
-            zenodo_license = LICENSE_URI_TO_ZENODO.get(str(license_url))
-            if zenodo_license:
-                return zenodo_license
+    step = STAGE_LICENSE_STEP[stage]
+    lic_uri = URIRef(f"{BASE_URI}/lic/{entity_id}/{step}/1")
+    for _, _, license_url in graph.triples((lic_uri, P70I, None)):
+        return LICENSE_URI_TO_ZENODO.get(str(license_url))
     return None
 
 
@@ -736,14 +737,16 @@ def prepare_all(
                 progress.advance(task)
 
 
-def _extract_doi(record: dict) -> str:
+def _extract_doi(record: Mapping[str, object]) -> str:
     pids = record.get("pids", {})
-    doi_info = pids.get("doi", {})
-    return doi_info.get("identifier", "")
+    doi_info = pids.get("doi", {}) if isinstance(pids, dict) else {}
+    return doi_info.get("identifier", "") if isinstance(doi_info, dict) else ""
 
 
-def _extract_record_url(record: dict) -> str:
-    return record["links"]["self_html"]
+def _extract_record_url(record: Mapping[str, object]) -> str:
+    links = record["links"]
+    assert isinstance(links, dict)
+    return links["self_html"]
 
 
 LICENSE_TITLE_TO_SHORT: dict[str, str] = {
