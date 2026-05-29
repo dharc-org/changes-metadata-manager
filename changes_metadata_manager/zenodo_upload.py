@@ -18,11 +18,12 @@ from contextlib import contextmanager
 from datetime import date
 from pathlib import Path
 
+import requests
 import yaml
 from rdflib import Graph, URIRef
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn, TimeElapsedColumn, TimeRemainingColumn
 
-from piccione.upload.on_zenodo import main as piccione_upload, publish_draft as piccione_publish_draft
+from piccione.upload.on_zenodo import get_headers, main as piccione_upload, publish_draft as piccione_publish_draft
 
 from changes_metadata_manager.folder_metadata_builder import (
     BASE_URI,
@@ -967,6 +968,105 @@ def publish_all_drafts(drafts_path: Path) -> Path:
     return csv_path
 
 
+def sync_status(drafts_path: Path) -> Path:
+    with open(drafts_path) as f:
+        drafts: list[dict] = json.load(f)
+
+    updated = 0
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        MofNCompleteColumn(),
+    ) as progress:
+        task = progress.add_task("Syncing status from Zenodo", total=len(drafts))
+        for draft in drafts:
+            progress.update(task, description=f"Querying {draft['draft_id']}")
+            headers = get_headers(draft["access_token"], draft["user_agent"])
+            base_url = draft["zenodo_url"].rstrip("/")
+            resp = requests.get(f"{base_url}/records/{draft['draft_id']}", headers=headers)
+            if resp.status_code == 404:
+                resp = requests.get(f"{base_url}/records/{draft['draft_id']}/draft", headers=headers)
+            resp.raise_for_status()
+            record = resp.json()
+            new_status = record["status"]
+            new_doi = record.get("doi", "")
+            new_url = record["links"]["self_html"]
+            if draft["status"] != new_status or draft["doi"] != new_doi or draft["record_url"] != new_url:
+                draft["status"] = new_status
+                draft["doi"] = new_doi
+                draft["record_url"] = new_url
+                updated += 1
+            time.sleep(0.5)
+            progress.advance(task)
+
+    _atomic_write_json(drafts_path, drafts)
+    csv_path = _write_doi_table(drafts, drafts_path.parent)
+    print(f"Updated {updated} of {len(drafts)} entries")
+    print(f"DOI table written to {csv_path}")
+    return csv_path
+
+
+def cleanup_duplicates(drafts_path: Path, dry_run: bool = False) -> None:
+    with open(drafts_path) as f:
+        drafts: list[dict] = json.load(f)
+
+    known_ids = {d["draft_id"] for d in drafts}
+    known_titles = {d["title"] for d in drafts}
+    token = drafts[0]["access_token"]
+    base_url = drafts[0]["zenodo_url"].rstrip("/")
+    ua = drafts[0]["user_agent"]
+    headers = get_headers(token, ua)
+
+    duplicates: list[dict] = []
+    page = 1
+    while True:
+        resp = requests.get(f"{base_url}/user/records", params={
+            "size": 100,
+            "page": page,
+        }, headers=headers)
+        resp.raise_for_status()
+        hits = resp.json()["hits"]["hits"]
+        if not hits:
+            break
+        for hit in hits:
+            title = hit.get("title", hit.get("metadata", {}).get("title", ""))
+            if hit["id"] not in known_ids and title in known_titles:
+                duplicates.append(hit)
+        page += 1
+
+    if not duplicates:
+        print("No duplicates found.")
+        return
+
+    draft_dups = [d for d in duplicates if d.get("status") != "published"]
+    published_dups = [d for d in duplicates if d.get("status") == "published"]
+
+    print(f"Found {len(duplicates)} duplicate(s): {len(draft_dups)} draft(s), {len(published_dups)} published")
+
+    for dup in published_dups:
+        print(f"  [PUBLISHED - cannot delete] id={dup['id']}, doi={dup.get('doi', '')}, title={dup.get('title', '')}")
+
+    deleted = 0
+    for dup in draft_dups:
+        title = dup.get("title", dup.get("metadata", {}).get("title", ""))
+        if dry_run:
+            print(f"  [DRY RUN] Would delete draft id={dup['id']}, title={title}")
+        else:
+            resp = requests.delete(f"{base_url}/records/{dup['id']}/draft", headers=headers)
+            if resp.status_code == 204:
+                deleted += 1
+                print(f"  [DELETED] id={dup['id']}, title={title}")
+            else:
+                print(f"  [FAILED] id={dup['id']}, status={resp.status_code}, body={resp.text[:200]}")
+            time.sleep(1)
+
+    if dry_run:
+        print(f"Dry run complete. {len(draft_dups)} draft(s) would be deleted.")
+    else:
+        print(f"Deleted {deleted} of {len(draft_dups)} draft duplicate(s).")
+
+
 def parse_arguments():  # pragma: no cover
     parser = argparse.ArgumentParser(description="Prepare and upload Zenodo packages")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -980,6 +1080,11 @@ def parse_arguments():  # pragma: no cover
     upload_parser.add_argument("--publish", action="store_true", help="Publish after upload")
     publish_parser = subparsers.add_parser("publish-drafts", help="Publish previously uploaded drafts")
     publish_parser.add_argument("drafts_file", type=Path, help="Path to drafts.json from a previous upload")
+    sync_parser = subparsers.add_parser("sync-status", help="Sync drafts.json with actual Zenodo record status")
+    sync_parser.add_argument("drafts_file", type=Path, help="Path to drafts.json")
+    cleanup_parser = subparsers.add_parser("cleanup-duplicates", help="Find and delete duplicate records not in drafts.json")
+    cleanup_parser.add_argument("drafts_file", type=Path, help="Path to drafts.json")
+    cleanup_parser.add_argument("--dry-run", action="store_true", help="Only report duplicates, don't delete")
 
     return parser.parse_args()
 
@@ -996,6 +1101,10 @@ def main():  # pragma: no cover
         upload_all(configs_dir=args.configs_dir, publish=args.publish)
     elif args.command == "publish-drafts":
         publish_all_drafts(drafts_path=args.drafts_file)
+    elif args.command == "sync-status":
+        sync_status(drafts_path=args.drafts_file)
+    elif args.command == "cleanup-duplicates":
+        cleanup_duplicates(drafts_path=args.drafts_file, dry_run=args.dry_run)
 
 
 if __name__ == "__main__":  # pragma: no cover
