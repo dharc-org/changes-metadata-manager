@@ -1007,12 +1007,16 @@ def sync_status(drafts_path: Path) -> Path:
     return csv_path
 
 
+def _normalize_quotes(text: str) -> str:
+    return text.replace("‘", "'").replace("’", "'").replace("“", '"').replace("”", '"')
+
+
 def cleanup_duplicates(drafts_path: Path, dry_run: bool = False) -> None:
     with open(drafts_path) as f:
         drafts: list[dict] = json.load(f)
 
     known_ids = {d["draft_id"] for d in drafts}
-    known_titles = {d["title"] for d in drafts}
+    known_titles = {_normalize_quotes(d["title"]) for d in drafts}
     token = drafts[0]["access_token"]
     base_url = drafts[0]["zenodo_url"].rstrip("/")
     ua = drafts[0]["user_agent"]
@@ -1031,7 +1035,7 @@ def cleanup_duplicates(drafts_path: Path, dry_run: bool = False) -> None:
             break
         for hit in hits:
             title = hit.get("title", hit.get("metadata", {}).get("title", ""))
-            if hit["id"] not in known_ids and title in known_titles:
+            if hit["id"] not in known_ids and _normalize_quotes(title) in known_titles:
                 duplicates.append(hit)
         page += 1
 
