@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
+# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelo.massari@unibo.it>
 #
 # SPDX-License-Identifier: ISC
 
@@ -10,7 +10,13 @@ import pyshacl
 from rdflib import Dataset, Graph, URIRef
 from rdflib.namespace import DCTERMS
 from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn
+from rich.progress import (
+    Progress,
+    SpinnerColumn,
+    TextColumn,
+    BarColumn,
+    MofNCompleteColumn,
+)
 
 from changes_metadata_manager.generate_provenance import generate_provenance_snapshots
 
@@ -236,7 +242,9 @@ def extract_metadata_for_stage(graph: Graph, nr: str, stage: str) -> Graph:
                 for s2, p2, o2 in graph.triples((o, None, None)):
                     result.add((s2, p2, o2))
 
-    appellation_uris = {o for _, p, o in result if p == P1_IS_IDENTIFIED_BY and isinstance(o, URIRef)}
+    appellation_uris = {
+        o for _, p, o in result if p == P1_IS_IDENTIFIED_BY and isinstance(o, URIRef)
+    }
     for uri in appellation_uris:
         for s2, p2, o2 in graph.triples((uri, None, None)):
             result.add((s2, p2, o2))
@@ -305,10 +313,7 @@ def process_all_folders(
             nr = extract_id_from_folder_name(folder_name)
             progress.update(task, description=f"{folder_name}")
 
-            existing_stages = [
-                s for s in subfolders.keys()
-                if s.lower() in STAGE_STEPS
-            ]
+            existing_stages = [s for s in subfolders.keys() if s.lower() in STAGE_STEPS]
 
             for stage_name in existing_stages:
                 stage_key = stage_name.lower()
@@ -340,12 +345,16 @@ def process_all_folders(
 
     if shapes_graph is not None:
         if validation_errors:
-            console.print(f"\n[bold red]SHACL validation failed for {len(validation_errors)} stage(s):[/bold red]")
+            console.print(
+                f"\n[bold red]SHACL validation failed for {len(validation_errors)} stage(s):[/bold red]"
+            )
             for label, results_text in validation_errors:
                 console.print(f"\n[bold yellow]{label}[/bold yellow]")
                 console.print(results_text)
         else:
-            console.print("\n[bold green]All metadata passed SHACL validation.[/bold green]")
+            console.print(
+                "\n[bold green]All metadata passed SHACL validation.[/bold green]"
+            )
 
     return validation_errors
 

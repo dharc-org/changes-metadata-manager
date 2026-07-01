@@ -1,11 +1,10 @@
----
-# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
-#
-# SPDX-License-Identifier: ISC
+<!--
+SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelo.massari@unibo.it>
 
-title: SharePoint sync
-description: Sync the folder structure from SharePoint using piccione
----
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
+# SharePoint sync
 
 When the local folder structure is not available, you can pull it from SharePoint using [piccione](https://github.com/opencitations/piccione).
 

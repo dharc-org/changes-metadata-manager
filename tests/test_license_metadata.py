@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
+# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelo.massari@unibo.it>
 #
 # SPDX-License-Identifier: ISC
 
@@ -27,7 +27,10 @@ class TestExtractStageFromConfigPath:
         assert _extract_stage_from_config_path("configs/sala1-obj-42-raw.yaml") == "raw"
 
     def test_extracts_dchoo(self):
-        assert _extract_stage_from_config_path("configs/sala1-obj-42-dchoo.yaml") == "dchoo"
+        assert (
+            _extract_stage_from_config_path("configs/sala1-obj-42-dchoo.yaml")
+            == "dchoo"
+        )
 
     def test_raises_on_invalid(self):
         with pytest.raises(AssertionError):
@@ -36,9 +39,11 @@ class TestExtractStageFromConfigPath:
 
 class TestExtractEntityIdFromConfig:
     def test_extracts_entity(self):
-        config = {"identifiers": [
-            {"identifier": "https://w3id.org/changes/4/aldrovandi/itm/42/ob1/1"}
-        ]}
+        config = {
+            "identifiers": [
+                {"identifier": "https://w3id.org/changes/4/aldrovandi/itm/42/ob1/1"}
+            ]
+        }
         assert _extract_entity_id_from_config(config) == "42"
 
     def test_raises_when_no_match(self):
@@ -49,15 +54,33 @@ class TestExtractEntityIdFromConfig:
 
 class TestCurrentContentLicense:
     def test_detects_cc0(self):
-        metadata = {"rights": [{"title": {"en": "CC0 (Content license)"}, "link": "https://creativecommons.org/publicdomain/zero/1.0/"}]}
+        metadata = {
+            "rights": [
+                {
+                    "title": {"en": "CC0 (Content license)"},
+                    "link": "https://creativecommons.org/publicdomain/zero/1.0/",
+                }
+            ]
+        }
         assert _current_content_license(metadata) == "cc0-1.0"
 
     def test_detects_cc_by_nc(self):
-        metadata = {"rights": [{"title": {"en": "CC BY-NC 4.0 (Content license)"}, "link": "https://creativecommons.org/licenses/by-nc/4.0/"}]}
+        metadata = {
+            "rights": [
+                {
+                    "title": {"en": "CC BY-NC 4.0 (Content license)"},
+                    "link": "https://creativecommons.org/licenses/by-nc/4.0/",
+                }
+            ]
+        }
         assert _current_content_license(metadata) == "cc-by-nc-4.0"
 
     def test_returns_none_without_content_license(self):
-        metadata = {"rights": [{"title": {"en": "ISC (Code license)"}, "link": "https://example.com"}]}
+        metadata = {
+            "rights": [
+                {"title": {"en": "ISC (Code license)"}, "link": "https://example.com"}
+            ]
+        }
         assert _current_content_license(metadata) is None
 
     def test_returns_none_on_empty(self):
@@ -66,7 +89,11 @@ class TestCurrentContentLicense:
 
 class TestHasCc0Disclaimer:
     def test_true_with_disclaimer(self):
-        metadata = {"additional_descriptions": [{"description": "Ai sensi del D. Lgs. 42/2004..."}]}
+        metadata = {
+            "additional_descriptions": [
+                {"description": "Ai sensi del D. Lgs. 42/2004..."}
+            ]
+        }
         assert _has_cc0_disclaimer(metadata) is True
 
     def test_false_without(self):
@@ -153,7 +180,9 @@ class TestFetchRecordMetadata:
         resp = MagicMock(status_code=200)
         resp.json.return_value = {"metadata": {"title": "test"}}
         mock_retry.return_value = resp
-        result = _fetch_record_metadata("https://zenodo.org/api", "123", "token", "agent")
+        result = _fetch_record_metadata(
+            "https://zenodo.org/api", "123", "token", "agent"
+        )
         assert result == {"title": "test"}
         assert mock_retry.call_count == 1
         assert "/records/123/draft" in mock_retry.call_args[0][1]
@@ -164,7 +193,9 @@ class TestFetchRecordMetadata:
         published_resp = MagicMock(status_code=200)
         published_resp.json.return_value = {"metadata": {"title": "published"}}
         mock_retry.side_effect = [draft_resp, published_resp]
-        result = _fetch_record_metadata("https://zenodo.org/api", "123", "token", "agent")
+        result = _fetch_record_metadata(
+            "https://zenodo.org/api", "123", "token", "agent"
+        )
         assert result == {"title": "published"}
         assert mock_retry.call_count == 2
 
@@ -183,28 +214,43 @@ class TestPatchDrafts:
         }
         config_path = tmp_path / filename
         import yaml
+
         config_path.write_text(yaml.dump(config))
         return str(config_path)
 
     @patch("changes_metadata_manager.patch.license_metadata.time.sleep")
-    @patch("changes_metadata_manager.patch.license_metadata.extract_license_for_entity_stage")
+    @patch(
+        "changes_metadata_manager.patch.license_metadata.extract_license_for_entity_stage"
+    )
     @patch("changes_metadata_manager.patch.license_metadata._fetch_record_metadata")
     def test_dry_run_logs_changes(self, mock_fetch, mock_extract, mock_sleep, tmp_path):
         mock_fetch.return_value = {
-            "identifiers": [{"identifier": "https://w3id.org/changes/4/aldrovandi/itm/42/ob1/1"}],
-            "rights": [{"title": {"en": "CC BY-NC 4.0 (Content license)"}, "link": "https://creativecommons.org/licenses/by-nc/4.0/"}],
+            "identifiers": [
+                {"identifier": "https://w3id.org/changes/4/aldrovandi/itm/42/ob1/1"}
+            ],
+            "rights": [
+                {
+                    "title": {"en": "CC BY-NC 4.0 (Content license)"},
+                    "link": "https://creativecommons.org/licenses/by-nc/4.0/",
+                }
+            ],
             "additional_descriptions": [],
         }
         mock_extract.return_value = "cc0-1.0"
 
-        config_file = self._make_config(tmp_path, "entity-42-dcho.yaml")
-        drafts_path = self._make_drafts_json(tmp_path, [{
-            "draft_id": 123,
-            "config_file": f"{tmp_path}/entity-42-dcho.yaml",
-            "zenodo_url": "https://zenodo.org/api",
-            "access_token": "tok",
-            "status": "published",
-        }])
+        self._make_config(tmp_path, "entity-42-dcho.yaml")
+        drafts_path = self._make_drafts_json(
+            tmp_path,
+            [
+                {
+                    "draft_id": 123,
+                    "config_file": f"{tmp_path}/entity-42-dcho.yaml",
+                    "zenodo_url": "https://zenodo.org/api",
+                    "access_token": "tok",
+                    "status": "published",
+                }
+            ],
+        )
 
         kg_path = tmp_path / "kg.ttl"
         kg_path.write_text("")
@@ -223,27 +269,49 @@ class TestPatchDrafts:
     @patch("changes_metadata_manager.patch.license_metadata.update_draft_metadata")
     @patch("changes_metadata_manager.patch.license_metadata.build_inveniordm_payload")
     @patch("changes_metadata_manager.patch.license_metadata._create_edit_draft")
-    @patch("changes_metadata_manager.patch.license_metadata.extract_license_for_entity_stage")
+    @patch(
+        "changes_metadata_manager.patch.license_metadata.extract_license_for_entity_stage"
+    )
     @patch("changes_metadata_manager.patch.license_metadata._fetch_record_metadata")
     def test_published_record_creates_edit_draft_and_publishes(
-        self, mock_fetch, mock_extract, mock_create_edit, mock_build, mock_update, mock_publish, mock_sleep, tmp_path
+        self,
+        mock_fetch,
+        mock_extract,
+        mock_create_edit,
+        mock_build,
+        mock_update,
+        mock_publish,
+        mock_sleep,
+        tmp_path,
     ):
         mock_fetch.return_value = {
-            "identifiers": [{"identifier": "https://w3id.org/changes/4/aldrovandi/itm/42/ob1/1"}],
-            "rights": [{"title": {"en": "CC BY-NC 4.0 (Content license)"}, "link": "https://creativecommons.org/licenses/by-nc/4.0/"}],
+            "identifiers": [
+                {"identifier": "https://w3id.org/changes/4/aldrovandi/itm/42/ob1/1"}
+            ],
+            "rights": [
+                {
+                    "title": {"en": "CC BY-NC 4.0 (Content license)"},
+                    "link": "https://creativecommons.org/licenses/by-nc/4.0/",
+                }
+            ],
             "additional_descriptions": [],
         }
         mock_extract.return_value = "cc0-1.0"
         mock_build.return_value = {"metadata": {}}
 
-        config_file = self._make_config(tmp_path, "entity-42-dcho.yaml")
-        drafts_path = self._make_drafts_json(tmp_path, [{
-            "draft_id": 456,
-            "config_file": str(tmp_path / "entity-42-dcho.yaml"),
-            "zenodo_url": "https://zenodo.org/api",
-            "access_token": "tok",
-            "status": "published",
-        }])
+        self._make_config(tmp_path, "entity-42-dcho.yaml")
+        drafts_path = self._make_drafts_json(
+            tmp_path,
+            [
+                {
+                    "draft_id": 456,
+                    "config_file": str(tmp_path / "entity-42-dcho.yaml"),
+                    "zenodo_url": "https://zenodo.org/api",
+                    "access_token": "tok",
+                    "status": "published",
+                }
+            ],
+        )
 
         kg_path = tmp_path / "kg.ttl"
         kg_path.write_text("")
@@ -251,40 +319,69 @@ class TestPatchDrafts:
         with patch("changes_metadata_manager.patch.license_metadata.load_kg"):
             patch_drafts(drafts_path, kg_path, dry_run=False)
 
-        mock_create_edit.assert_called_once_with("https://zenodo.org/api", "456", "tok", "changes-metadata-manager/1.0.0")
-        mock_publish.assert_called_once_with("https://zenodo.org/api", "tok", "456", "changes-metadata-manager/1.0.0")
+        mock_create_edit.assert_called_once_with(
+            "https://zenodo.org/api", "456", "tok", "changes-metadata-manager/1.0.0"
+        )
+        mock_publish.assert_called_once_with(
+            "https://zenodo.org/api", "tok", "456", "changes-metadata-manager/1.0.0"
+        )
 
     @patch("changes_metadata_manager.patch.license_metadata.time.sleep")
     @patch("changes_metadata_manager.patch.license_metadata.update_draft_metadata")
     @patch("changes_metadata_manager.patch.license_metadata.build_inveniordm_payload")
     @patch("changes_metadata_manager.patch.license_metadata._create_edit_draft")
-    @patch("changes_metadata_manager.patch.license_metadata.extract_license_for_entity_stage")
+    @patch(
+        "changes_metadata_manager.patch.license_metadata.extract_license_for_entity_stage"
+    )
     @patch("changes_metadata_manager.patch.license_metadata._fetch_record_metadata")
     def test_unpublished_record_skips_edit_draft_and_publish(
-        self, mock_fetch, mock_extract, mock_create_edit, mock_build, mock_update, mock_sleep, tmp_path
+        self,
+        mock_fetch,
+        mock_extract,
+        mock_create_edit,
+        mock_build,
+        mock_update,
+        mock_sleep,
+        tmp_path,
     ):
         mock_fetch.return_value = {
-            "identifiers": [{"identifier": "https://w3id.org/changes/4/aldrovandi/itm/42/ob1/1"}],
-            "rights": [{"title": {"en": "CC BY-NC 4.0 (Content license)"}, "link": "https://creativecommons.org/licenses/by-nc/4.0/"}],
+            "identifiers": [
+                {"identifier": "https://w3id.org/changes/4/aldrovandi/itm/42/ob1/1"}
+            ],
+            "rights": [
+                {
+                    "title": {"en": "CC BY-NC 4.0 (Content license)"},
+                    "link": "https://creativecommons.org/licenses/by-nc/4.0/",
+                }
+            ],
             "additional_descriptions": [],
         }
         mock_extract.return_value = "cc0-1.0"
         mock_build.return_value = {"metadata": {}}
 
-        config_file = self._make_config(tmp_path, "entity-42-dcho.yaml")
-        drafts_path = self._make_drafts_json(tmp_path, [{
-            "draft_id": 789,
-            "config_file": str(tmp_path / "entity-42-dcho.yaml"),
-            "zenodo_url": "https://zenodo.org/api",
-            "access_token": "tok",
-            "status": "uploaded",
-        }])
+        self._make_config(tmp_path, "entity-42-dcho.yaml")
+        drafts_path = self._make_drafts_json(
+            tmp_path,
+            [
+                {
+                    "draft_id": 789,
+                    "config_file": str(tmp_path / "entity-42-dcho.yaml"),
+                    "zenodo_url": "https://zenodo.org/api",
+                    "access_token": "tok",
+                    "status": "uploaded",
+                }
+            ],
+        )
 
         kg_path = tmp_path / "kg.ttl"
         kg_path.write_text("")
 
-        with patch("changes_metadata_manager.patch.license_metadata.load_kg"), \
-             patch("changes_metadata_manager.patch.license_metadata.publish_draft") as mock_publish:
+        with (
+            patch("changes_metadata_manager.patch.license_metadata.load_kg"),
+            patch(
+                "changes_metadata_manager.patch.license_metadata.publish_draft"
+            ) as mock_publish,
+        ):
             patch_drafts(drafts_path, kg_path, dry_run=False)
 
         mock_create_edit.assert_not_called()
@@ -295,13 +392,18 @@ class TestPatchDrafts:
     def test_errors_are_logged(self, mock_fetch, mock_sleep, tmp_path):
         mock_fetch.side_effect = requests.HTTPError("500 Server Error")
 
-        drafts_path = self._make_drafts_json(tmp_path, [{
-            "draft_id": 999,
-            "config_file": f"{tmp_path}/entity-42-dcho.yaml",
-            "zenodo_url": "https://zenodo.org/api",
-            "access_token": "tok",
-            "status": "published",
-        }])
+        drafts_path = self._make_drafts_json(
+            tmp_path,
+            [
+                {
+                    "draft_id": 999,
+                    "config_file": f"{tmp_path}/entity-42-dcho.yaml",
+                    "zenodo_url": "https://zenodo.org/api",
+                    "access_token": "tok",
+                    "status": "published",
+                }
+            ],
+        )
 
         kg_path = tmp_path / "kg.ttl"
         kg_path.write_text("")
@@ -316,23 +418,41 @@ class TestPatchDrafts:
         assert log[0]["record_id"] == 999
 
     @patch("changes_metadata_manager.patch.license_metadata.time.sleep")
-    @patch("changes_metadata_manager.patch.license_metadata.extract_license_for_entity_stage")
+    @patch(
+        "changes_metadata_manager.patch.license_metadata.extract_license_for_entity_stage"
+    )
     @patch("changes_metadata_manager.patch.license_metadata._fetch_record_metadata")
-    def test_skips_already_correct(self, mock_fetch, mock_extract, mock_sleep, tmp_path):
+    def test_skips_already_correct(
+        self, mock_fetch, mock_extract, mock_sleep, tmp_path
+    ):
         mock_fetch.return_value = {
-            "identifiers": [{"identifier": "https://w3id.org/changes/4/aldrovandi/itm/42/ob1/1"}],
-            "rights": [{"title": {"en": "CC0 (Content license)"}, "link": "https://creativecommons.org/publicdomain/zero/1.0/"}],
-            "additional_descriptions": [{"description": "Ai sensi del D. Lgs. 42/2004..."}],
+            "identifiers": [
+                {"identifier": "https://w3id.org/changes/4/aldrovandi/itm/42/ob1/1"}
+            ],
+            "rights": [
+                {
+                    "title": {"en": "CC0 (Content license)"},
+                    "link": "https://creativecommons.org/publicdomain/zero/1.0/",
+                }
+            ],
+            "additional_descriptions": [
+                {"description": "Ai sensi del D. Lgs. 42/2004..."}
+            ],
         }
         mock_extract.return_value = "cc0-1.0"
 
-        drafts_path = self._make_drafts_json(tmp_path, [{
-            "draft_id": 111,
-            "config_file": f"{tmp_path}/entity-42-dcho.yaml",
-            "zenodo_url": "https://zenodo.org/api",
-            "access_token": "tok",
-            "status": "published",
-        }])
+        drafts_path = self._make_drafts_json(
+            tmp_path,
+            [
+                {
+                    "draft_id": 111,
+                    "config_file": f"{tmp_path}/entity-42-dcho.yaml",
+                    "zenodo_url": "https://zenodo.org/api",
+                    "access_token": "tok",
+                    "status": "published",
+                }
+            ],
+        )
 
         kg_path = tmp_path / "kg.ttl"
         kg_path.write_text("")

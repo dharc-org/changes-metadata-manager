@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
+# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelo.massari@unibo.it>
 #
 # SPDX-License-Identifier: ISC
 
@@ -84,12 +84,41 @@ class TestExtractLicensedEntityStages:
 
     def test_maps_steps_to_stages(self):
         g = Graph()
-        g.add((URIRef(f"{BASE_URI}/lic/42/00/1"), P70I, URIRef("https://example.com/license")))
-        g.add((URIRef(f"{BASE_URI}/lic/42/01/1"), P70I, URIRef("https://example.com/license")))
-        g.add((URIRef(f"{BASE_URI}/lic/42/02/1"), P70I, URIRef("https://example.com/license")))
-        g.add((URIRef(f"{BASE_URI}/lic/42/03/1"), P70I, URIRef("https://example.com/license")))
+        g.add(
+            (
+                URIRef(f"{BASE_URI}/lic/42/00/1"),
+                P70I,
+                URIRef("https://example.com/license"),
+            )
+        )
+        g.add(
+            (
+                URIRef(f"{BASE_URI}/lic/42/01/1"),
+                P70I,
+                URIRef("https://example.com/license"),
+            )
+        )
+        g.add(
+            (
+                URIRef(f"{BASE_URI}/lic/42/02/1"),
+                P70I,
+                URIRef("https://example.com/license"),
+            )
+        )
+        g.add(
+            (
+                URIRef(f"{BASE_URI}/lic/42/03/1"),
+                P70I,
+                URIRef("https://example.com/license"),
+            )
+        )
         result = extract_licensed_entity_stages(g)
-        assert result == {("42", "raw"), ("42", "rawp"), ("42", "dcho"), ("42", "dchoo")}
+        assert result == {
+            ("42", "raw"),
+            ("42", "rawp"),
+            ("42", "dcho"),
+            ("42", "dchoo"),
+        }
 
 
 class TestGroupFoldersByEntity:
@@ -231,7 +260,9 @@ class TestCreateStageZip:
 
             folders = [("Sala1", "S1-01-Test", {"raw": {}})]
 
-            result = create_stage_zip("1", "raw", folders, root, output_dir, "Test Object")
+            result = create_stage_zip(
+                "1", "raw", folders, root, output_dir, "Test Object"
+            )
 
             assert result is not None
             zip_path, license_id = result
@@ -239,7 +270,11 @@ class TestCreateStageZip:
             assert license_id == "cc0-1.0"
             with zipfile.ZipFile(zip_path) as zf:
                 names = sorted(zf.namelist())
-                assert names == ["S1-01-Test/raw/meta.ttl", "S1-01-Test/raw/photo.jpg", "S1-01-Test/raw/prov.trig"]
+                assert names == [
+                    "S1-01-Test/raw/meta.ttl",
+                    "S1-01-Test/raw/photo.jpg",
+                    "S1-01-Test/raw/prov.trig",
+                ]
 
     def test_includes_only_metadata_for_unlicensed_stage(self):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -255,7 +290,9 @@ class TestCreateStageZip:
 
             folders = [("Sala1", "S1-01-Test", {"raw": {}})]
 
-            result = create_stage_zip("1", "raw", folders, root, output_dir, "Test Object")
+            result = create_stage_zip(
+                "1", "raw", folders, root, output_dir, "Test Object"
+            )
 
             assert result is not None
             zip_path, license_id = result
@@ -282,7 +319,9 @@ class TestCreateStageZip:
                 ("Sala6", "S6-98b-Test", {"raw": {}}),
             ]
 
-            result = create_stage_zip("98", "raw", folders, root, output_dir, "Test Masks")
+            result = create_stage_zip(
+                "98", "raw", folders, root, output_dir, "Test Masks"
+            )
 
             assert result is not None
             zip_path, license_id = result
@@ -313,7 +352,9 @@ class TestCreateStageZip:
                 ("Sala6", "S6-98b-Test", {"raw": {}}),
             ]
 
-            result = create_stage_zip("98", "raw", folders, root, output_dir, "Test Masks")
+            result = create_stage_zip(
+                "98", "raw", folders, root, output_dir, "Test Masks"
+            )
 
             assert result is not None
             zip_path, license_id = result
@@ -344,7 +385,9 @@ class TestCreateStageZip:
                 ("Sala6", "S6-98b-Test", {"raw": {}}),
             ]
 
-            result = create_stage_zip("98", "raw", folders, root, output_dir, "Test Masks")
+            result = create_stage_zip(
+                "98", "raw", folders, root, output_dir, "Test Masks"
+            )
 
             assert result is not None
             zip_path, license_id = result
@@ -370,7 +413,9 @@ class TestCreateStageZip:
 
             folders = [("Sala1", "S1-01-Test", {"raw": {}})]
 
-            result = create_stage_zip("1", "dcho", folders, root, output_dir, "Test Object")
+            result = create_stage_zip(
+                "1", "dcho", folders, root, output_dir, "Test Object"
+            )
 
             assert result is None
             assert not (output_dir / "sala1-test-object-1-dcho.zip").exists()
@@ -484,7 +529,9 @@ class TestBuildCreatorsForEntityStage:
                     "type": "personal",
                     "family_name": "Bonifazi",
                     "given_name": "Federica",
-                    "identifiers": [{"scheme": "orcid", "identifier": "0009-0000-8466-5541"}],
+                    "identifiers": [
+                        {"scheme": "orcid", "identifier": "0009-0000-8466-5541"}
+                    ],
                 },
                 "role": {"id": "researcher"},
                 "affiliations": [{"name": "CNR-ISPC"}],
@@ -549,7 +596,9 @@ class TestBuildMetadataCreators:
                     "type": "personal",
                     "family_name": "Author",
                     "given_name": "Metadata",
-                    "identifiers": [{"scheme": "orcid", "identifier": "0000-0001-2345-6789"}],
+                    "identifiers": [
+                        {"scheme": "orcid", "identifier": "0000-0001-2345-6789"}
+                    ],
                 },
                 "role": {"id": "datacurator"},
                 "affiliations": [{"name": "Test Uni"}],
@@ -565,7 +614,9 @@ class TestMergeCreators:
                     "type": "personal",
                     "family_name": "Author",
                     "given_name": "Digit",
-                    "identifiers": [{"scheme": "orcid", "identifier": "0000-0000-0000-0001"}],
+                    "identifiers": [
+                        {"scheme": "orcid", "identifier": "0000-0000-0000-0001"}
+                    ],
                 },
                 "role": {"id": "researcher"},
                 "affiliations": [{"name": "Uni"}],
@@ -577,7 +628,9 @@ class TestMergeCreators:
                     "type": "personal",
                     "family_name": "Author",
                     "given_name": "Meta",
-                    "identifiers": [{"scheme": "orcid", "identifier": "0000-0000-0000-0002"}],
+                    "identifiers": [
+                        {"scheme": "orcid", "identifier": "0000-0000-0000-0002"}
+                    ],
                 },
                 "role": {"id": "datacurator"},
                 "affiliations": [{"name": "Uni"}],
@@ -595,7 +648,9 @@ class TestMergeCreators:
                     "type": "personal",
                     "family_name": "Shared",
                     "given_name": "Author",
-                    "identifiers": [{"scheme": "orcid", "identifier": "0000-0000-0000-0001"}],
+                    "identifiers": [
+                        {"scheme": "orcid", "identifier": "0000-0000-0000-0001"}
+                    ],
                 },
                 "role": {"id": "researcher"},
                 "affiliations": [{"name": "Uni"}],
@@ -607,7 +662,9 @@ class TestMergeCreators:
                     "type": "personal",
                     "family_name": "Shared",
                     "given_name": "Author",
-                    "identifiers": [{"scheme": "orcid", "identifier": "0000-0000-0000-0001"}],
+                    "identifiers": [
+                        {"scheme": "orcid", "identifier": "0000-0000-0000-0001"}
+                    ],
                 },
                 "role": {"id": "datacurator"},
                 "affiliations": [{"name": "Uni"}],
@@ -627,7 +684,9 @@ class TestMergeCreators:
                     "type": "personal",
                     "family_name": "Author",
                     "given_name": "Meta",
-                    "identifiers": [{"scheme": "orcid", "identifier": "0000-0000-0000-0001"}],
+                    "identifiers": [
+                        {"scheme": "orcid", "identifier": "0000-0000-0000-0001"}
+                    ],
                 },
                 "role": {"id": "datacurator"},
                 "affiliations": [{"name": "Uni"}],
@@ -682,7 +741,14 @@ class TestGenerateZenodoConfig:
     def test_generates_valid_config(self, freezer):
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], SAMPLE_METHODS)
+        config = generate_zenodo_config(
+            "raw",
+            zip_path,
+            "Test Title",
+            SAMPLE_BASE_CONFIG,
+            [SAMPLE_CREATOR],
+            SAMPLE_METHODS,
+        )
 
         assert config == {
             "zenodo_url": "https://sandbox.zenodo.org/api",
@@ -699,8 +765,12 @@ class TestGenerateZenodoConfig:
             "publication_date": "2024-06-15",
             "rights": [
                 {
-                    "title": {"en": "Creative Commons Zero v1.0 Universal (Metadata license)"},
-                    "description": {"en": "Applies to metadata files: meta.ttl, prov.trig"},
+                    "title": {
+                        "en": "Creative Commons Zero v1.0 Universal (Metadata license)"
+                    },
+                    "description": {
+                        "en": "Applies to metadata files: meta.ttl, prov.trig"
+                    },
                     "link": "https://creativecommons.org/publicdomain/zero/1.0/",
                 },
             ],
@@ -723,10 +793,21 @@ class TestGenerateZenodoConfig:
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/27-raw.zip")
         entity_uri = "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1"
-        config = generate_zenodo_config("raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], SAMPLE_METHODS, entity_uri=entity_uri)
+        config = generate_zenodo_config(
+            "raw",
+            zip_path,
+            "Test Title",
+            SAMPLE_BASE_CONFIG,
+            [SAMPLE_CREATOR],
+            SAMPLE_METHODS,
+            entity_uri=entity_uri,
+        )
 
         assert config["identifiers"] == [
-            {"identifier": "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1", "scheme": "url"}
+            {
+                "identifier": "https://w3id.org/changes/4/aldrovandi/itm/27/ob00/1",
+                "scheme": "url",
+            }
         ]
 
     def test_converts_related_identifiers(self, freezer):
@@ -742,7 +823,9 @@ class TestGenerateZenodoConfig:
             ],
         }
         zip_path = Path("/tmp/27-raw.zip")
-        config = generate_zenodo_config("raw", zip_path, "Test Title", base_config, [SAMPLE_CREATOR], SAMPLE_METHODS)
+        config = generate_zenodo_config(
+            "raw", zip_path, "Test Title", base_config, [SAMPLE_CREATOR], SAMPLE_METHODS
+        )
 
         assert config["related_identifiers"] == [
             {
@@ -755,7 +838,14 @@ class TestGenerateZenodoConfig:
     def test_converts_notes_and_method_to_additional_descriptions(self, freezer):
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], SAMPLE_METHODS)
+        config = generate_zenodo_config(
+            "raw",
+            zip_path,
+            "Test Title",
+            SAMPLE_BASE_CONFIG,
+            [SAMPLE_CREATOR],
+            SAMPLE_METHODS,
+        )
 
         assert config["additional_descriptions"] == [
             {"description": "Test method content", "type": {"id": "methods"}},
@@ -765,7 +855,15 @@ class TestGenerateZenodoConfig:
     def test_cc0_disclaimer_in_additional_descriptions(self, freezer):
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], SAMPLE_METHODS, license="cc0-1.0")
+        config = generate_zenodo_config(
+            "raw",
+            zip_path,
+            "Test Title",
+            SAMPLE_BASE_CONFIG,
+            [SAMPLE_CREATOR],
+            SAMPLE_METHODS,
+            license="cc0-1.0",
+        )
 
         assert config["additional_descriptions"] == [
             {"description": "Test method content", "type": {"id": "methods"}},
@@ -776,7 +874,14 @@ class TestGenerateZenodoConfig:
     def test_converts_locations_to_geojson(self, freezer):
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], SAMPLE_METHODS)
+        config = generate_zenodo_config(
+            "raw",
+            zip_path,
+            "Test Title",
+            SAMPLE_BASE_CONFIG,
+            [SAMPLE_CREATOR],
+            SAMPLE_METHODS,
+        )
 
         assert config["locations"] == {
             "features": [
@@ -792,24 +897,47 @@ class TestGenerateZenodoConfig:
         freezer.move_to("2024-06-15")
         base_config = {**SAMPLE_BASE_CONFIG, "community": "project-changes"}
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("raw", zip_path, "Test Title", base_config, [SAMPLE_CREATOR], SAMPLE_METHODS)
+        config = generate_zenodo_config(
+            "raw", zip_path, "Test Title", base_config, [SAMPLE_CREATOR], SAMPLE_METHODS
+        )
 
         assert config["community"] == "project-changes"
 
     def test_includes_restricted_notice_when_no_license(self, freezer):
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], SAMPLE_METHODS, has_license=False)
+        config = generate_zenodo_config(
+            "raw",
+            zip_path,
+            "Test Title",
+            SAMPLE_BASE_CONFIG,
+            [SAMPLE_CREATOR],
+            SAMPLE_METHODS,
+            has_license=False,
+        )
 
         assert RESTRICTED_NOTICE not in config["description"]
-        assert {"description": RESTRICTED_NOTICE, "type": {"id": "notes"}} in config["additional_descriptions"]
+        assert {"description": RESTRICTED_NOTICE, "type": {"id": "notes"}} in config[
+            "additional_descriptions"
+        ]
 
     def test_no_restricted_notice_when_licensed(self, freezer):
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("raw", zip_path, "Test Title", SAMPLE_BASE_CONFIG, [SAMPLE_CREATOR], SAMPLE_METHODS, has_license=True)
+        config = generate_zenodo_config(
+            "raw",
+            zip_path,
+            "Test Title",
+            SAMPLE_BASE_CONFIG,
+            [SAMPLE_CREATOR],
+            SAMPLE_METHODS,
+            has_license=True,
+        )
 
-        assert {"description": RESTRICTED_NOTICE, "type": {"id": "notes"}} not in config["additional_descriptions"]
+        assert {
+            "description": RESTRICTED_NOTICE,
+            "type": {"id": "notes"},
+        } not in config["additional_descriptions"]
 
     def test_propagates_funding_field(self, freezer):
         freezer.move_to("2024-06-15")
@@ -824,7 +952,9 @@ class TestGenerateZenodoConfig:
         ]
         base_config = {**SAMPLE_BASE_CONFIG, "funding": funding}
         zip_path = Path("/tmp/1-raw.zip")
-        config = generate_zenodo_config("raw", zip_path, "Test Title", base_config, [SAMPLE_CREATOR], SAMPLE_METHODS)
+        config = generate_zenodo_config(
+            "raw", zip_path, "Test Title", base_config, [SAMPLE_CREATOR], SAMPLE_METHODS
+        )
 
         assert config["funding"] == funding
 
@@ -861,24 +991,69 @@ class TestExtractLicenseForEntityStage:
 
     def test_picks_defining_step_license(self):
         g = Graph()
-        g.add((URIRef(f"{BASE_URI}/lic/42/00/1"), P70I, URIRef("https://creativecommons.org/licenses/by-nc/4.0/")))
-        g.add((URIRef(f"{BASE_URI}/lic/42/01/1"), P70I, URIRef("https://creativecommons.org/licenses/by-nc/4.0/")))
-        g.add((URIRef(f"{BASE_URI}/lic/42/02/1"), P70I, URIRef("https://creativecommons.org/publicdomain/zero/1.0/")))
+        g.add(
+            (
+                URIRef(f"{BASE_URI}/lic/42/00/1"),
+                P70I,
+                URIRef("https://creativecommons.org/licenses/by-nc/4.0/"),
+            )
+        )
+        g.add(
+            (
+                URIRef(f"{BASE_URI}/lic/42/01/1"),
+                P70I,
+                URIRef("https://creativecommons.org/licenses/by-nc/4.0/"),
+            )
+        )
+        g.add(
+            (
+                URIRef(f"{BASE_URI}/lic/42/02/1"),
+                P70I,
+                URIRef("https://creativecommons.org/publicdomain/zero/1.0/"),
+            )
+        )
         assert extract_license_for_entity_stage(g, "42", "dcho") == "cc0-1.0"
 
     def test_picks_defining_step_real_kg(self, real_kg):
-        assert extract_license_for_entity_stage(real_kg, "vetrina_2_basso", "dcho") == "cc0-1.0"
+        assert (
+            extract_license_for_entity_stage(real_kg, "vetrina_2_basso", "dcho")
+            == "cc0-1.0"
+        )
 
     def test_raw_returns_defining_step_license(self):
         g = Graph()
-        g.add((URIRef(f"{BASE_URI}/lic/42/00/1"), P70I, URIRef("https://creativecommons.org/licenses/by-nc/4.0/")))
-        g.add((URIRef(f"{BASE_URI}/lic/42/02/1"), P70I, URIRef("https://creativecommons.org/publicdomain/zero/1.0/")))
+        g.add(
+            (
+                URIRef(f"{BASE_URI}/lic/42/00/1"),
+                P70I,
+                URIRef("https://creativecommons.org/licenses/by-nc/4.0/"),
+            )
+        )
+        g.add(
+            (
+                URIRef(f"{BASE_URI}/lic/42/02/1"),
+                P70I,
+                URIRef("https://creativecommons.org/publicdomain/zero/1.0/"),
+            )
+        )
         assert extract_license_for_entity_stage(g, "42", "raw") == "cc-by-nc-4.0"
 
     def test_returns_none_when_defining_step_missing(self):
         g = Graph()
-        g.add((URIRef(f"{BASE_URI}/lic/42/00/1"), P70I, URIRef("https://creativecommons.org/licenses/by-nc/4.0/")))
-        g.add((URIRef(f"{BASE_URI}/lic/42/01/1"), P70I, URIRef("https://creativecommons.org/licenses/by-nc/4.0/")))
+        g.add(
+            (
+                URIRef(f"{BASE_URI}/lic/42/00/1"),
+                P70I,
+                URIRef("https://creativecommons.org/licenses/by-nc/4.0/"),
+            )
+        )
+        g.add(
+            (
+                URIRef(f"{BASE_URI}/lic/42/01/1"),
+                P70I,
+                URIRef("https://creativecommons.org/licenses/by-nc/4.0/"),
+            )
+        )
         assert extract_license_for_entity_stage(g, "42", "dcho") is None
 
 
@@ -941,7 +1116,9 @@ class TestBuildEnhancedDescription:
         result = build_enhanced_description("dcho", "Museum Specimen")
         assert "Digital Cultural Heritage Object" in result
         assert '"Museum Specimen"' in result
-        assert "interpolation, gap filling, and resolution of geometric issues" in result
+        assert (
+            "interpolation, gap filling, and resolution of geometric issues" in result
+        )
 
     def test_dchoo_stage_description(self):
         result = build_enhanced_description("dchoo", "Object Title")
@@ -953,11 +1130,15 @@ class TestBuildEnhancedDescription:
         assert CC0_DISCLAIMER not in result
 
     def test_includes_keeper_and_location(self):
-        result = build_enhanced_description("raw", "Test Object", keeper_name="Test Museum", keeper_location="Test City")
+        result = build_enhanced_description(
+            "raw", "Test Object", keeper_name="Test Museum", keeper_location="Test City"
+        )
         assert "The original object is held by Test Museum (Test City)." in result
 
     def test_includes_keeper_without_location(self):
-        result = build_enhanced_description("raw", "Test Object", keeper_name="Test Museum")
+        result = build_enhanced_description(
+            "raw", "Test Object", keeper_name="Test Museum"
+        )
         assert "The original object is held by Test Museum." in result
         assert "Test Museum (" not in result
 
@@ -966,7 +1147,9 @@ class TestBuildEnhancedDescription:
         assert "held by" not in result
 
     def test_description_is_single_paragraph(self):
-        result = build_enhanced_description("raw", "Test Object", keeper_name="Museum", keeper_location="City")
+        result = build_enhanced_description(
+            "raw", "Test Object", keeper_name="Museum", keeper_location="City"
+        )
         assert "\n" not in result.rstrip("\n")
 
 
@@ -974,44 +1157,100 @@ class TestFormatCreatorsForTable:
     def test_formats_multiple_creators(self):
         config = {
             "creators": [
-                {"person_or_org": {"family_name": "Bordignon", "given_name": "Alice", "identifiers": [{"scheme": "orcid", "identifier": "0009-0008-3556-0493"}]}},
-                {"person_or_org": {"family_name": "Massari", "given_name": "Arcangelo", "identifiers": [{"scheme": "orcid", "identifier": "0000-0002-8420-0696"}]}},
+                {
+                    "person_or_org": {
+                        "family_name": "Bordignon",
+                        "given_name": "Alice",
+                        "identifiers": [
+                            {"scheme": "orcid", "identifier": "0009-0008-3556-0493"}
+                        ],
+                    }
+                },
+                {
+                    "person_or_org": {
+                        "family_name": "Massari",
+                        "given_name": "Arcangelo",
+                        "identifiers": [
+                            {"scheme": "orcid", "identifier": "0000-0002-8420-0696"}
+                        ],
+                    }
+                },
             ]
         }
-        assert _format_creators_for_table(config) == "Bordignon, Alice [orcid:0009-0008-3556-0493]; Massari, Arcangelo [orcid:0000-0002-8420-0696]"
+        assert (
+            _format_creators_for_table(config)
+            == "Bordignon, Alice [orcid:0009-0008-3556-0493]; Massari, Arcangelo [orcid:0000-0002-8420-0696]"
+        )
 
     def test_formats_single_creator(self):
         config = {
             "creators": [
-                {"person_or_org": {"family_name": "Barzaghi", "given_name": "Sebastian", "identifiers": [{"scheme": "orcid", "identifier": "0000-0002-0799-1527"}]}},
+                {
+                    "person_or_org": {
+                        "family_name": "Barzaghi",
+                        "given_name": "Sebastian",
+                        "identifiers": [
+                            {"scheme": "orcid", "identifier": "0000-0002-0799-1527"}
+                        ],
+                    }
+                },
             ]
         }
-        assert _format_creators_for_table(config) == "Barzaghi, Sebastian [orcid:0000-0002-0799-1527]"
+        assert (
+            _format_creators_for_table(config)
+            == "Barzaghi, Sebastian [orcid:0000-0002-0799-1527]"
+        )
 
 
 class TestFormatLicensesForTable:
     def test_formats_cc0_metadata_and_content(self):
         config = {
             "rights": [
-                {"title": {"en": "Creative Commons Zero v1.0 Universal (Metadata license)"}},
-                {"title": {"en": "Creative Commons Zero v1.0 Universal (Content license)"}},
+                {
+                    "title": {
+                        "en": "Creative Commons Zero v1.0 Universal (Metadata license)"
+                    }
+                },
+                {
+                    "title": {
+                        "en": "Creative Commons Zero v1.0 Universal (Content license)"
+                    }
+                },
             ]
         }
-        assert _format_licenses_for_table(config) == "cc0-1.0 (Metadata license); cc0-1.0 (Content license)"
+        assert (
+            _format_licenses_for_table(config)
+            == "cc0-1.0 (Metadata license); cc0-1.0 (Content license)"
+        )
 
     def test_formats_mixed_licenses(self):
         config = {
             "rights": [
-                {"title": {"en": "Creative Commons Zero v1.0 Universal (Metadata license)"}},
-                {"title": {"en": "Creative Commons Attribution Non Commercial Share Alike 4.0 International (Content license)"}},
+                {
+                    "title": {
+                        "en": "Creative Commons Zero v1.0 Universal (Metadata license)"
+                    }
+                },
+                {
+                    "title": {
+                        "en": "Creative Commons Attribution Non Commercial Share Alike 4.0 International (Content license)"
+                    }
+                },
             ]
         }
-        assert _format_licenses_for_table(config) == "cc0-1.0 (Metadata license); cc-by-nc-sa-4.0 (Content license)"
+        assert (
+            _format_licenses_for_table(config)
+            == "cc0-1.0 (Metadata license); cc-by-nc-sa-4.0 (Content license)"
+        )
 
     def test_formats_metadata_only(self):
         config = {
             "rights": [
-                {"title": {"en": "Creative Commons Zero v1.0 Universal (Metadata license)"}},
+                {
+                    "title": {
+                        "en": "Creative Commons Zero v1.0 Universal (Metadata license)"
+                    }
+                },
             ]
         }
         assert _format_licenses_for_table(config) == "cc0-1.0 (Metadata license)"
@@ -1069,7 +1308,9 @@ class TestExtractDevices:
     def test_excludes_item_uris(self):
         g = Graph()
         act_uri = URIRef(f"{BASE_URI}/act/42/00/1")
-        g.add((act_uri, P16_USED_SPECIFIC_OBJECT, URIRef(f"{BASE_URI}/dev/nikon_d7200/1")))
+        g.add(
+            (act_uri, P16_USED_SPECIFIC_OBJECT, URIRef(f"{BASE_URI}/dev/nikon_d7200/1"))
+        )
         g.add((act_uri, P16_USED_SPECIFIC_OBJECT, URIRef(f"{BASE_URI}/itm/42/ob00/1")))
         devices = extract_devices(g, ["42"])
         assert devices == ["Nikon D7200"]
@@ -1136,17 +1377,26 @@ MINIMAL_CONFIG = {
     "access_token": "fake-token",
     "user_agent": "test/1.0",
     "publication_date": "2026-05-22",
-    "creators": [{
-        "person_or_org": {
-            "type": "personal",
-            "family_name": "Rossi",
-            "given_name": "Mario",
-            "identifiers": [{"scheme": "orcid", "identifier": "0000-0001-0000-0001"}],
-        },
-        "role": {"id": "researcher"},
-        "affiliations": [{"name": "University of Bologna"}],
-    }],
-    "rights": [{"title": {"en": "Creative Commons Zero v1.0 Universal (Metadata license)"}, "link": "https://creativecommons.org/publicdomain/zero/1.0/"}],
+    "creators": [
+        {
+            "person_or_org": {
+                "type": "personal",
+                "family_name": "Rossi",
+                "given_name": "Mario",
+                "identifiers": [
+                    {"scheme": "orcid", "identifier": "0000-0001-0000-0001"}
+                ],
+            },
+            "role": {"id": "researcher"},
+            "affiliations": [{"name": "University of Bologna"}],
+        }
+    ],
+    "rights": [
+        {
+            "title": {"en": "Creative Commons Zero v1.0 Universal (Metadata license)"},
+            "link": "https://creativecommons.org/publicdomain/zero/1.0/",
+        }
+    ],
 }
 
 MOCK_RECORD = {
@@ -1183,17 +1433,19 @@ class TestAtomicWriteJson:
 class TestWriteDoiTable:
     def test_generates_csv_from_drafts(self, tmp_path):
         config_path = _write_config(tmp_path / "test-raw.yaml")
-        drafts = [{
-            "draft_id": "100",
-            "config_file": str(config_path),
-            "title": "Test",
-            "zenodo_url": "https://sandbox.zenodo.org/api",
-            "access_token": "tok",
-            "user_agent": "ua",
-            "status": "uploaded",
-            "doi": "10.5281/zenodo.100",
-            "record_url": "https://sandbox.zenodo.org/records/100",
-        }]
+        drafts = [
+            {
+                "draft_id": "100",
+                "config_file": str(config_path),
+                "title": "Test",
+                "zenodo_url": "https://sandbox.zenodo.org/api",
+                "access_token": "tok",
+                "user_agent": "ua",
+                "status": "uploaded",
+                "doi": "10.5281/zenodo.100",
+                "record_url": "https://sandbox.zenodo.org/records/100",
+            }
+        ]
         csv_path = _write_doi_table(drafts, tmp_path)
         with open(csv_path) as f:
             rows = list(csv.DictReader(f))
@@ -1255,7 +1507,9 @@ class TestUploadAllResume:
             return {
                 "id": f"draft-{call_count}",
                 "pids": {},
-                "links": {"self_html": f"https://sandbox.zenodo.org/records/draft-{call_count}"},
+                "links": {
+                    "self_html": f"https://sandbox.zenodo.org/records/draft-{call_count}"
+                },
             }
 
         mock_upload.side_effect = side_effect
@@ -1273,17 +1527,22 @@ class TestUploadAllResume:
     def test_resume_skips_completed(self, mock_upload, mock_sleep, tmp_path):
         configs_dir = self._setup_configs(tmp_path)
         drafts_path = tmp_path / "drafts.json"
-        _atomic_write_json(drafts_path, [{
-            "draft_id": "existing-1",
-            "config_file": str(configs_dir / "entity-a-raw.yaml"),
-            "title": "Entity A - Raw",
-            "zenodo_url": "https://sandbox.zenodo.org/api",
-            "access_token": "tok",
-            "user_agent": "ua",
-            "status": "uploaded",
-            "doi": "",
-            "record_url": "https://sandbox.zenodo.org/uploads/existing-1",
-        }])
+        _atomic_write_json(
+            drafts_path,
+            [
+                {
+                    "draft_id": "existing-1",
+                    "config_file": str(configs_dir / "entity-a-raw.yaml"),
+                    "title": "Entity A - Raw",
+                    "zenodo_url": "https://sandbox.zenodo.org/api",
+                    "access_token": "tok",
+                    "user_agent": "ua",
+                    "status": "uploaded",
+                    "doi": "",
+                    "record_url": "https://sandbox.zenodo.org/uploads/existing-1",
+                }
+            ],
+        )
 
         mock_upload.return_value = {
             "id": "new-draft",
@@ -1297,14 +1556,18 @@ class TestUploadAllResume:
             drafts = json.load(f)
         assert len(drafts) == 3
         assert mock_upload.call_count == 2
-        stems = {Path(d["config_file"]).stem for d in drafts if d["status"] == "uploaded"}
+        stems = {
+            Path(d["config_file"]).stem for d in drafts if d["status"] == "uploaded"
+        }
         assert "entity-a-raw" in stems
         assert "entity-b-raw" in stems
         assert "entity-c-raw" in stems
 
     @patch("changes_metadata_manager.zenodo_upload.time.sleep")
     @patch("changes_metadata_manager.zenodo_upload.piccione_upload")
-    def test_failure_continues_and_records_error(self, mock_upload, mock_sleep, tmp_path):
+    def test_failure_continues_and_records_error(
+        self, mock_upload, mock_sleep, tmp_path
+    ):
         configs_dir = self._setup_configs(tmp_path)
         call_count = 0
 
@@ -1316,7 +1579,9 @@ class TestUploadAllResume:
             return {
                 "id": f"draft-{call_count}",
                 "pids": {},
-                "links": {"self_html": f"https://sandbox.zenodo.org/records/draft-{call_count}"},
+                "links": {
+                    "self_html": f"https://sandbox.zenodo.org/records/draft-{call_count}"
+                },
             }
 
         mock_upload.side_effect = side_effect
@@ -1337,42 +1602,45 @@ class TestUploadAllResume:
     def test_failed_entry_retried_on_rerun(self, mock_upload, mock_sleep, tmp_path):
         configs_dir = self._setup_configs(tmp_path)
         drafts_path = tmp_path / "drafts.json"
-        _atomic_write_json(drafts_path, [
-            {
-                "draft_id": "existing-1",
-                "config_file": str(configs_dir / "entity-a-raw.yaml"),
-                "title": "Entity A - Raw",
-                "zenodo_url": "https://sandbox.zenodo.org/api",
-                "access_token": "tok",
-                "user_agent": "ua",
-                "status": "uploaded",
-                "doi": "",
-                "record_url": "",
-            },
-            {
-                "draft_id": "",
-                "config_file": str(configs_dir / "entity-b-raw.yaml"),
-                "title": "entity-b-raw",
-                "zenodo_url": "",
-                "access_token": "",
-                "user_agent": "",
-                "status": "failed",
-                "doi": "",
-                "record_url": "",
-                "error": "previous failure",
-            },
-            {
-                "draft_id": "existing-3",
-                "config_file": str(configs_dir / "entity-c-raw.yaml"),
-                "title": "Entity C - Raw",
-                "zenodo_url": "https://sandbox.zenodo.org/api",
-                "access_token": "tok",
-                "user_agent": "ua",
-                "status": "uploaded",
-                "doi": "",
-                "record_url": "",
-            },
-        ])
+        _atomic_write_json(
+            drafts_path,
+            [
+                {
+                    "draft_id": "existing-1",
+                    "config_file": str(configs_dir / "entity-a-raw.yaml"),
+                    "title": "Entity A - Raw",
+                    "zenodo_url": "https://sandbox.zenodo.org/api",
+                    "access_token": "tok",
+                    "user_agent": "ua",
+                    "status": "uploaded",
+                    "doi": "",
+                    "record_url": "",
+                },
+                {
+                    "draft_id": "",
+                    "config_file": str(configs_dir / "entity-b-raw.yaml"),
+                    "title": "entity-b-raw",
+                    "zenodo_url": "",
+                    "access_token": "",
+                    "user_agent": "",
+                    "status": "failed",
+                    "doi": "",
+                    "record_url": "",
+                    "error": "previous failure",
+                },
+                {
+                    "draft_id": "existing-3",
+                    "config_file": str(configs_dir / "entity-c-raw.yaml"),
+                    "title": "Entity C - Raw",
+                    "zenodo_url": "https://sandbox.zenodo.org/api",
+                    "access_token": "tok",
+                    "user_agent": "ua",
+                    "status": "uploaded",
+                    "doi": "",
+                    "record_url": "",
+                },
+            ],
+        )
 
         mock_upload.return_value = {
             "id": "retried-draft",
@@ -1387,13 +1655,17 @@ class TestUploadAllResume:
             drafts = json.load(f)
         assert len(drafts) == 3
         assert all(d["status"] == "uploaded" for d in drafts)
-        retried = [d for d in drafts if Path(d["config_file"]).stem == "entity-b-raw"][0]
+        retried = [d for d in drafts if Path(d["config_file"]).stem == "entity-b-raw"][
+            0
+        ]
         assert retried["draft_id"] == "retried-draft"
         assert "error" not in retried
 
     @patch("changes_metadata_manager.zenodo_upload.time.sleep")
     @patch("changes_metadata_manager.zenodo_upload.piccione_upload")
-    def test_drafts_json_written_after_each_upload(self, mock_upload, mock_sleep, tmp_path):
+    def test_drafts_json_written_after_each_upload(
+        self, mock_upload, mock_sleep, tmp_path
+    ):
         configs_dir = self._setup_configs(tmp_path)
         snapshots: list[int] = []
 
@@ -1401,7 +1673,9 @@ class TestUploadAllResume:
             return {
                 "id": f"draft-{len(snapshots) + 1}",
                 "pids": {},
-                "links": {"self_html": f"https://sandbox.zenodo.org/records/draft-{len(snapshots) + 1}"},
+                "links": {
+                    "self_html": f"https://sandbox.zenodo.org/records/draft-{len(snapshots) + 1}"
+                },
             }
 
         mock_upload.side_effect = counting_upload
@@ -1410,18 +1684,24 @@ class TestUploadAllResume:
             snapshots.append(len(data))
             fd, tmp = tempfile.mkstemp(dir=path.parent, suffix=".tmp")
             import os
+
             with os.fdopen(fd, "w") as f:
                 json.dump(data, f, indent=2)
             os.replace(tmp, path)
 
-        with patch("changes_metadata_manager.zenodo_upload._atomic_write_json", side_effect=tracking_write):
+        with patch(
+            "changes_metadata_manager.zenodo_upload._atomic_write_json",
+            side_effect=tracking_write,
+        ):
             upload_all(configs_dir, publish=False)
 
         assert snapshots == [1, 2, 3]
 
     @patch("changes_metadata_manager.zenodo_upload.time.sleep")
     @patch("changes_metadata_manager.zenodo_upload.piccione_upload")
-    def test_publish_flag_sets_published_status(self, mock_upload, mock_sleep, tmp_path):
+    def test_publish_flag_sets_published_status(
+        self, mock_upload, mock_sleep, tmp_path
+    ):
         configs_dir = self._setup_configs(tmp_path)
         mock_upload.return_value = {
             "id": "pub-1",
@@ -1444,7 +1724,9 @@ class TestPublishAllDraftsResume:
         configs_dir.mkdir(exist_ok=True)
         drafts = []
         for i, status in enumerate(statuses):
-            config_path = _write_config(configs_dir / f"entity-{i}-raw.yaml", {"title": f"Entity {i}"})
+            config_path = _write_config(
+                configs_dir / f"entity-{i}-raw.yaml", {"title": f"Entity {i}"}
+            )
             entry = {
                 "draft_id": f"draft-{i}",
                 "config_file": str(config_path),
@@ -1454,7 +1736,9 @@ class TestPublishAllDraftsResume:
                 "user_agent": "ua",
                 "status": status,
                 "doi": "10.5281/existing" if status == "published" else "",
-                "record_url": f"https://sandbox.zenodo.org/records/draft-{i}" if status == "published" else "",
+                "record_url": f"https://sandbox.zenodo.org/records/draft-{i}"
+                if status == "published"
+                else "",
             }
             if status in ("failed", "publish_failed"):
                 entry["error"] = "old error"

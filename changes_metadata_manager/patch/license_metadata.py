@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
+# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelo.massari@unibo.it>
 #
 # SPDX-License-Identifier: ISC
 
@@ -11,7 +11,13 @@ from pathlib import Path
 import requests
 import yaml
 from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn
+from rich.progress import (
+    Progress,
+    SpinnerColumn,
+    TextColumn,
+    BarColumn,
+    MofNCompleteColumn,
+)
 
 from piccione.upload.on_zenodo import (
     build_inveniordm_payload,
@@ -42,14 +48,16 @@ def _request_with_retry(method: str, url: str, **kwargs) -> requests.Response:
     for attempt in range(1, MAX_RETRIES):
         if response.status_code != 429:
             return response
-        wait = BASE_BACKOFF * (2 ** attempt)
+        wait = BASE_BACKOFF * (2**attempt)
         console.print(f"  [yellow]Rate limited, retrying in {wait}s...[/yellow]")
         time.sleep(wait)
         response = requests.request(method, url, **kwargs)
     return response
 
 
-def _create_edit_draft(zenodo_url: str, record_id: str, access_token: str, user_agent: str) -> None:
+def _create_edit_draft(
+    zenodo_url: str, record_id: str, access_token: str, user_agent: str
+) -> None:
     response = _request_with_retry(
         "POST",
         f"{zenodo_url}/records/{record_id}/draft",
@@ -75,15 +83,21 @@ def _extract_entity_id_from_config(config: dict) -> str:
     raise ValueError(f"No entity URI found in identifiers: {config['identifiers']}")
 
 
-def _fetch_record_metadata(zenodo_url: str, record_id: str, access_token: str, user_agent: str) -> dict:
+def _fetch_record_metadata(
+    zenodo_url: str, record_id: str, access_token: str, user_agent: str
+) -> dict:
     headers = {
         "Authorization": f"Bearer {access_token}",
         "User-Agent": user_agent,
         "Accept": "application/vnd.inveniordm.v1+json",
     }
-    response = _request_with_retry("GET", f"{zenodo_url}/records/{record_id}/draft", headers=headers, timeout=30)
+    response = _request_with_retry(
+        "GET", f"{zenodo_url}/records/{record_id}/draft", headers=headers, timeout=30
+    )
     if response.status_code == 404:
-        response = _request_with_retry("GET", f"{zenodo_url}/records/{record_id}", headers=headers, timeout=30)
+        response = _request_with_retry(
+            "GET", f"{zenodo_url}/records/{record_id}", headers=headers, timeout=30
+        )
     response.raise_for_status()
     return response.json()["metadata"]
 
@@ -118,10 +132,12 @@ def _rebuild_additional_descriptions(
 ) -> list[dict]:
     rebuilt = [d for d in current if "D. Lgs. 42/2004" not in d.get("description", "")]
     if correct_license == "cc0-1.0":
-        rebuilt.append({
-            "description": CC0_DISCLAIMER,
-            "type": {"id": "notes"},
-        })
+        rebuilt.append(
+            {
+                "description": CC0_DISCLAIMER,
+                "type": {"id": "notes"},
+            }
+        )
     return rebuilt
 
 
@@ -137,7 +153,13 @@ def patch_drafts(
     with open(drafts_path) as f:
         drafts = json.load(f)
 
-    stats = {"patched": 0, "skipped_correct": 0, "skipped_failed": 0, "skipped_no_kg_license": 0, "errors": 0}
+    stats = {
+        "patched": 0,
+        "skipped_correct": 0,
+        "skipped_failed": 0,
+        "skipped_no_kg_license": 0,
+        "errors": 0,
+    }
     patch_log: list[dict] = []
 
     entries_to_check = []
@@ -168,7 +190,9 @@ def patch_drafts(
             progress.update(task, description=f"Record {record_id}")
 
             try:
-                zenodo_metadata = _fetch_record_metadata(zenodo_url, str(record_id), access_token, user_agent)
+                zenodo_metadata = _fetch_record_metadata(
+                    zenodo_url, str(record_id), access_token, user_agent
+                )
 
                 entity_id = _extract_entity_id_from_config(zenodo_metadata)
 
@@ -181,7 +205,9 @@ def patch_drafts(
                 current_license = _current_content_license(zenodo_metadata)
 
                 needs_rights_fix = correct_license != current_license
-                needs_disclaimer_fix = (correct_license == "cc0-1.0") != _has_cc0_disclaimer(zenodo_metadata)
+                needs_disclaimer_fix = (
+                    correct_license == "cc0-1.0"
+                ) != _has_cc0_disclaimer(zenodo_metadata)
 
                 if not needs_rights_fix and not needs_disclaimer_fix:
                     stats["skipped_correct"] += 1
@@ -205,7 +231,9 @@ def patch_drafts(
                 }
 
                 if dry_run:
-                    console.print(f"  [cyan]DRY RUN[/cyan] {record_id}: {current_license} → {correct_license}")
+                    console.print(
+                        f"  [cyan]DRY RUN[/cyan] {record_id}: {current_license} → {correct_license}"
+                    )
                     log_entry["status"] = "dry_run"
                     patch_log.append(log_entry)
                     stats["patched"] += 1
@@ -213,7 +241,9 @@ def patch_drafts(
                     continue
 
                 if is_published:
-                    _create_edit_draft(zenodo_url, str(record_id), access_token, user_agent)
+                    _create_edit_draft(
+                        zenodo_url, str(record_id), access_token, user_agent
+                    )
 
                 with open(config_path) as f:
                     config = yaml.safe_load(f)
@@ -223,26 +253,37 @@ def patch_drafts(
 
                 access = config["access"]
                 payload = build_inveniordm_payload(config, access)
-                update_draft_metadata(zenodo_url, access_token, str(record_id), payload, user_agent)
+                update_draft_metadata(
+                    zenodo_url, access_token, str(record_id), payload, user_agent
+                )
 
                 if is_published:
                     publish_draft(zenodo_url, access_token, str(record_id), user_agent)
 
                 with open(config_path, "w") as f:
-                    yaml.dump(config, f, Dumper=LiteralBlockDumper, default_flow_style=False, allow_unicode=True, sort_keys=False)
+                    yaml.dump(
+                        config,
+                        f,
+                        Dumper=LiteralBlockDumper,
+                        default_flow_style=False,
+                        allow_unicode=True,
+                        sort_keys=False,
+                    )
 
                 log_entry["status"] = "patched"
                 stats["patched"] += 1
                 patch_log.append(log_entry)
             except Exception as exc:
                 stats["errors"] += 1
-                patch_log.append({
-                    "record_id": record_id,
-                    "config_file": entry["config_file"],
-                    "stage": stage,
-                    "status": "error",
-                    "error": str(exc),
-                })
+                patch_log.append(
+                    {
+                        "record_id": record_id,
+                        "config_file": entry["config_file"],
+                        "stage": stage,
+                        "status": "error",
+                        "error": str(exc),
+                    }
+                )
                 console.print(f"\n[red][FAILED][/red] Record {record_id}: {exc}")
 
             progress.advance(task)
@@ -253,7 +294,7 @@ def patch_drafts(
         json.dump(patch_log, f, indent=2)
 
     console.print()
-    console.print(f"[bold]Results:[/bold]")
+    console.print("[bold]Results:[/bold]")
     console.print(f"  Patched: {stats['patched']}")
     console.print(f"  Already correct: {stats['skipped_correct']}")
     console.print(f"  Skipped (failed): {stats['skipped_failed']}")
@@ -263,9 +304,13 @@ def patch_drafts(
 
 
 if __name__ == "__main__":  # pragma: no cover
-    parser = argparse.ArgumentParser(description="Patch license metadata on Zenodo records")
+    parser = argparse.ArgumentParser(
+        description="Patch license metadata on Zenodo records"
+    )
     parser.add_argument("drafts_json", type=Path, help="Path to drafts.json")
     parser.add_argument("kg_path", type=Path, help="Path to knowledge graph (kg.ttl)")
-    parser.add_argument("--dry-run", action="store_true", help="Show changes without applying")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Show changes without applying"
+    )
     args = parser.parse_args()
     patch_drafts(args.drafts_json, args.kg_path, dry_run=args.dry_run)

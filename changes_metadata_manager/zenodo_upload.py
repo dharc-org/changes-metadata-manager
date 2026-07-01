@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
+# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelo.massari@unibo.it>
 #
 # SPDX-License-Identifier: ISC
 
@@ -22,9 +22,21 @@ from pathlib import Path
 import requests
 import yaml
 from rdflib import Graph, URIRef
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn, TimeElapsedColumn, TimeRemainingColumn
+from rich.progress import (
+    Progress,
+    SpinnerColumn,
+    TextColumn,
+    BarColumn,
+    MofNCompleteColumn,
+    TimeElapsedColumn,
+    TimeRemainingColumn,
+)
 
-from piccione.upload.on_zenodo import get_headers, main as piccione_upload, publish_draft as piccione_publish_draft
+from piccione.upload.on_zenodo import (
+    get_headers,
+    main as piccione_upload,
+    publish_draft as piccione_publish_draft,
+)
 
 from changes_metadata_manager.folder_metadata_builder import (
     BASE_URI,
@@ -58,6 +70,7 @@ def slugify(text: str) -> str:
     text = text.encode("ascii", "ignore").decode("ascii")
     text = re.sub(r"[^\w\s-]", "", text.lower())
     return re.sub(r"[-\s]+", "-", text).strip("-")
+
 
 STEP_TO_STAGE = {
     "00": "raw",
@@ -185,12 +198,16 @@ def _extract_actor_names(graph: Graph, act_uri: URIRef) -> set[str]:
     return names
 
 
-def extract_authors_for_entity_stage(graph: Graph, entity_ids: list[str], stage: str) -> set[str]:
+def extract_authors_for_entity_stage(
+    graph: Graph, entity_ids: list[str], stage: str
+) -> set[str]:
     steps = [s for s in STAGE_STEPS[stage] if s != METADATA_STEP]
     authors: set[str] = set()
     for eid in entity_ids:
         for step in steps:
-            authors |= _extract_actor_names(graph, URIRef(f"{BASE_URI}/act/{eid}/{step}/1"))
+            authors |= _extract_actor_names(
+                graph, URIRef(f"{BASE_URI}/act/{eid}/{step}/1")
+            )
     return authors
 
 
@@ -223,7 +240,9 @@ def build_metadata_creators(
     ]
 
 
-def merge_creators(digitization_creators: list[dict], metadata_creators: list[dict]) -> list[dict]:
+def merge_creators(
+    digitization_creators: list[dict], metadata_creators: list[dict]
+) -> list[dict]:
     seen_orcids: set[str] = set()
     merged: list[dict] = []
     for creator in digitization_creators:
@@ -329,7 +348,9 @@ def _get_label(graph: Graph, uri: URIRef) -> str | None:
     return None
 
 
-def extract_keeper_info(graph: Graph, entity_ids: list[str]) -> tuple[str | None, str | None]:
+def extract_keeper_info(
+    graph: Graph, entity_ids: list[str]
+) -> tuple[str | None, str | None]:
     for eid in entity_ids:
         custody_uri = URIRef(f"{BASE_URI}/act/{eid}/ob08/1")
         for _, _, keeper_uri in graph.triples((custody_uri, P14_CARRIED_OUT_BY, None)):
@@ -355,7 +376,9 @@ def extract_entity_title(graph: Graph, entity_ids: list[str]) -> str:
 def extract_acquisition_technique(graph: Graph, entity_ids: list[str]) -> str | None:
     for eid in entity_ids:
         act_uri = URIRef(f"{BASE_URI}/act/{eid}/00/1")
-        for _, _, technique_uri in graph.triples((act_uri, P32_USED_GENERAL_TECHNIQUE, None)):
+        for _, _, technique_uri in graph.triples(
+            (act_uri, P32_USED_GENERAL_TECHNIQUE, None)
+        ):
             return AAT_TECHNIQUE_LABELS[str(technique_uri)]
     return None
 
@@ -372,7 +395,9 @@ def extract_devices(graph: Graph, entity_ids: list[str]) -> list[str]:
     return sorted(devices)
 
 
-def extract_software_for_stage(graph: Graph, entity_ids: list[str], stage: str) -> list[str]:
+def extract_software_for_stage(
+    graph: Graph, entity_ids: list[str], stage: str
+) -> list[str]:
     steps = [s for s in STAGE_STEPS[stage] if s != METADATA_STEP]
     software: set[str] = set()
     for eid in entity_ids:
@@ -415,15 +440,23 @@ STAGE_DESCRIPTIONS = {
 }
 
 PROPAGATED_FIELDS = (
-    "zenodo_url", "access_token", "user_agent",
-    "subjects", "publication_date",
-    "version", "community",
-    "contributors", "funding",
-    "references", "dates",
+    "zenodo_url",
+    "access_token",
+    "user_agent",
+    "subjects",
+    "publication_date",
+    "version",
+    "community",
+    "contributors",
+    "funding",
+    "references",
+    "dates",
 )
 
 
-def extract_license_for_entity_stage(graph: Graph, entity_id: str, stage: str) -> str | None:
+def extract_license_for_entity_stage(
+    graph: Graph, entity_id: str, stage: str
+) -> str | None:
     step = STAGE_LICENSE_STEP[stage]
     lic_uri = URIRef(f"{BASE_URI}/lic/{entity_id}/{step}/1")
     for _, _, license_url in graph.triples((lic_uri, P70I, None)):
@@ -472,7 +505,7 @@ def build_enhanced_description(
         parts.append(keeper_line)
     parts.append(STAGE_DESCRIPTIONS[stage])
     parts.append(
-        f"Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href=\"{CHAD_AP_URL}\">CHAD-AP</a> ontology.",
+        f'Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href="{CHAD_AP_URL}">CHAD-AP</a> ontology.',
     )
     return " ".join(parts) + "\n"
 
@@ -486,7 +519,7 @@ def build_methods_description(
     stage: str,
 ) -> str:
     parts = [
-        f'Acquisition and digitization followed the reproducible workflow documented in '
+        f"Acquisition and digitization followed the reproducible workflow documented in "
         f'<a href="{WORKFLOW_DOI_URL}">doi:10.46298/transformations.14773</a>.',
     ]
     technique = extract_acquisition_technique(graph, entity_ids)
@@ -537,18 +570,24 @@ LICENSE_INFO = {
 
 def build_rights(content_license: str | None) -> list[dict]:
     metadata_info = LICENSE_INFO["cc0-1.0"]
-    rights = [{
-        "title": {"en": f"{metadata_info['title']} (Metadata license)"},
-        "description": {"en": "Applies to metadata files: meta.ttl, prov.trig"},
-        "link": metadata_info["link"],
-    }]
+    rights = [
+        {
+            "title": {"en": f"{metadata_info['title']} (Metadata license)"},
+            "description": {"en": "Applies to metadata files: meta.ttl, prov.trig"},
+            "link": metadata_info["link"],
+        }
+    ]
     if content_license and content_license in LICENSE_INFO:
         content_info = LICENSE_INFO[content_license]
-        rights.append({
-            "title": {"en": f"{content_info['title']} (Content license)"},
-            "description": {"en": "Applies to all data files except meta.ttl and prov.trig"},
-            "link": content_info["link"],
-        })
+        rights.append(
+            {
+                "title": {"en": f"{content_info['title']} (Content license)"},
+                "description": {
+                    "en": "Applies to all data files except meta.ttl and prov.trig"
+                },
+                "link": content_info["link"],
+            }
+        )
     return rights
 
 
@@ -590,15 +629,19 @@ def generate_zenodo_config(
         },
     ]
     if not has_license:
-        additional_descriptions.append({
-            "description": RESTRICTED_NOTICE,
-            "type": {"id": "notes"},
-        })
+        additional_descriptions.append(
+            {
+                "description": RESTRICTED_NOTICE,
+                "type": {"id": "notes"},
+            }
+        )
     if license == "cc0-1.0":
-        additional_descriptions.append({
-            "description": CC0_DISCLAIMER,
-            "type": {"id": "notes"},
-        })
+        additional_descriptions.append(
+            {
+                "description": CC0_DISCLAIMER,
+                "type": {"id": "notes"},
+            }
+        )
     config["additional_descriptions"] = additional_descriptions
 
     config["locations"] = {
@@ -684,14 +727,35 @@ def _process_entity(
             continue
         zip_path, license = result
         has_license = license is not None
-        digitization_creators = build_creators_for_entity_stage(kg, sub_ids, stage, creators_lookup)
+        digitization_creators = build_creators_for_entity_stage(
+            kg, sub_ids, stage, creators_lookup
+        )
         creators = merge_creators(digitization_creators, metadata_creators)
         entity_uri = build_entity_uri(sub_ids)
         methods_description = build_methods_description(kg, sub_ids, stage)
-        config = generate_zenodo_config(stage, zip_path, title, base_config, creators, methods_description, license, entity_uri, keeper_name, keeper_location, has_license)
+        config = generate_zenodo_config(
+            stage,
+            zip_path,
+            title,
+            base_config,
+            creators,
+            methods_description,
+            license,
+            entity_uri,
+            keeper_name,
+            keeper_location,
+            has_license,
+        )
         config_path = configs_dir / f"{sala_slug}-{title_slug}-{entity_id}-{stage}.yaml"
         with open(config_path, "w") as f:
-            yaml.dump(config, f, Dumper=LiteralBlockDumper, default_flow_style=False, allow_unicode=True, sort_keys=False)
+            yaml.dump(
+                config,
+                f,
+                Dumper=LiteralBlockDumper,
+                default_flow_style=False,
+                allow_unicode=True,
+                sort_keys=False,
+            )
 
 
 def prepare_all(
@@ -718,7 +782,9 @@ def prepare_all(
         initargs=(kg_path, base_config, creators_lookup),
     ) as executor:
         futures = {
-            executor.submit(_process_entity, entity_id, folders, root, zips_dir, configs_dir): entity_id
+            executor.submit(
+                _process_entity, entity_id, folders, root, zips_dir, configs_dir
+            ): entity_id
             for entity_id, folders in entity_groups.items()
         }
         with Progress(
@@ -802,12 +868,14 @@ def _atomic_write_json(path: Path, data: list) -> None:
 def _graceful_shutdown():
     stop = [False]
     original = signal.getsignal(signal.SIGINT)
+
     def handler(signum, frame):
         if stop[0]:
             signal.signal(signal.SIGINT, original)
             raise KeyboardInterrupt
         stop[0] = True
         print("Finishing current record, then stopping...")
+
     signal.signal(signal.SIGINT, handler)
     try:
         yield stop
@@ -822,19 +890,21 @@ def _write_doi_table(drafts: list[dict], output_dir: Path) -> Path:
             continue
         with open(draft["config_file"]) as f:
             config = yaml.safe_load(f)
-        rows.append({
-            "Numero su DMP": "",
-            "Caso di studio": "Aldrovandi",
-            "Autore/i": _format_creators_for_table(config),
-            "Tipo": "Dataset",
-            "Titolo": config["title"],
-            "Data pubblicazione": config["publication_date"],
-            "DOI": draft["doi"],
-            "URL": draft["record_url"],
-            "Repository": "Zenodo",
-            "Licenza": _format_licenses_for_table(config),
-            "Note": "",
-        })
+        rows.append(
+            {
+                "Numero su DMP": "",
+                "Caso di studio": "Aldrovandi",
+                "Autore/i": _format_creators_for_table(config),
+                "Tipo": "Dataset",
+                "Titolo": config["title"],
+                "Data pubblicazione": config["publication_date"],
+                "DOI": draft["doi"],
+                "URL": draft["record_url"],
+                "Repository": "Zenodo",
+                "Licenza": _format_licenses_for_table(config),
+                "Note": "",
+            }
+        )
     csv_path = output_dir / "doi_table.csv"
     with open(csv_path, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=DOI_TABLE_FIELDNAMES)
@@ -853,7 +923,8 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
             drafts = json.load(f)
 
     completed_stems = {
-        Path(d["config_file"]).stem for d in drafts
+        Path(d["config_file"]).stem
+        for d in drafts
         if d["status"] in ("uploaded", "published")
     }
 
@@ -861,12 +932,15 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
     failed = 0
     uploaded = 0
 
-    with _graceful_shutdown() as shutdown, Progress(
-        SpinnerColumn(),
-        TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
-        MofNCompleteColumn(),
-    ) as progress:
+    with (
+        _graceful_shutdown() as shutdown,
+        Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            MofNCompleteColumn(),
+        ) as progress,
+    ):
         task = progress.add_task("Uploading to Zenodo", total=len(config_files))
         for config_file in config_files:
             if shutdown[0]:
@@ -883,32 +957,43 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
                 record = piccione_upload(str(config_file), publish=publish)
                 with open(config_file) as f:
                     config = yaml.safe_load(f)
-                drafts = [d for d in drafts if not (Path(d["config_file"]).stem == config_file.stem and d["status"] == "failed")]
-                drafts.append({
-                    "draft_id": record["id"],
-                    "config_file": str(config_file),
-                    "title": config["title"],
-                    "zenodo_url": config["zenodo_url"],
-                    "access_token": config["access_token"],
-                    "user_agent": config["user_agent"],
-                    "status": "published" if publish else "uploaded",
-                    "doi": _extract_doi(record),
-                    "record_url": _extract_record_url(record),
-                })
+                drafts = [
+                    d
+                    for d in drafts
+                    if not (
+                        Path(d["config_file"]).stem == config_file.stem
+                        and d["status"] == "failed"
+                    )
+                ]
+                drafts.append(
+                    {
+                        "draft_id": record["id"],
+                        "config_file": str(config_file),
+                        "title": config["title"],
+                        "zenodo_url": config["zenodo_url"],
+                        "access_token": config["access_token"],
+                        "user_agent": config["user_agent"],
+                        "status": "published" if publish else "uploaded",
+                        "doi": _extract_doi(record),
+                        "record_url": _extract_record_url(record),
+                    }
+                )
                 uploaded += 1
             except Exception as exc:
-                drafts.append({
-                    "draft_id": "",
-                    "config_file": str(config_file),
-                    "title": config_file.stem,
-                    "zenodo_url": "",
-                    "access_token": "",
-                    "user_agent": "",
-                    "status": "failed",
-                    "doi": "",
-                    "record_url": "",
-                    "error": str(exc),
-                })
+                drafts.append(
+                    {
+                        "draft_id": "",
+                        "config_file": str(config_file),
+                        "title": config_file.stem,
+                        "zenodo_url": "",
+                        "access_token": "",
+                        "user_agent": "",
+                        "status": "failed",
+                        "doi": "",
+                        "record_url": "",
+                        "error": str(exc),
+                    }
+                )
                 failed += 1
                 print(f"\n[FAILED] {config_file.stem}: {exc}")
 
@@ -919,7 +1004,9 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
     csv_path = _write_doi_table(drafts, configs_dir.parent)
     print(f"DOI table written to {csv_path}")
     print(f"Drafts saved to {drafts_path}")
-    print(f"Summary: {uploaded} uploaded, {skipped} skipped, {failed} failed (of {len(config_files)} total)")
+    print(
+        f"Summary: {uploaded} uploaded, {skipped} skipped, {failed} failed (of {len(config_files)} total)"
+    )
     return csv_path
 
 
@@ -931,12 +1018,15 @@ def publish_all_drafts(drafts_path: Path) -> Path:
     published = 0
     failed = 0
 
-    with _graceful_shutdown() as shutdown, Progress(
-        SpinnerColumn(),
-        TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
-        MofNCompleteColumn(),
-    ) as progress:
+    with (
+        _graceful_shutdown() as shutdown,
+        Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            MofNCompleteColumn(),
+        ) as progress,
+    ):
         task = progress.add_task("Publishing drafts", total=len(publishable))
         for draft in publishable:
             if shutdown[0]:
@@ -946,7 +1036,10 @@ def publish_all_drafts(drafts_path: Path) -> Path:
             try:
                 base_url = draft["zenodo_url"].rstrip("/")
                 record = piccione_publish_draft(
-                    base_url, draft["access_token"], draft["draft_id"], draft["user_agent"],
+                    base_url,
+                    draft["access_token"],
+                    draft["draft_id"],
+                    draft["user_agent"],
                 )
                 draft["status"] = "published"
                 draft["doi"] = _extract_doi(record)
@@ -987,15 +1080,23 @@ def sync_status(drafts_path: Path) -> Path:
             progress.update(task, description=f"Querying {draft['draft_id']}")
             headers = get_headers(draft["access_token"], draft["user_agent"])
             base_url = draft["zenodo_url"].rstrip("/")
-            resp = requests.get(f"{base_url}/records/{draft['draft_id']}", headers=headers)
+            resp = requests.get(
+                f"{base_url}/records/{draft['draft_id']}", headers=headers
+            )
             if resp.status_code == 404:
-                resp = requests.get(f"{base_url}/records/{draft['draft_id']}/draft", headers=headers)
+                resp = requests.get(
+                    f"{base_url}/records/{draft['draft_id']}/draft", headers=headers
+                )
             resp.raise_for_status()
             record = resp.json()
             new_status = record["status"]
             new_doi = record.get("doi", "")
             new_url = record["links"]["self_html"]
-            if draft["status"] != new_status or draft["doi"] != new_doi or draft["record_url"] != new_url:
+            if (
+                draft["status"] != new_status
+                or draft["doi"] != new_doi
+                or draft["record_url"] != new_url
+            ):
                 draft["status"] = new_status
                 draft["doi"] = new_doi
                 draft["record_url"] = new_url
@@ -1028,10 +1129,14 @@ def cleanup_duplicates(drafts_path: Path, dry_run: bool = False) -> None:
     duplicates: list[dict] = []
     page = 1
     while True:
-        resp = requests.get(f"{base_url}/user/records", params={
-            "size": 100,
-            "page": page,
-        }, headers=headers)
+        resp = requests.get(
+            f"{base_url}/user/records",
+            params={
+                "size": 100,
+                "page": page,
+            },
+            headers=headers,
+        )
         resp.raise_for_status()
         hits = resp.json()["hits"]["hits"]
         if not hits:
@@ -1049,10 +1154,14 @@ def cleanup_duplicates(drafts_path: Path, dry_run: bool = False) -> None:
     draft_dups = [d for d in duplicates if d.get("status") != "published"]
     published_dups = [d for d in duplicates if d.get("status") == "published"]
 
-    print(f"Found {len(duplicates)} duplicate(s): {len(draft_dups)} draft(s), {len(published_dups)} published")
+    print(
+        f"Found {len(duplicates)} duplicate(s): {len(draft_dups)} draft(s), {len(published_dups)} published"
+    )
 
     for dup in published_dups:
-        print(f"  [PUBLISHED - cannot delete] id={dup['id']}, doi={dup.get('doi', '')}, title={dup.get('title', '')}")
+        print(
+            f"  [PUBLISHED - cannot delete] id={dup['id']}, doi={dup.get('doi', '')}, title={dup.get('title', '')}"
+        )
 
     deleted = 0
     for dup in draft_dups:
@@ -1060,12 +1169,16 @@ def cleanup_duplicates(drafts_path: Path, dry_run: bool = False) -> None:
         if dry_run:
             print(f"  [DRY RUN] Would delete draft id={dup['id']}, title={title}")
         else:
-            resp = requests.delete(f"{base_url}/records/{dup['id']}/draft", headers=headers)
+            resp = requests.delete(
+                f"{base_url}/records/{dup['id']}/draft", headers=headers
+            )
             if resp.status_code == 204:
                 deleted += 1
                 print(f"  [DELETED] id={dup['id']}, title={title}")
             else:
-                print(f"  [FAILED] id={dup['id']}, status={resp.status_code}, body={resp.text[:200]}")
+                print(
+                    f"  [FAILED] id={dup['id']}, status={resp.status_code}, body={resp.text[:200]}"
+                )
             time.sleep(1)
 
     if dry_run:
@@ -1078,20 +1191,47 @@ def parse_arguments():  # pragma: no cover
     parser = argparse.ArgumentParser(description="Prepare and upload Zenodo packages")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    prepare_parser = subparsers.add_parser("prepare", help="Create zips and YAML configs")
-    prepare_parser.add_argument("root", type=Path, help="Root directory with Sala/Folder/Stage structure")
-    prepare_parser.add_argument("zenodo_config", type=Path, help="Base Zenodo configuration YAML")
-    prepare_parser.add_argument("--output", "-o", type=Path, default=Path("zenodo_output"), help="Output directory")
+    prepare_parser = subparsers.add_parser(
+        "prepare", help="Create zips and YAML configs"
+    )
+    prepare_parser.add_argument(
+        "root", type=Path, help="Root directory with Sala/Folder/Stage structure"
+    )
+    prepare_parser.add_argument(
+        "zenodo_config", type=Path, help="Base Zenodo configuration YAML"
+    )
+    prepare_parser.add_argument(
+        "--output",
+        "-o",
+        type=Path,
+        default=Path("zenodo_output"),
+        help="Output directory",
+    )
     upload_parser = subparsers.add_parser("upload", help="Upload to Zenodo")
-    upload_parser.add_argument("configs_dir", type=Path, help="Directory containing YAML configs")
-    upload_parser.add_argument("--publish", action="store_true", help="Publish after upload")
-    publish_parser = subparsers.add_parser("publish-drafts", help="Publish previously uploaded drafts")
-    publish_parser.add_argument("drafts_file", type=Path, help="Path to drafts.json from a previous upload")
-    sync_parser = subparsers.add_parser("sync-status", help="Sync drafts.json with actual Zenodo record status")
+    upload_parser.add_argument(
+        "configs_dir", type=Path, help="Directory containing YAML configs"
+    )
+    upload_parser.add_argument(
+        "--publish", action="store_true", help="Publish after upload"
+    )
+    publish_parser = subparsers.add_parser(
+        "publish-drafts", help="Publish previously uploaded drafts"
+    )
+    publish_parser.add_argument(
+        "drafts_file", type=Path, help="Path to drafts.json from a previous upload"
+    )
+    sync_parser = subparsers.add_parser(
+        "sync-status", help="Sync drafts.json with actual Zenodo record status"
+    )
     sync_parser.add_argument("drafts_file", type=Path, help="Path to drafts.json")
-    cleanup_parser = subparsers.add_parser("cleanup-duplicates", help="Find and delete duplicate records not in drafts.json")
+    cleanup_parser = subparsers.add_parser(
+        "cleanup-duplicates",
+        help="Find and delete duplicate records not in drafts.json",
+    )
     cleanup_parser.add_argument("drafts_file", type=Path, help="Path to drafts.json")
-    cleanup_parser.add_argument("--dry-run", action="store_true", help="Only report duplicates, don't delete")
+    cleanup_parser.add_argument(
+        "--dry-run", action="store_true", help="Only report duplicates, don't delete"
+    )
 
     return parser.parse_args()
 

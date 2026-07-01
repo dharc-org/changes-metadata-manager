@@ -1,7 +1,7 @@
-# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
+# SPDX-FileCopyrightText: NONE
 #
-# SPDX-License-Identifier: ISC
+# SPDX-License-Identifier: CC0-1.0
 
 """
 Map RDF knowledge graph triples to Aldrovandi digitization folder stages.
-""" 
+"""

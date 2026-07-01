@@ -2,24 +2,26 @@ version = 1
 
 [[annotations]]
 path = [
-    ".gitignore",
+    "docs/.gitignore",
     ".python-version",
-    "CHANGELOG.md",
-    "LICENSE",
     "pyproject.toml",
     "uv.lock",
     "data/kg.ttl",
     "data/prov.trig",
-    "data/shapes-chadap.ttl",
-    "docs/package.json",
-    "docs/package-lock.json",
-    "docs/tsconfig.json",
     "tests/fixtures/**",
 ]
-SPDX-FileCopyrightText = "2025-2026 Arcangelo Massari <arcangelomas@gmail.com>"
-SPDX-License-Identifier = "ISC"
+SPDX-FileCopyrightText = "NONE"
+SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = "LICENSES/**"
-SPDX-FileCopyrightText = "2025-2026 Arcangelo Massari <arcangelomas@gmail.com>"
+path = "CHANGELOG.md"
+SPDX-FileCopyrightText = "2025-2026 Arcangelo Massari <arcangelo.massari@unibo.it>"
+SPDX-License-Identifier = "CC-BY-4.0"
+
+[[annotations]]
+path = [
+    "LICENSE",
+    "data/shapes-chadap.ttl",
+]
+SPDX-FileCopyrightText = "2025-2026 Arcangelo Massari <arcangelo.massari@unibo.it>"
 SPDX-License-Identifier = "ISC"

@@ -1,0 +1,20 @@
+# SPDX-FileCopyrightText: NONE
+#
+# SPDX-License-Identifier: CC0-1.0
+
+format: jb-book
+root: intro
+parts:
+  - caption: Guides
+    numbered: false
+    chapters:
+      - file: 01-getting-started
+      - file: 02-folder-metadata
+      - file: 03-zenodo-upload
+      - file: 04-sharepoint-sync
+  - caption: Reference
+    numbered: false
+    chapters:
+      - file: 05-architecture
+      - file: 06-digitization-stages
+      - file: 07-naming-convention

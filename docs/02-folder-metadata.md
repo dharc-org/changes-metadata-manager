@@ -1,11 +1,10 @@
----
-# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
-#
-# SPDX-License-Identifier: ISC
+<!--
+SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelo.massari@unibo.it>
 
-title: Folder metadata builder
-description: Generate RDF metadata and provenance files from the knowledge graph
----
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
+# Folder metadata builder
 
 The folder metadata builder is the main entry point. It scans a folder hierarchy, extracts RDF triples from the knowledge graph for each object and stage, validates the output against SHACL shapes, and generates provenance snapshots.
 
@@ -40,7 +39,7 @@ The builder walks through every folder matching the `Sala*/Folder/Stage/` patter
 
 4. **Validates against SHACL shapes**. Unless `--no-validate` is passed, the output is checked against `data/shapes-chadap.ttl` using pyshacl. Validation errors are reported but do not stop the process.
 
-5. **Generates `prov.trig`**. For each subject in the metadata, a provenance snapshot is created as a named graph. The snapshot records who created the entity, when, and from what source. See [Architecture](/changes-metadata-manager/reference/architecture/) for details on the provenance model.
+5. **Generates `prov.trig`**. For each subject in the metadata, a provenance snapshot is created as a named graph. The snapshot records who created the entity, when, and from what source. See [Architecture](05-architecture.md) for details on the provenance model.
 
 ## Stage-to-step mapping
 

@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
+# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelo.massari@unibo.it>
 #
 # SPDX-License-Identifier: ISC
 
@@ -44,7 +44,9 @@ def assert_graphs_equal(actual: Graph, expected: Graph):
     extra = actual_triples - expected_triples
 
     if missing:
-        missing_str = "\n".join(f"  {s} {p} {o}" for s, p, o in sorted(missing, key=str))
+        missing_str = "\n".join(
+            f"  {s} {p} {o}" for s, p, o in sorted(missing, key=str)
+        )
         raise AssertionError(f"Missing {len(missing)} triples:\n{missing_str}")
 
     if extra:
@@ -76,11 +78,23 @@ def test_folder_structure():
 
 
 class TestExtractMetadataForStageExact:
-    @pytest.mark.parametrize("nr,stage", [
-        ("1", "raw"), ("1", "rawp"), ("1", "dcho"), ("1", "dchoo"),
-        ("24", "raw"), ("24", "rawp"), ("24", "dcho"), ("24", "dchoo"),
-        ("57", "raw"), ("57", "rawp"), ("57", "dcho"), ("57", "dchoo"),
-    ])
+    @pytest.mark.parametrize(
+        "nr,stage",
+        [
+            ("1", "raw"),
+            ("1", "rawp"),
+            ("1", "dcho"),
+            ("1", "dchoo"),
+            ("24", "raw"),
+            ("24", "rawp"),
+            ("24", "dcho"),
+            ("24", "dchoo"),
+            ("57", "raw"),
+            ("57", "rawp"),
+            ("57", "dcho"),
+            ("57", "dchoo"),
+        ],
+    )
     def test_stage_output_matches_fixture(self, real_kg, nr, stage):
         result = extract_metadata_for_stage(real_kg, nr, stage)
         expected = load_fixture(f"nr_{nr}/{stage}.ttl")
@@ -88,23 +102,29 @@ class TestExtractMetadataForStageExact:
 
 
 class TestExtractIdFromFolderName:
-    @pytest.mark.parametrize("folder_name,expected", [
-        ("S1-5-nome_oggetto", "5"),
-        ("S2-42-altro_nome", "42"),
-        ("S6-123-oggetto_complesso", "123"),
-        ("S1-7-nome con spazi", "7"),
-        ("S1-01-CNR_CartaNautica", "1"),
-        ("S2-27a-FICLIT_DelphiniumStaphisagria", "27a"),
-        ("S6-74b-ISPC-Orchis_morio_L", "74b"),
-    ])
+    @pytest.mark.parametrize(
+        "folder_name,expected",
+        [
+            ("S1-5-nome_oggetto", "5"),
+            ("S2-42-altro_nome", "42"),
+            ("S6-123-oggetto_complesso", "123"),
+            ("S1-7-nome con spazi", "7"),
+            ("S1-01-CNR_CartaNautica", "1"),
+            ("S2-27a-FICLIT_DelphiniumStaphisagria", "27a"),
+            ("S6-74b-ISPC-Orchis_morio_L", "74b"),
+        ],
+    )
     def test_valid_folder_names(self, folder_name, expected):
         assert extract_id_from_folder_name(folder_name) == expected
 
-    @pytest.mark.parametrize("folder_name", [
-        "1-5-nome",
-        "Sala1-5-nome",
-        "S1_5_nome",
-    ])
+    @pytest.mark.parametrize(
+        "folder_name",
+        [
+            "1-5-nome",
+            "Sala1-5-nome",
+            "S1_5_nome",
+        ],
+    )
     def test_invalid_folder_names(self, folder_name):
         with pytest.raises(ValueError, match="Cannot extract ID"):
             extract_id_from_folder_name(folder_name)
@@ -121,13 +141,19 @@ class TestProcessAllFolders:
         for sala, folder, _ in TEST_ITEMS:
             folder_dir = root / sala / folder
             stage_dirs = [d for d in folder_dir.iterdir() if d.is_dir()]
-            assert len(stage_dirs) == 4, f"Expected 4 stages for {folder}, got {len(stage_dirs)}"
+            assert len(stage_dirs) == 4, (
+                f"Expected 4 stages for {folder}, got {len(stage_dirs)}"
+            )
 
             for stage_dir in stage_dirs:
                 meta_file = stage_dir / "meta.ttl"
                 prov_file = stage_dir / "prov.trig"
-                assert meta_file.exists(), f"meta.ttl not created for {folder}/{stage_dir.name}"
-                assert prov_file.exists(), f"prov.trig not created for {folder}/{stage_dir.name}"
+                assert meta_file.exists(), (
+                    f"meta.ttl not created for {folder}/{stage_dir.name}"
+                )
+                assert prov_file.exists(), (
+                    f"prov.trig not created for {folder}/{stage_dir.name}"
+                )
 
 
 class TestMergeProvenanceFiles:
@@ -148,9 +174,7 @@ class TestMergeProvenanceFiles:
 
         PROV = Namespace("http://www.w3.org/ns/prov#")
         prov_entities = set(merged.quads((None, PROV.specializationOf, None, None)))
-        individual_count = sum(
-            1 for _ in root.rglob("prov.trig")
-        )
+        individual_count = sum(1 for _ in root.rglob("prov.trig"))
 
         assert individual_count == 12
         assert len(prov_entities) == 249
@@ -180,5 +204,3 @@ class TestScanFolderStructure:
             assert "dcho" in folder_data
             assert set(folder_data["raw"]["_files"]) == {"file1.jpg", "file2.jpg"}
             assert folder_data["dcho"]["_files"] == ["model.obj"]
-
-

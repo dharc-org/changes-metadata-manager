@@ -1,11 +1,10 @@
----
-# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
-#
-# SPDX-License-Identifier: ISC
+<!--
+SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelo.massari@unibo.it>
 
-title: Digitization stages
-description: The four processing stages and what each one represents
----
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
+# Digitization stages
 
 Every digitized object goes through a pipeline of four stages. Each stage builds on the previous ones, and the metadata is cumulative: a `dcho` folder contains triples from `raw`, `rawp`, and `dcho` steps.
 
@@ -64,4 +63,3 @@ dchoo (steps 00-06)
 ```
 
 Because metadata is cumulative, the author list grows at each stage. The people who created the `dchoo` include everyone from `raw`, `rawp`, and `dcho` as well.
-

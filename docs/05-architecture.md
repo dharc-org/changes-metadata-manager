@@ -1,11 +1,10 @@
----
-# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
-#
-# SPDX-License-Identifier: ISC
+<!--
+SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelo.massari@unibo.it>
 
-title: Architecture
-description: How the system processes metadata and generates provenance
----
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
+# Architecture
 
 ## Overview
 

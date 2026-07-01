@@ -1,11 +1,10 @@
----
-# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
-#
-# SPDX-License-Identifier: ISC
+<!--
+SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelo.massari@unibo.it>
 
-title: Zenodo upload
-description: Package and upload digitized objects to Zenodo
----
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
+# Zenodo upload
 
 The Zenodo upload module has two subcommands: `prepare` builds ZIP archives and YAML configuration files, and `upload` sends them to Zenodo through piccione's InvenioRDM integration.
 

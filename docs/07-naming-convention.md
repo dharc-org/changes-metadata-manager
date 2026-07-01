@@ -1,11 +1,10 @@
----
-# SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelomas@gmail.com>
-#
-# SPDX-License-Identifier: ISC
+<!--
+SPDX-FileCopyrightText: 2025-2026 Arcangelo Massari <arcangelo.massari@unibo.it>
 
-title: Naming convention
-description: Folder and file naming rules for the Aldrovandi digitization project
----
+SPDX-License-Identifier: CC-BY-4.0
+-->
+
+# Naming convention
 
 This page documents the directory layout and file naming rules used across the Aldrovandi collection.
 

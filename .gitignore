@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: NONE
+#
+# SPDX-License-Identifier: CC0-1.0
+
 __pycache__
 htmlcov
 .pytest_cache
@@ -7,9 +11,7 @@ coverage.xml
 data/aldrovandi_obj.csv
 data/aldrovandi_pro.csv
 data/spoke4_dati.csv
-docs/node_modules
-docs/dist
-docs/.astro
+docs/_build
 .env
 data/output
 data/test_output
