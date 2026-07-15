@@ -71,6 +71,11 @@ def real_kg():
     return load_kg(REAL_KG_PATH)
 
 
+@pytest.fixture(scope="module")
+def real_creators_lookup():
+    return load_creators_lookup(DATA_DIR / "creators_lookup.yaml")
+
+
 class TestExtractLicensedEntityStages:
     def test_returns_set_of_tuples(self, real_kg):
         result = extract_licensed_entity_stages(real_kg)
@@ -538,10 +543,63 @@ class TestBuildCreatorsForEntityStage:
             }
         ]
 
-    def test_ignores_authors_not_in_lookup(self, real_kg):
+    def test_raises_for_author_not_in_lookup(self, real_kg):
         lookup = {}
-        creators = build_creators_for_entity_stage(real_kg, ["1"], "raw", lookup)
-        assert creators == []
+        with pytest.raises(
+            ValueError, match="^Creators missing from lookup: Federica Bonifazi$"
+        ):
+            build_creators_for_entity_stage(real_kg, ["1"], "raw", lookup)
+
+    @pytest.mark.parametrize(
+        "entity_id,expected_creator",
+        [
+            (
+                "40",
+                {
+                    "person_or_org": {
+                        "type": "personal",
+                        "family_name": "Girelli",
+                        "given_name": "Valentina Alena",
+                        "identifiers": [
+                            {
+                                "scheme": "orcid",
+                                "identifier": "0000-0001-9257-9803",
+                            }
+                        ],
+                    },
+                    "role": {"id": "researcher"},
+                    "affiliations": [
+                        {"name": "Alma Mater Studiorum - Università di Bologna"}
+                    ],
+                },
+            ),
+            (
+                "105",
+                {
+                    "person_or_org": {
+                        "type": "personal",
+                        "family_name": "Manganelli Del Fà",
+                        "given_name": "Rachele",
+                        "identifiers": [
+                            {
+                                "scheme": "orcid",
+                                "identifier": "0000-0002-4767-5684",
+                            }
+                        ],
+                    },
+                    "role": {"id": "researcher"},
+                    "affiliations": [{"name": "Consiglio Nazionale delle Ricerche"}],
+                },
+            ),
+        ],
+    )
+    def test_resolves_rdf_name_to_full_creator(
+        self, real_kg, real_creators_lookup, entity_id, expected_creator
+    ):
+        creators = build_creators_for_entity_stage(
+            real_kg, [entity_id], "raw", real_creators_lookup
+        )
+        assert creators == [expected_creator]
 
     def test_sorts_authors_alphabetically(self):
         g = Graph()
@@ -567,6 +625,11 @@ class TestBuildCreatorsForEntityStage:
                 "orcid": "0000-0000-0000-0002",
             },
         }
+        with pytest.raises(
+            ValueError,
+            match="^Creators missing from lookup: Alpha Author, Zeta Author$",
+        ):
+            build_creators_for_entity_stage(g, ["42"], "raw", {})
         creators = build_creators_for_entity_stage(g, ["42"], "raw", lookup)
         assert [c["person_or_org"]["given_name"] for c in creators] == ["Alpha", "Zeta"]
 
@@ -604,6 +667,21 @@ class TestBuildMetadataCreators:
                 "affiliations": [{"name": "Test Uni"}],
             }
         ]
+
+    def test_raises_for_author_not_in_lookup(self):
+        g = Graph()
+        act_uri = URIRef(f"{BASE_URI}/act/42/05/1")
+        actor_uri = URIRef(f"{BASE_URI}/per/meta/1")
+        apl_uri = URIRef(f"{BASE_URI}/apl/meta/1")
+        g.add((act_uri, P14_CARRIED_OUT_BY, actor_uri))
+        g.add((actor_uri, RDF_TYPE, E21_PERSON))
+        g.add((actor_uri, P1_IS_IDENTIFIED_BY, apl_uri))
+        g.add((apl_uri, P190_HAS_SYMBOLIC_CONTENT, Literal("Metadata Author")))
+
+        with pytest.raises(
+            ValueError, match="^Creators missing from lookup: Metadata Author$"
+        ):
+            build_metadata_creators(g, ["42"], {})
 
 
 class TestMergeCreators:

@@ -76,7 +76,7 @@ Handles two tasks:
 |------|---------|
 | `data/kg.ttl` | Knowledge graph with all RDF triples |
 | `data/shapes-chadap.ttl` | SHACL shapes for metadata validation |
-| `data/creators_lookup.yaml` | Maps creator names from RDF to structured InvenioRDM fields (family name, given name, affiliation, ORCID) |
+| `data/creators_lookup.yaml` | Maps exact RDF creator names to structured InvenioRDM fields (family name, given name, affiliation, ORCID); unresolved names stop Zenodo package preparation |
 | `zenodo_config.yaml` | Base Zenodo record configuration |
 
 ## SHACL validation

@@ -218,26 +218,29 @@ def extract_metadata_authors(graph: Graph, entity_ids: list[str]) -> set[str]:
     return authors
 
 
+def _build_creators(
+    author_names: set[str], role: str, creators_lookup: dict[str, dict]
+) -> list[dict]:
+    missing_names = sorted(author_names.difference(creators_lookup))
+    if missing_names:
+        raise ValueError(f"Creators missing from lookup: {', '.join(missing_names)}")
+    return [
+        _format_creator(creators_lookup[name], role) for name in sorted(author_names)
+    ]
+
+
 def build_creators_for_entity_stage(
     graph: Graph, entity_ids: list[str], stage: str, creators_lookup: dict[str, dict]
 ) -> list[dict]:
     author_names = extract_authors_for_entity_stage(graph, entity_ids, stage)
-    return [
-        _format_creator(creators_lookup[name], "researcher")
-        for name in sorted(author_names)
-        if name in creators_lookup
-    ]
+    return _build_creators(author_names, "researcher", creators_lookup)
 
 
 def build_metadata_creators(
     graph: Graph, entity_ids: list[str], creators_lookup: dict[str, dict]
 ) -> list[dict]:
     author_names = extract_metadata_authors(graph, entity_ids)
-    return [
-        _format_creator(creators_lookup[name], "datacurator")
-        for name in sorted(author_names)
-        if name in creators_lookup
-    ]
+    return _build_creators(author_names, "datacurator", creators_lookup)
 
 
 def merge_creators(
