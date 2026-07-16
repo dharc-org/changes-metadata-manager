@@ -4,109 +4,59 @@
 
 import argparse
 import json
-import re
 import time
+from copy import deepcopy
 from pathlib import Path
+from typing import cast
 
 import requests
-import yaml
+from piccione.upload.on_zenodo import text_to_html
 from rich.console import Console
 from rich.progress import (
+    BarColumn,
+    MofNCompleteColumn,
     Progress,
     SpinnerColumn,
     TextColumn,
-    BarColumn,
-    MofNCompleteColumn,
-)
-
-from piccione.upload.on_zenodo import (
-    build_inveniordm_payload,
-    get_headers,
-    publish_draft,
-    update_draft_metadata,
 )
 
 from changes_metadata_manager.folder_metadata_builder import load_kg
+from changes_metadata_manager.zenodo_api import (
+    create_edit_draft,
+    fetch_record,
+    publish_draft,
+    update_draft,
+)
+from changes_metadata_manager.zenodo_metadata import (
+    ZenodoUpdatePayload,
+    build_zenodo_update_payload,
+    extract_entity_id,
+    extract_stage,
+    zenodo_payload_differences,
+)
 from changes_metadata_manager.zenodo_upload import (
     CC0_DISCLAIMER,
-    LiteralBlockDumper,
     build_rights,
     extract_license_for_entity_stage,
 )
 
 console = Console()
 
-MAX_RETRIES = 5
-BASE_BACKOFF = 10
-
-STAGE_PATTERN = re.compile(r"-(raw|rawp|dcho|dchoo)\.yaml$")
-ENTITY_URI_PATTERN = re.compile(r"/itm/([^/]+)/ob\d+/\d+$")
-
-
-def _request_with_retry(method: str, url: str, **kwargs) -> requests.Response:
-    response = requests.request(method, url, **kwargs)
-    for attempt in range(1, MAX_RETRIES):
-        if response.status_code != 429:
-            return response
-        wait = BASE_BACKOFF * (2**attempt)
-        console.print(f"  [yellow]Rate limited, retrying in {wait}s...[/yellow]")
-        time.sleep(wait)
-        response = requests.request(method, url, **kwargs)
-    return response
-
-
-def _create_edit_draft(
-    zenodo_url: str, record_id: str, access_token: str, user_agent: str
-) -> None:
-    response = _request_with_retry(
-        "POST",
-        f"{zenodo_url}/records/{record_id}/draft",
-        headers=get_headers(access_token, user_agent),
-        timeout=30,
-    )
-    if response.status_code == 403 and "already" in response.text.lower():
-        return
-    response.raise_for_status()
-
-
-def _extract_stage_from_config_path(config_file: str) -> str:
-    m = STAGE_PATTERN.search(config_file)
-    assert m, f"Cannot extract stage from config path: {config_file}"
-    return m.group(1)
-
-
-def _extract_entity_id_from_config(config: dict) -> str:
-    for entry in config["identifiers"]:
-        m = ENTITY_URI_PATTERN.search(entry["identifier"])
-        if m:
-            return m.group(1)
-    raise ValueError(f"No entity URI found in identifiers: {config['identifiers']}")
-
-
-def _fetch_record_metadata(
-    zenodo_url: str, record_id: str, access_token: str, user_agent: str
-) -> dict:
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-        "User-Agent": user_agent,
-        "Accept": "application/vnd.inveniordm.v1+json",
-    }
-    response = _request_with_retry(
-        "GET", f"{zenodo_url}/records/{record_id}/draft", headers=headers, timeout=30
-    )
-    if response.status_code == 404:
-        response = _request_with_retry(
-            "GET", f"{zenodo_url}/records/{record_id}", headers=headers, timeout=30
-        )
-    response.raise_for_status()
-    return response.json()["metadata"]
+REQUEST_DELAY = 2
+DEFAULT_USER_AGENT = "changes-metadata-manager/1.0.0"
 
 
 def _current_content_license(metadata: dict) -> str | None:
-    for right in metadata.get("rights", []):
-        title = right.get("title", {}).get("en", "")
+    if "rights" not in metadata:
+        return None
+    for right in metadata["rights"]:
+        if "title" not in right or "en" not in right["title"]:
+            continue
+        title = right["title"]["en"]
         if "(Content license)" in title:
-            link = right.get("link", "")
+            if "link" not in right:
+                continue
+            link = right["link"]
             if "zero" in link:
                 return "cc0-1.0"
             if "by-nc-sa" in link:
@@ -121,8 +71,10 @@ def _current_content_license(metadata: dict) -> str | None:
 
 
 def _has_cc0_disclaimer(metadata: dict) -> bool:
-    for desc in metadata.get("additional_descriptions", []):
-        if "D. Lgs. 42/2004" in desc.get("description", ""):
+    if "additional_descriptions" not in metadata:
+        return False
+    for description in metadata["additional_descriptions"]:
+        if "D. Lgs. 42/2004" in description["description"]:
             return True
     return False
 
@@ -130,15 +82,36 @@ def _has_cc0_disclaimer(metadata: dict) -> bool:
 def _rebuild_additional_descriptions(
     current: list[dict], correct_license: str | None
 ) -> list[dict]:
-    rebuilt = [d for d in current if "D. Lgs. 42/2004" not in d.get("description", "")]
+    rebuilt = [
+        deepcopy(description)
+        for description in current
+        if "D. Lgs. 42/2004" not in description["description"]
+    ]
     if correct_license == "cc0-1.0":
         rebuilt.append(
             {
-                "description": CC0_DISCLAIMER,
+                "description": text_to_html(CC0_DISCLAIMER),
                 "type": {"id": "notes"},
             }
         )
     return rebuilt
+
+
+def _payload_with_license(
+    record: dict, correct_license: str | None
+) -> ZenodoUpdatePayload:
+    payload = build_zenodo_update_payload(record)
+    metadata = payload["metadata"]
+    current_descriptions = (
+        cast("list[dict]", metadata["additional_descriptions"])
+        if "additional_descriptions" in metadata
+        else []
+    )
+    metadata["rights"] = build_rights(correct_license)
+    metadata["additional_descriptions"] = _rebuild_additional_descriptions(
+        current_descriptions, correct_license
+    )
+    return payload
 
 
 def patch_drafts(
@@ -150,27 +123,26 @@ def patch_drafts(
     console.print(f"Loading KG from {kg_path}...")
     kg = load_kg(kg_path)
 
-    with open(drafts_path) as f:
-        drafts = json.load(f)
+    with open(drafts_path) as file:
+        drafts = json.load(file)
 
     stats = {
         "patched": 0,
+        "blocked": 0,
         "skipped_correct": 0,
         "skipped_failed": 0,
         "skipped_no_kg_license": 0,
         "errors": 0,
     }
     patch_log: list[dict] = []
-
     entries_to_check = []
     for entry in drafts:
-        if entry.get("status") == "failed":
+        if entry["status"] == "failed":
             stats["skipped_failed"] += 1
-            continue
-        stage = _extract_stage_from_config_path(entry["config_file"])
-        entries_to_check.append((entry, stage))
+        else:
+            entries_to_check.append(entry)
 
-    console.print(f"Checking {len(entries_to_check)} drafts...")
+    console.print(f"Checking {len(entries_to_check)} records...")
 
     with Progress(
         SpinnerColumn(),
@@ -180,30 +152,41 @@ def patch_drafts(
     ) as progress:
         task = progress.add_task("Patching", total=len(entries_to_check))
 
-        for entry, stage in entries_to_check:
-            config_path = Path(entry["config_file"])
+        for entry in entries_to_check:
             record_id = entry["draft_id"]
-            zenodo_url = entry["zenodo_url"]
-            access_token = entry["access_token"]
-            user_agent = entry.get("user_agent", "changes-metadata-manager/1.0.0")
-            is_published = entry.get("status") == "published"
+            record_id_text = str(record_id)
+            log_entry = {"record_id": record_id}
             progress.update(task, description=f"Record {record_id}")
 
+            if entry["status"] not in ("published", "uploaded"):
+                log_entry["status"] = "blocked"
+                log_entry["reason"] = f"Unsupported record status: {entry['status']}"
+                patch_log.append(log_entry)
+                stats["blocked"] += 1
+                progress.advance(task)
+                continue
+
+            zenodo_url = entry["zenodo_url"].rstrip("/")
+            access_token = entry["access_token"]
+            user_agent = (
+                entry["user_agent"] if "user_agent" in entry else DEFAULT_USER_AGENT
+            )
+            is_published = entry["status"] == "published"
+
             try:
-                zenodo_metadata = _fetch_record_metadata(
-                    zenodo_url, str(record_id), access_token, user_agent
+                record, has_edit_draft = fetch_record(
+                    zenodo_url, record_id_text, access_token, user_agent
                 )
-
-                entity_id = _extract_entity_id_from_config(zenodo_metadata)
-
+                stage = extract_stage(record)
+                entity_id = extract_entity_id(record)
                 correct_license = extract_license_for_entity_stage(kg, entity_id, stage)
                 if correct_license is None:
                     stats["skipped_no_kg_license"] += 1
                     progress.advance(task)
                     continue
 
+                zenodo_metadata = record["metadata"]
                 current_license = _current_content_license(zenodo_metadata)
-
                 needs_rights_fix = correct_license != current_license
                 needs_disclaimer_fix = (
                     correct_license == "cc0-1.0"
@@ -214,88 +197,105 @@ def patch_drafts(
                     progress.advance(task)
                     continue
 
-                new_rights = build_rights(correct_license)
-                new_additional = _rebuild_additional_descriptions(
-                    zenodo_metadata.get("additional_descriptions", []), correct_license
-                )
-
-                log_entry = {
-                    "record_id": record_id,
-                    "config_file": entry["config_file"],
-                    "entity_id": entity_id,
-                    "stage": stage,
-                    "old_license": current_license,
-                    "new_license": correct_license,
-                    "rights_changed": needs_rights_fix,
-                    "disclaimer_changed": needs_disclaimer_fix,
-                }
-
-                if dry_run:
-                    console.print(
-                        f"  [cyan]DRY RUN[/cyan] {record_id}: {current_license} → {correct_license}"
-                    )
-                    log_entry["status"] = "dry_run"
-                    patch_log.append(log_entry)
-                    stats["patched"] += 1
-                    progress.advance(task)
-                    continue
-
-                if is_published:
-                    _create_edit_draft(
-                        zenodo_url, str(record_id), access_token, user_agent
-                    )
-
-                with open(config_path) as f:
-                    config = yaml.safe_load(f)
-
-                config["rights"] = new_rights
-                config["additional_descriptions"] = new_additional
-
-                access = config["access"]
-                payload = build_inveniordm_payload(config, access)
-                update_draft_metadata(
-                    zenodo_url, access_token, str(record_id), payload, user_agent
-                )
-
-                if is_published:
-                    publish_draft(zenodo_url, access_token, str(record_id), user_agent)
-
-                with open(config_path, "w") as f:
-                    yaml.dump(
-                        config,
-                        f,
-                        Dumper=LiteralBlockDumper,
-                        default_flow_style=False,
-                        allow_unicode=True,
-                        sort_keys=False,
-                    )
-
-                log_entry["status"] = "patched"
-                stats["patched"] += 1
-                patch_log.append(log_entry)
-            except Exception as exc:
-                stats["errors"] += 1
-                patch_log.append(
+                log_entry.update(
                     {
-                        "record_id": record_id,
-                        "config_file": entry["config_file"],
+                        "entity_id": entity_id,
                         "stage": stage,
-                        "status": "error",
-                        "error": str(exc),
+                        "old_license": current_license,
+                        "new_license": correct_license,
+                        "rights_changed": needs_rights_fix,
+                        "disclaimer_changed": needs_disclaimer_fix,
                     }
                 )
+
+                if is_published and has_edit_draft:
+                    log_entry["status"] = "blocked"
+                    log_entry["reason"] = "An edit draft already exists"
+                elif not is_published and not has_edit_draft:
+                    log_entry["status"] = "blocked"
+                    log_entry["reason"] = "Draft not found for unpublished record"
+                else:
+                    payload = _payload_with_license(record, correct_license)
+                    payload_differences = zenodo_payload_differences(
+                        payload,
+                        record,
+                        {"rights", "additional_descriptions"},
+                    )
+                    if payload_differences:
+                        log_entry["status"] = "blocked"
+                        log_entry["reason"] = (
+                            "Remote metadata cannot be preserved in an update payload"
+                        )
+                        log_entry["differences"] = payload_differences
+                    elif dry_run:
+                        console.print(
+                            f"  [cyan]DRY RUN[/cyan] {record_id}: "
+                            f"{current_license} → {correct_license}"
+                        )
+                        log_entry["status"] = "dry_run"
+                    else:
+                        draft_record = (
+                            create_edit_draft(
+                                zenodo_url,
+                                record_id_text,
+                                access_token,
+                                user_agent,
+                            )
+                            if is_published
+                            else record
+                        )
+                        payload = _payload_with_license(draft_record, correct_license)
+                        payload_differences = zenodo_payload_differences(
+                            payload,
+                            draft_record,
+                            {"rights", "additional_descriptions"},
+                        )
+                        if payload_differences:
+                            log_entry["status"] = "blocked"
+                            log_entry["reason"] = (
+                                "Edit draft metadata cannot be preserved in an "
+                                "update payload"
+                            )
+                            log_entry["differences"] = payload_differences
+                        else:
+                            update_draft(
+                                zenodo_url,
+                                record_id_text,
+                                access_token,
+                                user_agent,
+                                payload,
+                            )
+                            if is_published:
+                                publish_draft(
+                                    zenodo_url,
+                                    record_id_text,
+                                    access_token,
+                                    user_agent,
+                                )
+                            log_entry["status"] = "patched"
+            except (requests.RequestException, ValueError) as exc:
+                log_entry["status"] = "error"
+                log_entry["error"] = str(exc)
                 console.print(f"\n[red][FAILED][/red] Record {record_id}: {exc}")
 
+            patch_log.append(log_entry)
+            if log_entry["status"] in ("patched", "dry_run"):
+                stats["patched"] += 1
+            elif log_entry["status"] == "blocked":
+                stats["blocked"] += 1
+            elif log_entry["status"] == "error":
+                stats["errors"] += 1
             progress.advance(task)
-            time.sleep(2)
+            time.sleep(REQUEST_DELAY)
 
     log_path = drafts_path.parent / "patch_license_log.json"
-    with open(log_path, "w") as f:
-        json.dump(patch_log, f, indent=2)
+    with open(log_path, "w") as file:
+        json.dump(patch_log, file, indent=2)
 
     console.print()
     console.print("[bold]Results:[/bold]")
     console.print(f"  Patched: {stats['patched']}")
+    console.print(f"  Blocked: {stats['blocked']}")
     console.print(f"  Already correct: {stats['skipped_correct']}")
     console.print(f"  Skipped (failed): {stats['skipped_failed']}")
     console.print(f"  Skipped (no KG license): {stats['skipped_no_kg_license']}")

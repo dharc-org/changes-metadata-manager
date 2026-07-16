@@ -280,12 +280,15 @@ def group_folders_by_entity(structure: dict) -> dict[str, list[tuple[str, str, d
             if folder_name in SKIP_FOLDERS:
                 continue
             entity_id = extract_id_from_folder_name(folder_name)
-            if entity_id in FOLDER_TO_ID.values():
-                base_id = entity_id
-            else:
-                base_id = entity_id.rstrip("abcdefghijklmnopqrstuvwxyz")
+            base_id = entity_group_id(entity_id)
             groups[base_id].append((sala_name, folder_name, subfolders))
     return dict(groups)
+
+
+def entity_group_id(entity_id: str) -> str:
+    if entity_id in FOLDER_TO_ID.values():
+        return entity_id
+    return entity_id.rstrip("abcdefghijklmnopqrstuvwxyz")
 
 
 STAGES = ("raw", "rawp", "dcho", "dchoo")
