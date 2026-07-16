@@ -5,7 +5,9 @@
 import re
 from collections.abc import Iterable
 from copy import deepcopy
-from typing import NotRequired, TypedDict, cast
+from typing import TypedDict, cast
+
+from typing_extensions import NotRequired
 
 ENTITY_URI_PATTERN = re.compile(r"/itm/([^/]+)/ob\d+/\d+$")
 STAGE_ARCHIVE_PATTERN = re.compile(r"-(raw|rawp|dcho|dchoo)\.zip$")
