@@ -31,7 +31,7 @@ morph-kgc-changes-metadata  -->  data/kg.ttl
           zenodo_upload.prepare
               |
               v
-          ZIP + YAML config (per entity+stage)
+          ZIP + YAML config (per Zenodo group+stage)
               |
               v
           zenodo_upload.upload  -->  Zenodo
@@ -67,7 +67,7 @@ The provenance model follows the [OpenCitations Data Model](https://doi.org/10.6
 
 Handles two tasks:
 
-- **prepare**: walks the same folder structure, creates one ZIP per entity+stage (including data files only when a license exists), and writes a YAML config file for each. Creators are resolved from `data/creators_lookup.yaml` with roles assigned by step type.
+- **prepare**: walks the same folder structure, creates one ZIP per Zenodo group and stage (including data files only when a license exists), and writes a YAML config file for each. Numeric IDs with alphabetic suffixes share the base-number group unless the folder has an explicit mapping. Creators are resolved from every exact entity ID in the group through `data/creators_lookup.yaml`, with roles assigned by step type.
 - **upload**: reads the YAML configs and calls piccione's InvenioRDM module to create records on Zenodo.
 
 ## Key data files

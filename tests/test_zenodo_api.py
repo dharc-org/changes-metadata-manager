@@ -4,10 +4,13 @@
 
 from unittest.mock import MagicMock, call, patch
 
+import pytest
 import requests
 
 from changes_metadata_manager.zenodo_api import (
+    CACHE_TTL_SECONDS,
     MAX_RETRIES,
+    ZenodoRecordCache,
     create_edit_draft,
     fetch_record,
     publish_draft,
@@ -15,6 +18,27 @@ from changes_metadata_manager.zenodo_api import (
     update_draft,
 )
 from changes_metadata_manager.zenodo_metadata import ZenodoUpdatePayload
+
+
+@patch("changes_metadata_manager.zenodo_api.time.time", return_value=1000)
+def test_record_cache_stores_expires_and_invalidates(mock_time, tmp_path):
+    cache_path = tmp_path / "records.sqlite3"
+    record = {"metadata": {"title": "Record"}}
+
+    with ZenodoRecordCache(cache_path) as cache:
+        assert cache.get("https://zenodo.org/api/", "123") is None
+
+        cache.set("https://zenodo.org/api/", "123", record, False)
+        assert cache.get("https://zenodo.org/api", "123") == (record, False)
+        assert cache.get("https://sandbox.zenodo.org/api", "123") is None
+
+        mock_time.return_value = 1000 + CACHE_TTL_SECONDS
+        assert cache.get("https://zenodo.org/api", "123") is None
+
+        cache.set("https://zenodo.org/api", "123", record, True)
+        assert cache.get("https://zenodo.org/api", "123") == (record, True)
+        cache.invalidate("https://zenodo.org/api/", "123")
+        assert cache.get("https://zenodo.org/api", "123") is None
 
 
 @patch("changes_metadata_manager.zenodo_api.time.sleep")
@@ -29,6 +53,21 @@ def test_request_retries_rate_limits(mock_request, mock_sleep):
     assert result == success
     assert mock_request.call_count == 3
     assert mock_sleep.call_args_list == [call(20), call(40)]
+
+
+@pytest.mark.parametrize("status_code", [502, 503, 504])
+@patch("changes_metadata_manager.zenodo_api.time.sleep")
+@patch("changes_metadata_manager.zenodo_api.requests.request")
+def test_request_retries_gateway_errors(mock_request, mock_sleep, status_code):
+    gateway_error = MagicMock(status_code=status_code)
+    success = MagicMock(status_code=200)
+    mock_request.side_effect = [gateway_error, success]
+
+    result = request_with_retry("GET", "https://example.org")
+
+    assert result == success
+    assert mock_request.call_count == 2
+    assert mock_sleep.call_args_list == [call(20)]
 
 
 @patch("changes_metadata_manager.zenodo_api.time.sleep")

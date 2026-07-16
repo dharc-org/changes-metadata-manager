@@ -203,18 +203,20 @@ def extract_authors_for_entity_stage(
 ) -> set[str]:
     steps = [s for s in STAGE_STEPS[stage] if s != METADATA_STEP]
     authors: set[str] = set()
-    for eid in entity_ids:
+    for entity_id in entity_ids:
         for step in steps:
             authors |= _extract_actor_names(
-                graph, URIRef(f"{BASE_URI}/act/{eid}/{step}/1")
+                graph, URIRef(f"{BASE_URI}/act/{entity_id}/{step}/1")
             )
     return authors
 
 
 def extract_metadata_authors(graph: Graph, entity_ids: list[str]) -> set[str]:
     authors: set[str] = set()
-    for eid in entity_ids:
-        authors |= _extract_actor_names(graph, URIRef(f"{BASE_URI}/act/{eid}/05/1"))
+    for entity_id in entity_ids:
+        authors |= _extract_actor_names(
+            graph, URIRef(f"{BASE_URI}/act/{entity_id}/05/1")
+        )
     return authors
 
 
@@ -280,15 +282,12 @@ def group_folders_by_entity(structure: dict) -> dict[str, list[tuple[str, str, d
             if folder_name in SKIP_FOLDERS:
                 continue
             entity_id = extract_id_from_folder_name(folder_name)
-            base_id = entity_group_id(entity_id)
-            groups[base_id].append((sala_name, folder_name, subfolders))
+            if entity_id in FOLDER_TO_ID.values():
+                group_id = entity_id
+            else:
+                group_id = entity_id.rstrip("abcdefghijklmnopqrstuvwxyz")
+            groups[group_id].append((sala_name, folder_name, subfolders))
     return dict(groups)
-
-
-def entity_group_id(entity_id: str) -> str:
-    if entity_id in FOLDER_TO_ID.values():
-        return entity_id
-    return entity_id.rstrip("abcdefghijklmnopqrstuvwxyz")
 
 
 STAGES = ("raw", "rawp", "dcho", "dchoo")
@@ -357,8 +356,8 @@ def _get_label(graph: Graph, uri: URIRef) -> str | None:
 def extract_keeper_info(
     graph: Graph, entity_ids: list[str]
 ) -> tuple[str | None, str | None]:
-    for eid in entity_ids:
-        custody_uri = URIRef(f"{BASE_URI}/act/{eid}/ob08/1")
+    for entity_id in entity_ids:
+        custody_uri = URIRef(f"{BASE_URI}/act/{entity_id}/ob08/1")
         for _, _, keeper_uri in graph.triples((custody_uri, P14_CARRIED_OUT_BY, None)):
             assert isinstance(keeper_uri, URIRef)
             keeper_name = _get_label(graph, keeper_uri)
@@ -371,17 +370,17 @@ def extract_keeper_info(
 
 
 def extract_entity_title(graph: Graph, entity_ids: list[str]) -> str:
-    for eid in entity_ids:
-        item_uri = URIRef(f"{BASE_URI}/itm/{eid}/ob00/1")
-        for s, p, o in graph.triples((item_uri, P3_HAS_NOTE, None)):
-            note = str(o)
+    for entity_id in entity_ids:
+        item_uri = URIRef(f"{BASE_URI}/itm/{entity_id}/ob00/1")
+        for _, _, note_value in graph.triples((item_uri, P3_HAS_NOTE, None)):
+            note = str(note_value)
             return re.split(r"\n|\\n", note)[0].strip()
     return f"Entity {entity_ids[0]}"
 
 
 def extract_acquisition_technique(graph: Graph, entity_ids: list[str]) -> str | None:
-    for eid in entity_ids:
-        act_uri = URIRef(f"{BASE_URI}/act/{eid}/00/1")
+    for entity_id in entity_ids:
+        act_uri = URIRef(f"{BASE_URI}/act/{entity_id}/00/1")
         for _, _, technique_uri in graph.triples(
             (act_uri, P32_USED_GENERAL_TECHNIQUE, None)
         ):
@@ -391,8 +390,8 @@ def extract_acquisition_technique(graph: Graph, entity_ids: list[str]) -> str | 
 
 def extract_devices(graph: Graph, entity_ids: list[str]) -> list[str]:
     devices: set[str] = set()
-    for eid in entity_ids:
-        act_uri = URIRef(f"{BASE_URI}/act/{eid}/00/1")
+    for entity_id in entity_ids:
+        act_uri = URIRef(f"{BASE_URI}/act/{entity_id}/00/1")
         for _, _, obj_uri in graph.triples((act_uri, P16_USED_SPECIFIC_OBJECT, None)):
             uri_str = str(obj_uri)
             if "/dev/" in uri_str:
@@ -406,9 +405,9 @@ def extract_software_for_stage(
 ) -> list[str]:
     steps = [s for s in STAGE_STEPS[stage] if s != METADATA_STEP]
     software: set[str] = set()
-    for eid in entity_ids:
+    for entity_id in entity_ids:
         for step in steps:
-            act_uri = URIRef(f"{BASE_URI}/act/{eid}/{step}/1")
+            act_uri = URIRef(f"{BASE_URI}/act/{entity_id}/{step}/1")
             for _, _, sfw_uri in graph.triples((act_uri, L23_USED_SOFTWARE, None)):
                 uri_str = str(sfw_uri)
                 slug = uri_str.split("/sfw/")[1].split("/")[0]
@@ -689,14 +688,12 @@ def generate_zenodo_config(
 
 
 def _get_sub_entity_ids(folders: list[tuple[str, str, dict]]) -> list[str]:
-    seen: set[str] = set()
-    ids: list[str] = []
+    entity_ids: list[str] = []
     for _, folder_name, _ in folders:
-        eid = extract_id_from_folder_name(folder_name)
-        if eid not in seen:
-            seen.add(eid)
-            ids.append(eid)
-    return ids
+        entity_id = extract_id_from_folder_name(folder_name)
+        if entity_id not in entity_ids:
+            entity_ids.append(entity_id)
+    return entity_ids
 
 
 _worker_kg: Graph
@@ -721,12 +718,12 @@ def _process_entity(
     kg = _worker_kg
     base_config = _worker_base_config
     creators_lookup = _worker_creators_lookup
-    sub_ids = _get_sub_entity_ids(folders)
-    title = extract_entity_title(kg, sub_ids)
-    keeper_name, keeper_location = extract_keeper_info(kg, sub_ids)
+    entity_ids = _get_sub_entity_ids(folders)
+    title = extract_entity_title(kg, entity_ids)
+    keeper_name, keeper_location = extract_keeper_info(kg, entity_ids)
     sala_slug = slugify(folders[0][0])
     title_slug = slugify(title)
-    metadata_creators = build_metadata_creators(kg, sub_ids, creators_lookup)
+    metadata_creators = build_metadata_creators(kg, entity_ids, creators_lookup)
     for stage in STAGES:
         result = create_stage_zip(entity_id, stage, folders, root, zips_dir, title)
         if result is None:
@@ -734,11 +731,11 @@ def _process_entity(
         zip_path, license = result
         has_license = license is not None
         digitization_creators = build_creators_for_entity_stage(
-            kg, sub_ids, stage, creators_lookup
+            kg, entity_ids, stage, creators_lookup
         )
         creators = merge_creators(digitization_creators, metadata_creators)
-        entity_uri = build_entity_uri(sub_ids)
-        methods_description = build_methods_description(kg, sub_ids, stage)
+        entity_uri = build_entity_uri(entity_ids)
+        methods_description = build_methods_description(kg, entity_ids, stage)
         config = generate_zenodo_config(
             stage,
             zip_path,

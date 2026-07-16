@@ -55,5 +55,5 @@ The full path to a specific file is:
 ## Special cases
 
 - **Materials folder**: some objects have a `materials/` folder with supplementary files outside the standard taxonomy. These are not processed.
-- **Grouped objects**: objects like 98a, 98b, 98c are physically distinct but catalogued under the same base number. Each variant has its own subfolder within the stage directories. For Zenodo uploads, grouped objects are merged into a single archive.
+- **Letter-suffixed IDs**: IDs such as `27a` and `27b` identify distinct entities in the knowledge graph. For Zenodo, numeric IDs with an alphabetic suffix are packaged under their base number, following the grouping of the published records. The `27` archive therefore contains `27a` through `27f`, while the `74` archive contains `74a` through `74e`.
 - **Scanner projects**: Artec `.a3d` files reference a `data/` subdirectory by its original name. Neither the project file nor its data folder should be renamed.

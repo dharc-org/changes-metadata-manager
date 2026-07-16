@@ -20,4 +20,5 @@ data/cache
 sharepoint_config.yaml
 zenodo_config.yaml
 zenodo_output*
+creator_names_cache.sqlite3
 references

@@ -142,19 +142,49 @@ class TestGroupFoldersByEntity:
         assert len(result["1"]) == 1
         assert result["1"][0][1] == "S1-01-Test"
 
-    def test_groups_abc_variants(self):
+    def test_groups_letter_suffixed_ids_by_base_number(self):
         structure = {
             "structure": {
                 "Sala6": {
-                    "S6-98a-DA-Calchi facciali colorati, boscimani": {"raw": {}},
-                    "S6-98b-DA-Calchi facciali colorati, boscimani": {"raw": {}},
-                    "S6-98c-DA-Calchi facciali colorati, boscimani": {"raw": {}},
+                    "S6-74a-ISPC_Linum_usitatissimum_L": {"raw": {}},
+                    "S6-74b-ISPC-Orchis_morio_L": {"raw": {}},
                 },
             }
         }
         result = group_folders_by_entity(structure)
-        assert "98" in result
-        assert len(result["98"]) == 3
+        assert result == {
+            "74": [
+                (
+                    "Sala6",
+                    "S6-74a-ISPC_Linum_usitatissimum_L",
+                    {"raw": {}},
+                ),
+                (
+                    "Sala6",
+                    "S6-74b-ISPC-Orchis_morio_L",
+                    {"raw": {}},
+                ),
+            ],
+        }
+
+    def test_keeps_explicitly_mapped_id(self):
+        structure = {
+            "structure": {
+                "Sala3": {
+                    "S3-PT-DICAM_VetrinaMatriciXilografiche": {"raw": {}},
+                },
+            }
+        }
+        result = group_folders_by_entity(structure)
+        assert result == {
+            "ptb": [
+                (
+                    "Sala3",
+                    "S3-PT-DICAM_VetrinaMatriciXilografiche",
+                    {"raw": {}},
+                )
+            ]
+        }
 
     def test_skips_skip_folders(self):
         structure = {
@@ -306,7 +336,7 @@ class TestCreateStageZip:
                 names = sorted(zf.namelist())
                 assert names == ["S1-01-Test/raw/meta.ttl", "S1-01-Test/raw/prov.trig"]
 
-    def test_multiple_folders_grouped_entity_license(self):
+    def test_multiple_folders_share_license(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             root = Path(tmpdir) / "root"
 

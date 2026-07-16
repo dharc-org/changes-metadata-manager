@@ -32,15 +32,15 @@ uv run python -m changes_metadata_manager.zenodo_upload prepare \
 
 The command creates two subdirectories under the output path:
 
-- `zips/`: one ZIP per entity and stage (e.g., `S1-01-CNR_CartaNautica-raw.zip`)
-- `configs/`: one YAML per entity and stage, ready for piccione
+- `zips/`: one ZIP per Zenodo group and stage (e.g., `S1-01-CNR_CartaNautica-raw.zip`)
+- `configs/`: one YAML per Zenodo group and stage, ready for piccione
 
 Each ZIP preserves the original folder names and includes:
 
 - `meta.ttl` and `prov.trig` (always included)
 - Data files (3D models, textures, scans) only for stages that have a license assigned in the knowledge graph
 
-For grouped entities (e.g., objects 98a, 98b, 98c), all variants go into a single ZIP.
+The `prepare` command follows the same grouping used by the records published on Zenodo. Numeric IDs with an alphabetic suffix are packaged under their base number: the `27` ZIP contains the folders for `27a` through `27f`, and the `74` ZIP contains the folders for `74a` through `74e`.
 
 ### Base configuration file
 

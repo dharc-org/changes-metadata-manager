@@ -3,15 +3,24 @@
 # SPDX-License-Identifier: ISC
 
 import json
+import zipfile
 from copy import deepcopy
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import call, patch
 
 import pytest
 import requests
+import yaml
+from rdflib import Graph
 
 from changes_metadata_manager.folder_metadata_builder import load_kg
-from changes_metadata_manager.patch.creator_names import patch_creator_names
+from changes_metadata_manager.patch.creator_names import (
+    CACHE_FILENAME,
+    MANIFEST_FILENAME,
+    apply_creator_name_patches,
+    prepare_creator_name_patches,
+)
+from changes_metadata_manager.zenodo_api import ZenodoRecordCache
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 
@@ -63,19 +72,37 @@ def real_kg():
     return load_kg(DATA_DIR / "kg.ttl")
 
 
-def _draft(record_id: int, status: str = "published") -> dict:
+def _draft(
+    record_id: int,
+    status: str = "published",
+    folder_names: tuple[str, ...] = ("S1-40-Test",),
+) -> dict:
     return {
         "draft_id": record_id,
         "zenodo_url": "https://zenodo.org/api",
         "access_token": "secret-token",
         "user_agent": "changes-metadata-manager/1.0.0",
         "status": status,
+        "folder_names": folder_names,
     }
 
 
 def _write_drafts(tmp_path: Path, drafts: list[dict]) -> Path:
+    serialized_drafts = []
+    for source_draft in drafts:
+        draft = dict(source_draft)
+        folder_names = draft.pop("folder_names")
+        zip_path = tmp_path / f"{draft['draft_id']}.zip"
+        with zipfile.ZipFile(zip_path, "w") as archive:
+            for folder_name in folder_names:
+                archive.writestr(f"{folder_name}/raw/meta.ttl", "")
+        config_path = tmp_path / f"{draft['draft_id']}.yaml"
+        config_path.write_text(yaml.safe_dump({"files": [str(zip_path)]}))
+        draft["config_file"] = str(config_path)
+        serialized_drafts.append(draft)
+
     drafts_path = tmp_path / "drafts.json"
-    drafts_path.write_text(json.dumps(drafts))
+    drafts_path.write_text(json.dumps(serialized_drafts))
     return drafts_path
 
 
@@ -199,29 +226,26 @@ def _expected_payload(expected_creators: list[dict]) -> dict:
     }
 
 
-@patch("changes_metadata_manager.patch.creator_names.time.sleep")
-@patch("changes_metadata_manager.patch.creator_names.publish_draft")
-@patch("changes_metadata_manager.patch.creator_names.update_draft")
-@patch("changes_metadata_manager.patch.creator_names.create_edit_draft")
-@patch("changes_metadata_manager.patch.creator_names.fetch_record")
-def test_audit_uses_remote_record_without_local_config(
-    mock_fetch,
-    mock_create,
-    mock_update,
-    mock_publish,
-    mock_sleep,
-    tmp_path,
-    real_kg,
-):
-    drafts_path = _write_drafts(tmp_path, [_draft(20420559)])
-    mock_fetch.return_value = (_record("40", "raw", METADATA_CREATORS), False)
-
+def _run_prepare(drafts_path: Path, output_dir: Path, real_kg: Graph) -> Path:
     with patch(
         "changes_metadata_manager.patch.creator_names.load_kg", return_value=real_kg
     ):
-        log_path = patch_creator_names(drafts_path, DATA_DIR / "kg.ttl")
+        return prepare_creator_name_patches(
+            drafts_path, DATA_DIR / "kg.ttl", output_dir
+        )
 
-    assert json.loads(log_path.read_text()) == [
+
+@patch("changes_metadata_manager.patch.creator_names.time.sleep")
+@patch("changes_metadata_manager.patch.creator_names.fetch_record")
+def test_prepare_writes_payload_manifest_and_reuses_cache(
+    mock_fetch, mock_sleep, tmp_path, real_kg
+):
+    drafts_path = _write_drafts(tmp_path, [_draft(20420559)])
+    output_dir = tmp_path / "prepared"
+    record = _record("40", "raw", METADATA_CREATORS)
+    mock_fetch.return_value = (record, False)
+    expected_creators = [VALENTINA, *METADATA_CREATORS]
+    expected_manifest = [
         {
             "record_id": 20420559,
             "entity_ids": ["40"],
@@ -233,11 +257,28 @@ def test_audit_uses_remote_record_without_local_config(
                 }
             ],
             "status": "would_patch",
+            "payload_file": "20420559.yaml",
         }
     ]
-    mock_create.assert_not_called()
-    mock_update.assert_not_called()
-    mock_publish.assert_not_called()
+
+    manifest_path = _run_prepare(drafts_path, output_dir, real_kg)
+
+    assert json.loads(manifest_path.read_text()) == expected_manifest
+    assert yaml.safe_load((output_dir / "20420559.yaml").read_text()) == (
+        _expected_payload(expected_creators)
+    )
+    assert {path.name for path in output_dir.iterdir()} == {
+        MANIFEST_FILENAME,
+        "20420559.yaml",
+    }
+    assert "secret-token" not in manifest_path.read_text()
+    assert "secret-token" not in (output_dir / "20420559.yaml").read_text()
+
+    second_manifest_path = _run_prepare(drafts_path, output_dir, real_kg)
+
+    assert json.loads(second_manifest_path.read_text()) == expected_manifest
+    assert mock_fetch.call_count == 1
+    assert mock_sleep.call_args_list == [call(2)]
 
 
 @patch("changes_metadata_manager.patch.creator_names.time.sleep")
@@ -245,7 +286,7 @@ def test_audit_uses_remote_record_without_local_config(
 @patch("changes_metadata_manager.patch.creator_names.update_draft")
 @patch("changes_metadata_manager.patch.creator_names.create_edit_draft")
 @patch("changes_metadata_manager.patch.creator_names.fetch_record")
-def test_apply_builds_payload_from_created_remote_draft(
+def test_apply_uses_prepared_payload_without_refetching(
     mock_fetch,
     mock_create,
     mock_update,
@@ -255,16 +296,18 @@ def test_apply_builds_payload_from_created_remote_draft(
     real_kg,
 ):
     drafts_path = _write_drafts(tmp_path, [_draft(20420559)])
+    output_dir = tmp_path / "prepared"
     record = _record("40", "raw", METADATA_CREATORS)
     mock_fetch.return_value = (record, False)
-    mock_create.return_value = deepcopy(record)
-    expected_creators = [VALENTINA, *METADATA_CREATORS]
+    expected_payload = _expected_payload([VALENTINA, *METADATA_CREATORS])
+    _run_prepare(drafts_path, output_dir, real_kg)
 
-    with patch(
-        "changes_metadata_manager.patch.creator_names.load_kg", return_value=real_kg
-    ):
-        log_path = patch_creator_names(drafts_path, DATA_DIR / "kg.ttl", apply=True)
+    with ZenodoRecordCache(tmp_path / CACHE_FILENAME) as cache:
+        assert cache.get("https://zenodo.org/api", "20420559") == (record, False)
 
+    log_path = apply_creator_name_patches(drafts_path, output_dir)
+
+    mock_fetch.assert_called_once()
     mock_create.assert_called_once_with(
         "https://zenodo.org/api",
         "20420559",
@@ -276,7 +319,7 @@ def test_apply_builds_payload_from_created_remote_draft(
         "20420559",
         "secret-token",
         "changes-metadata-manager/1.0.0",
-        _expected_payload(expected_creators),
+        expected_payload,
     )
     mock_publish.assert_called_once_with(
         "https://zenodo.org/api",
@@ -285,24 +328,22 @@ def test_apply_builds_payload_from_created_remote_draft(
         "changes-metadata-manager/1.0.0",
     )
     assert json.loads(log_path.read_text()) == [
-        {
-            "record_id": 20420559,
-            "entity_ids": ["40"],
-            "stage": "raw",
-            "missing_creators": [
-                {
-                    "name": "Valentina Alena Girelli",
-                    "orcid": "0000-0001-9257-9803",
-                }
-            ],
-            "status": "patched",
-        }
+        {"record_id": 20420559, "status": "patched"}
     ]
+    with ZenodoRecordCache(tmp_path / CACHE_FILENAME) as cache:
+        assert cache.get("https://zenodo.org/api", "20420559") is None
+
+    apply_creator_name_patches(drafts_path, output_dir)
+
+    assert mock_create.call_count == 1
+    assert mock_update.call_count == 1
+    assert mock_publish.call_count == 1
+    assert mock_sleep.call_args_list == [call(2), call(2)]
 
 
 @patch("changes_metadata_manager.patch.creator_names.time.sleep")
 @patch("changes_metadata_manager.patch.creator_names.fetch_record")
-def test_grouped_entities_are_reconstructed_from_remote_id_and_kg(
+def test_prepare_uses_entity_ids_from_uploaded_zip(
     mock_fetch, mock_sleep, tmp_path, real_kg
 ):
     current_creators = [
@@ -312,18 +353,30 @@ def test_grouped_entities_are_reconstructed_from_remote_id_and_kg(
         MARIA,
         *METADATA_CREATORS,
     ]
-    drafts_path = _write_drafts(tmp_path, [_draft(20437073)])
+    drafts_path = _write_drafts(
+        tmp_path,
+        [
+            _draft(
+                20437073,
+                folder_names=(
+                    "S6-74a-ISPC_Linum_usitatissimum_L",
+                    "S6-74b-ISPC-Orchis_morio_L",
+                    "S6-74c-DBC_ButomusUmbellatusL",
+                    "S6-74d-ISPC_Daphne_mezereum_L",
+                    "S6-74e-ISPC_Primula_veris_L",
+                ),
+            )
+        ],
+    )
+    output_dir = tmp_path / "prepared"
     mock_fetch.return_value = (
         _record("74a", "dchoo", current_creators),
         False,
     )
 
-    with patch(
-        "changes_metadata_manager.patch.creator_names.load_kg", return_value=real_kg
-    ):
-        log_path = patch_creator_names(drafts_path, DATA_DIR / "kg.ttl")
+    manifest_path = _run_prepare(drafts_path, output_dir, real_kg)
 
-    assert json.loads(log_path.read_text()) == [
+    assert json.loads(manifest_path.read_text()) == [
         {
             "record_id": 20437073,
             "entity_ids": ["74a", "74b", "74c", "74d", "74e"],
@@ -335,41 +388,49 @@ def test_grouped_entities_are_reconstructed_from_remote_id_and_kg(
                 }
             ],
             "status": "would_patch",
+            "payload_file": "20437073.yaml",
         }
     ]
+    expected_payload = _expected_payload(
+        [ALICE, FEDERICA, FRANCESCA, MARIA, RACHELE, *METADATA_CREATORS]
+    )
+    expected_payload["metadata"]["identifiers"] = [
+        {
+            "identifier": ("https://w3id.org/changes/4/aldrovandi/itm/74a/ob00/1"),
+            "scheme": "url",
+        }
+    ]
+    assert yaml.safe_load((output_dir / "20437073.yaml").read_text()) == (
+        expected_payload
+    )
 
 
 @patch("changes_metadata_manager.patch.creator_names.time.sleep")
-@patch("changes_metadata_manager.patch.creator_names.publish_draft")
-@patch("changes_metadata_manager.patch.creator_names.update_draft")
-@patch("changes_metadata_manager.patch.creator_names.create_edit_draft")
 @patch("changes_metadata_manager.patch.creator_names.fetch_record")
-def test_blocks_existing_draft_and_unrelated_creator_difference(
-    mock_fetch,
-    mock_create,
-    mock_update,
-    mock_publish,
-    mock_sleep,
-    tmp_path,
-    real_kg,
+def test_prepare_reports_blocked_and_correct_records(
+    mock_fetch, mock_sleep, tmp_path, real_kg
 ):
     unrelated_creators = deepcopy(METADATA_CREATORS)
     unrelated_creators[0]["role"]["id"] = "researcher"
+    expected_creators = [VALENTINA, *METADATA_CREATORS]
     drafts_path = _write_drafts(
         tmp_path,
-        [_draft(20420559), _draft(20436931)],
+        [
+            _draft(20420559),
+            _draft(20436931, folder_names=("S6-105-Test",)),
+            _draft(20420560),
+        ],
     )
+    output_dir = tmp_path / "prepared"
     mock_fetch.side_effect = [
         (_record("40", "raw", METADATA_CREATORS), True),
         (_record("105", "raw", unrelated_creators), False),
+        (_record("40", "raw", expected_creators), False),
     ]
 
-    with patch(
-        "changes_metadata_manager.patch.creator_names.load_kg", return_value=real_kg
-    ):
-        log_path = patch_creator_names(drafts_path, DATA_DIR / "kg.ttl", apply=True)
+    manifest_path = _run_prepare(drafts_path, output_dir, real_kg)
 
-    assert json.loads(log_path.read_text()) == [
+    assert json.loads(manifest_path.read_text()) == [
         {
             "record_id": 20420559,
             "entity_ids": ["40"],
@@ -396,56 +457,119 @@ def test_blocks_existing_draft_and_unrelated_creator_difference(
             "status": "blocked",
             "reason": "Creator differences are not limited to missing creators",
         },
-    ]
-    mock_create.assert_not_called()
-    mock_update.assert_not_called()
-    mock_publish.assert_not_called()
-
-
-@patch("changes_metadata_manager.patch.creator_names.time.sleep")
-@patch("changes_metadata_manager.patch.creator_names.fetch_record")
-def test_reports_already_correct_remote_record(
-    mock_fetch, mock_sleep, tmp_path, real_kg
-):
-    drafts_path = _write_drafts(tmp_path, [_draft(20420559)])
-    expected_creators = [VALENTINA, *METADATA_CREATORS]
-    mock_fetch.return_value = (
-        _record("40", "raw", expected_creators),
-        False,
-    )
-
-    with patch(
-        "changes_metadata_manager.patch.creator_names.load_kg", return_value=real_kg
-    ):
-        log_path = patch_creator_names(drafts_path, DATA_DIR / "kg.ttl")
-
-    assert json.loads(log_path.read_text()) == [
         {
-            "record_id": 20420559,
+            "record_id": 20420560,
             "entity_ids": ["40"],
             "stage": "raw",
             "missing_creators": [],
             "status": "already_correct",
-        }
+        },
     ]
+    assert {path.name for path in output_dir.iterdir()} == {MANIFEST_FILENAME}
 
 
 @patch("changes_metadata_manager.patch.creator_names.time.sleep")
 @patch("changes_metadata_manager.patch.creator_names.fetch_record")
-def test_logs_http_error_without_credentials(mock_fetch, mock_sleep, tmp_path, real_kg):
+def test_prepare_does_not_cache_http_errors(mock_fetch, mock_sleep, tmp_path, real_kg):
     drafts_path = _write_drafts(tmp_path, [_draft(20420559)])
+    output_dir = tmp_path / "prepared"
     mock_fetch.side_effect = requests.HTTPError("500 Server Error")
 
-    with patch(
-        "changes_metadata_manager.patch.creator_names.load_kg", return_value=real_kg
-    ):
-        log_path = patch_creator_names(drafts_path, DATA_DIR / "kg.ttl")
+    manifest_path = _run_prepare(drafts_path, output_dir, real_kg)
+    second_manifest_path = _run_prepare(drafts_path, output_dir, real_kg)
 
-    assert json.loads(log_path.read_text()) == [
+    expected_manifest = [
         {
             "record_id": 20420559,
             "status": "error",
             "error": "500 Server Error",
         }
     ]
+    assert json.loads(manifest_path.read_text()) == expected_manifest
+    assert json.loads(second_manifest_path.read_text()) == expected_manifest
+    assert mock_fetch.call_count == 2
+    assert mock_sleep.call_args_list == [call(2), call(2)]
+    assert "secret-token" not in second_manifest_path.read_text()
+
+
+def test_prepare_rejects_unmanaged_output_files(tmp_path):
+    drafts_path = _write_drafts(tmp_path, [_draft(20420559)])
+    output_dir = tmp_path / "prepared"
+    output_dir.mkdir()
+    unrelated_path = output_dir / "notes.txt"
+    unrelated_path.write_text("keep me")
+
+    with pytest.raises(ValueError, match="Output directory contains unmanaged files"):
+        prepare_creator_name_patches(drafts_path, DATA_DIR / "kg.ttl", output_dir)
+
+    assert unrelated_path.read_text() == "keep me"
+
+
+@patch("changes_metadata_manager.patch.creator_names.time.sleep")
+@patch("changes_metadata_manager.patch.creator_names.publish_draft")
+@patch("changes_metadata_manager.patch.creator_names.update_draft")
+@patch("changes_metadata_manager.patch.creator_names.create_edit_draft")
+def test_apply_logs_errors_and_continues(
+    mock_create, mock_update, mock_publish, mock_sleep, tmp_path
+):
+    drafts_path = _write_drafts(tmp_path, [_draft(20420559), _draft(20436931)])
+    output_dir = tmp_path / "prepared"
+    output_dir.mkdir()
+    payload = _expected_payload([VALENTINA, *METADATA_CREATORS])
+    manifest = [
+        {
+            "record_id": 20420559,
+            "status": "would_patch",
+            "payload_file": "20420559.yaml",
+        },
+        {
+            "record_id": 20436931,
+            "status": "would_patch",
+            "payload_file": "20436931.yaml",
+        },
+    ]
+    (output_dir / MANIFEST_FILENAME).write_text(json.dumps(manifest))
+    for entry in manifest:
+        (output_dir / entry["payload_file"]).write_text(
+            yaml.safe_dump(payload, sort_keys=False)
+        )
+    with ZenodoRecordCache(tmp_path / CACHE_FILENAME) as cache:
+        cache.set("https://zenodo.org/api", "20420559", {"id": 1}, False)
+        cache.set("https://zenodo.org/api", "20436931", {"id": 2}, False)
+    mock_create.side_effect = [requests.HTTPError("500 Server Error"), {}]
+
+    log_path = apply_creator_name_patches(drafts_path, output_dir)
+
+    assert json.loads(log_path.read_text()) == [
+        {
+            "record_id": 20420559,
+            "status": "error",
+            "error": "500 Server Error",
+        },
+        {"record_id": 20436931, "status": "patched"},
+    ]
+    assert mock_create.call_count == 2
+    mock_update.assert_called_once_with(
+        "https://zenodo.org/api",
+        "20436931",
+        "secret-token",
+        "changes-metadata-manager/1.0.0",
+        payload,
+    )
+    mock_publish.assert_called_once_with(
+        "https://zenodo.org/api",
+        "20436931",
+        "secret-token",
+        "changes-metadata-manager/1.0.0",
+    )
+    assert mock_sleep.call_args_list == [call(2), call(2)]
+    with ZenodoRecordCache(tmp_path / CACHE_FILENAME) as cache:
+        assert cache.get("https://zenodo.org/api", "20420559") is None
+        assert cache.get("https://zenodo.org/api", "20436931") is None
     assert "secret-token" not in log_path.read_text()
+
+    apply_creator_name_patches(drafts_path, output_dir)
+
+    assert mock_create.call_count == 2
+    assert mock_update.call_count == 1
+    assert mock_publish.call_count == 1
