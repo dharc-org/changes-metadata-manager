@@ -19,6 +19,7 @@ from changes_metadata_manager.zenodo_upload import (
     AAT,
     BASE_URI,
     CC0_DISCLAIMER,
+    EXTERNAL_SOURCE_NOTICE,
     RESTRICTED_NOTICE,
     E21_PERSON,
     P14_CARRIED_OUT_BY,
@@ -57,6 +58,7 @@ from changes_metadata_manager.zenodo_upload import (
     load_creators_lookup,
     merge_creators,
     publish_all_drafts,
+    select_missing_files_notice,
     slugify,
     upload_all,
 )
@@ -1021,7 +1023,7 @@ class TestGenerateZenodoConfig:
             SAMPLE_BASE_CONFIG,
             [SAMPLE_CREATOR],
             SAMPLE_METHODS,
-            has_license=False,
+            missing_files_notice=RESTRICTED_NOTICE,
         )
 
         assert RESTRICTED_NOTICE not in config["description"]
@@ -1029,7 +1031,7 @@ class TestGenerateZenodoConfig:
             "additional_descriptions"
         ]
 
-    def test_no_restricted_notice_when_licensed(self, freezer):
+    def test_includes_external_source_notice(self, freezer):
         freezer.move_to("2024-06-15")
         zip_path = Path("/tmp/1-raw.zip")
         config = generate_zenodo_config(
@@ -1039,13 +1041,13 @@ class TestGenerateZenodoConfig:
             SAMPLE_BASE_CONFIG,
             [SAMPLE_CREATOR],
             SAMPLE_METHODS,
-            has_license=True,
+            missing_files_notice=EXTERNAL_SOURCE_NOTICE,
         )
 
         assert {
-            "description": RESTRICTED_NOTICE,
+            "description": EXTERNAL_SOURCE_NOTICE,
             "type": {"id": "notes"},
-        } not in config["additional_descriptions"]
+        } in config["additional_descriptions"]
 
     def test_propagates_funding_field(self, freezer):
         freezer.move_to("2024-06-15")
@@ -1163,6 +1165,37 @@ class TestExtractLicenseForEntityStage:
             )
         )
         assert extract_license_for_entity_stage(g, "42", "dcho") is None
+
+
+class TestSelectMissingFilesNotice:
+    def test_selects_notice_from_stage_activity_and_license(self, real_kg):
+        assert (
+            select_missing_files_notice(
+                real_kg,
+                ["16"],
+                "dcho",
+                extract_license_for_entity_stage(real_kg, "16", "dcho"),
+            )
+            == EXTERNAL_SOURCE_NOTICE
+        )
+        assert (
+            select_missing_files_notice(
+                real_kg,
+                ["35"],
+                "raw",
+                extract_license_for_entity_stage(real_kg, "35", "raw"),
+            )
+            == RESTRICTED_NOTICE
+        )
+        assert (
+            select_missing_files_notice(
+                real_kg,
+                ["107"],
+                "dcho",
+                extract_license_for_entity_stage(real_kg, "107", "dcho"),
+            )
+            is None
+        )
 
 
 class TestExtractKeeperInfo:

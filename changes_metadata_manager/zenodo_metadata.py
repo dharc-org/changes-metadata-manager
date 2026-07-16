@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: ISC
 
 import re
+from collections.abc import Iterable
 from copy import deepcopy
 from typing import NotRequired, TypedDict, cast
 
@@ -64,15 +65,43 @@ def extract_entity_id(record: dict) -> str:
     )
 
 
-def extract_stage(record: dict) -> str:
+def extract_stage_from_filenames(filenames: Iterable[str]) -> str:
     stages = {
         match.group(1)
-        for filename in record["files"]["entries"]
+        for filename in filenames
         if (match := STAGE_ARCHIVE_PATTERN.search(filename))
     }
     if len(stages) != 1:
         raise ValueError(f"Expected one stage archive, found: {sorted(stages)}")
     return stages.pop()
+
+
+def extract_stage(record: dict) -> str:
+    return extract_stage_from_filenames(record["files"]["entries"])
+
+
+def extract_content_license(metadata: dict) -> str | None:
+    if "rights" not in metadata:
+        return None
+    for right in metadata["rights"]:
+        if "title" not in right or "en" not in right["title"]:
+            continue
+        title = right["title"]["en"]
+        if "(Content license)" in title:
+            if "link" not in right:
+                continue
+            link = right["link"]
+            if "zero" in link:
+                return "cc0-1.0"
+            if "by-nc-sa" in link:
+                return "cc-by-nc-sa-4.0"
+            if "by-nc" in link:
+                return "cc-by-nc-4.0"
+            if "by-sa" in link:
+                return "cc-by-sa-4.0"
+            if "by" in link:
+                return "cc-by-4.0"
+    return None
 
 
 def _value_differences(expected: object, actual: object, path: str) -> list[str]:

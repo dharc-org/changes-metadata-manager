@@ -96,6 +96,11 @@ Each record gets two license entries in the `rights` field:
 1. A CC0 license for the metadata files (`meta.ttl`, `prov.trig`), always present
 2. A content license for the data files, taken from the knowledge graph (typically CC-BY 4.0 or CC-BY-NC 4.0)
 
+When a stage has no content license, the generated record contains metadata and provenance files only. Its note is selected from the knowledge graph:
+
+- If the activity defining that stage exists, the note states that the holding institution did not grant permission to publish the digital object files.
+- If the defining activity is absent, the note states that the digital object came from an existing platform or was provided directly by colleagues without formal permission to republish the original files.
+
 ## Uploading to Zenodo
 
 ```bash

@@ -82,7 +82,7 @@ STEP_TO_STAGE = {
     "06": "dchoo",
 }
 
-STAGE_LICENSE_STEP: dict[str, str] = {
+STAGE_DEFINING_STEP: dict[str, str] = {
     "raw": "00",
     "rawp": "01",
     "dcho": "02",
@@ -296,7 +296,7 @@ STAGES = ("raw", "rawp", "dcho", "dchoo")
 def _extract_license_from_meta(stage_dir: Path, stage: str) -> str | None:
     g = Graph()
     g.parse(stage_dir / "meta.ttl", format="turtle")
-    expected_step = STAGE_LICENSE_STEP[stage]
+    expected_step = STAGE_DEFINING_STEP[stage]
     for s, _, o in g.triples((None, P70I, None)):
         s_str = str(s)
         if "/lic/" in s_str:
@@ -462,7 +462,7 @@ PROPAGATED_FIELDS = (
 def extract_license_for_entity_stage(
     graph: Graph, entity_id: str, stage: str
 ) -> str | None:
-    step = STAGE_LICENSE_STEP[stage]
+    step = STAGE_DEFINING_STEP[stage]
     lic_uri = URIRef(f"{BASE_URI}/lic/{entity_id}/{step}/1")
     for _, _, license_url in graph.triples((lic_uri, P70I, None)):
         return LICENSE_URI_TO_ZENODO.get(str(license_url))
@@ -491,6 +491,34 @@ RESTRICTED_NOTICE = (
     "because the holding institution did not grant permission for their publication. "
     "Only metadata and provenance files are provided."
 )
+
+EXTERNAL_SOURCE_NOTICE = (
+    "The digital object files are not included in this dataset because they have "
+    "been either gathered from an existing platform or provided directly by "
+    "colleagues, without any formal permission to republish them in their original "
+    "form. Only metadata and provenance files are provided."
+)
+
+
+def has_defining_activity(graph: Graph, entity_ids: list[str], stage: str) -> bool:
+    step = STAGE_DEFINING_STEP[stage]
+    return any(
+        any(graph.triples((URIRef(f"{BASE_URI}/act/{entity_id}/{step}/1"), None, None)))
+        for entity_id in entity_ids
+    )
+
+
+def select_missing_files_notice(
+    graph: Graph,
+    entity_ids: list[str],
+    stage: str,
+    content_license: str | None,
+) -> str | None:
+    if content_license is not None:
+        return None
+    if has_defining_activity(graph, entity_ids, stage):
+        return RESTRICTED_NOTICE
+    return EXTERNAL_SOURCE_NOTICE
 
 
 def build_enhanced_description(
@@ -607,7 +635,7 @@ def generate_zenodo_config(
     entity_uri: str | None = None,
     keeper_name: str | None = None,
     keeper_location: str | None = None,
-    has_license: bool = True,
+    missing_files_notice: str | None = None,
 ) -> dict:
     description = build_enhanced_description(stage, title, keeper_name, keeper_location)
 
@@ -633,10 +661,10 @@ def generate_zenodo_config(
             "type": {"id": "notes"},
         },
     ]
-    if not has_license:
+    if missing_files_notice is not None:
         additional_descriptions.append(
             {
-                "description": RESTRICTED_NOTICE,
+                "description": missing_files_notice,
                 "type": {"id": "notes"},
             }
         )
@@ -729,13 +757,15 @@ def _process_entity(
         if result is None:
             continue
         zip_path, license = result
-        has_license = license is not None
         digitization_creators = build_creators_for_entity_stage(
             kg, entity_ids, stage, creators_lookup
         )
         creators = merge_creators(digitization_creators, metadata_creators)
         entity_uri = build_entity_uri(entity_ids)
         methods_description = build_methods_description(kg, entity_ids, stage)
+        missing_files_notice = select_missing_files_notice(
+            kg, entity_ids, stage, license
+        )
         config = generate_zenodo_config(
             stage,
             zip_path,
@@ -747,7 +777,7 @@ def _process_entity(
             entity_uri,
             keeper_name,
             keeper_location,
-            has_license,
+            missing_files_notice,
         )
         config_path = configs_dir / f"{sala_slug}-{title_slug}-{entity_id}-{stage}.yaml"
         with open(config_path, "w") as f:

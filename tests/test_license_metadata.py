@@ -10,11 +10,11 @@ import requests
 from piccione.upload.on_zenodo import text_to_html
 
 from changes_metadata_manager.patch.license_metadata import (
-    _current_content_license,
     _has_cc0_disclaimer,
     _rebuild_additional_descriptions,
     patch_drafts,
 )
+from changes_metadata_manager.zenodo_metadata import extract_content_license
 from changes_metadata_manager.zenodo_upload import CC0_DISCLAIMER, build_rights
 
 
@@ -149,11 +149,11 @@ def _expected_cc0_payload() -> dict:
 
 def test_detects_content_license_and_disclaimer():
     metadata = _record("cc-by-nc-4.0")["metadata"]
-    assert _current_content_license(metadata) == "cc-by-nc-4.0"
+    assert extract_content_license(metadata) == "cc-by-nc-4.0"
     assert _has_cc0_disclaimer(metadata) is False
 
     cc0_metadata = _record("cc0-1.0", disclaimer=True)["metadata"]
-    assert _current_content_license(cc0_metadata) == "cc0-1.0"
+    assert extract_content_license(cc0_metadata) == "cc0-1.0"
     assert _has_cc0_disclaimer(cc0_metadata) is True
 
 

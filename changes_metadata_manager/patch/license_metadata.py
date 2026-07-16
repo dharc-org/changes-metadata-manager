@@ -30,6 +30,7 @@ from changes_metadata_manager.zenodo_api import (
 from changes_metadata_manager.zenodo_metadata import (
     ZenodoUpdatePayload,
     build_zenodo_update_payload,
+    extract_content_license,
     extract_entity_id,
     extract_stage,
     zenodo_payload_differences,
@@ -44,30 +45,6 @@ console = Console()
 
 REQUEST_DELAY = 2
 DEFAULT_USER_AGENT = "changes-metadata-manager/1.0.0"
-
-
-def _current_content_license(metadata: dict) -> str | None:
-    if "rights" not in metadata:
-        return None
-    for right in metadata["rights"]:
-        if "title" not in right or "en" not in right["title"]:
-            continue
-        title = right["title"]["en"]
-        if "(Content license)" in title:
-            if "link" not in right:
-                continue
-            link = right["link"]
-            if "zero" in link:
-                return "cc0-1.0"
-            if "by-nc-sa" in link:
-                return "cc-by-nc-sa-4.0"
-            if "by-nc" in link:
-                return "cc-by-nc-4.0"
-            if "by-sa" in link:
-                return "cc-by-sa-4.0"
-            if "by" in link:
-                return "cc-by-4.0"
-    return None
 
 
 def _has_cc0_disclaimer(metadata: dict) -> bool:
@@ -186,7 +163,7 @@ def patch_drafts(
                     continue
 
                 zenodo_metadata = record["metadata"]
-                current_license = _current_content_license(zenodo_metadata)
+                current_license = extract_content_license(zenodo_metadata)
                 needs_rights_fix = correct_license != current_license
                 needs_disclaimer_fix = (
                     correct_license == "cc0-1.0"

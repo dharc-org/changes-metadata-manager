@@ -282,9 +282,9 @@ def test_prepare_writes_payload_manifest_and_reuses_cache(
 
 
 @patch("changes_metadata_manager.patch.creator_names.time.sleep")
-@patch("changes_metadata_manager.patch.creator_names.publish_draft")
-@patch("changes_metadata_manager.patch.creator_names.update_draft")
-@patch("changes_metadata_manager.patch.creator_names.create_edit_draft")
+@patch("changes_metadata_manager.patch.prepared_updates.publish_draft")
+@patch("changes_metadata_manager.patch.prepared_updates.update_draft")
+@patch("changes_metadata_manager.patch.prepared_updates.create_edit_draft")
 @patch("changes_metadata_manager.patch.creator_names.fetch_record")
 def test_apply_uses_prepared_payload_without_refetching(
     mock_fetch,
@@ -506,9 +506,9 @@ def test_prepare_rejects_unmanaged_output_files(tmp_path):
 
 
 @patch("changes_metadata_manager.patch.creator_names.time.sleep")
-@patch("changes_metadata_manager.patch.creator_names.publish_draft")
-@patch("changes_metadata_manager.patch.creator_names.update_draft")
-@patch("changes_metadata_manager.patch.creator_names.create_edit_draft")
+@patch("changes_metadata_manager.patch.prepared_updates.publish_draft")
+@patch("changes_metadata_manager.patch.prepared_updates.update_draft")
+@patch("changes_metadata_manager.patch.prepared_updates.create_edit_draft")
 def test_apply_logs_errors_and_continues(
     mock_create, mock_update, mock_publish, mock_sleep, tmp_path
 ):
