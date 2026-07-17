@@ -2,7 +2,6 @@
 #
 # SPDX-License-Identifier: ISC
 
-import csv
 import json
 import tempfile
 import zipfile
@@ -35,9 +34,6 @@ from changes_metadata_manager.zenodo_upload import (
     _extract_doi,
     _extract_license_from_meta,
     _extract_record_url,
-    _format_creators_for_table,
-    _format_licenses_for_table,
-    _write_doi_table,
     build_creators_for_entity_stage,
     build_enhanced_description,
     build_entity_uri,
@@ -1294,109 +1290,6 @@ class TestBuildEnhancedDescription:
         assert "\n" not in result.rstrip("\n")
 
 
-class TestFormatCreatorsForTable:
-    def test_formats_multiple_creators(self):
-        config = {
-            "creators": [
-                {
-                    "person_or_org": {
-                        "family_name": "Bordignon",
-                        "given_name": "Alice",
-                        "identifiers": [
-                            {"scheme": "orcid", "identifier": "0009-0008-3556-0493"}
-                        ],
-                    }
-                },
-                {
-                    "person_or_org": {
-                        "family_name": "Massari",
-                        "given_name": "Arcangelo",
-                        "identifiers": [
-                            {"scheme": "orcid", "identifier": "0000-0002-8420-0696"}
-                        ],
-                    }
-                },
-            ]
-        }
-        assert (
-            _format_creators_for_table(config)
-            == "Bordignon, Alice [orcid:0009-0008-3556-0493]; Massari, Arcangelo [orcid:0000-0002-8420-0696]"
-        )
-
-    def test_formats_single_creator(self):
-        config = {
-            "creators": [
-                {
-                    "person_or_org": {
-                        "family_name": "Barzaghi",
-                        "given_name": "Sebastian",
-                        "identifiers": [
-                            {"scheme": "orcid", "identifier": "0000-0002-0799-1527"}
-                        ],
-                    }
-                },
-            ]
-        }
-        assert (
-            _format_creators_for_table(config)
-            == "Barzaghi, Sebastian [orcid:0000-0002-0799-1527]"
-        )
-
-
-class TestFormatLicensesForTable:
-    def test_formats_cc0_metadata_and_content(self):
-        config = {
-            "rights": [
-                {
-                    "title": {
-                        "en": "Creative Commons Zero v1.0 Universal (Metadata license)"
-                    }
-                },
-                {
-                    "title": {
-                        "en": "Creative Commons Zero v1.0 Universal (Content license)"
-                    }
-                },
-            ]
-        }
-        assert (
-            _format_licenses_for_table(config)
-            == "cc0-1.0 (Metadata license); cc0-1.0 (Content license)"
-        )
-
-    def test_formats_mixed_licenses(self):
-        config = {
-            "rights": [
-                {
-                    "title": {
-                        "en": "Creative Commons Zero v1.0 Universal (Metadata license)"
-                    }
-                },
-                {
-                    "title": {
-                        "en": "Creative Commons Attribution Non Commercial Share Alike 4.0 International (Content license)"
-                    }
-                },
-            ]
-        }
-        assert (
-            _format_licenses_for_table(config)
-            == "cc0-1.0 (Metadata license); cc-by-nc-sa-4.0 (Content license)"
-        )
-
-    def test_formats_metadata_only(self):
-        config = {
-            "rights": [
-                {
-                    "title": {
-                        "en": "Creative Commons Zero v1.0 Universal (Metadata license)"
-                    }
-                },
-            ]
-        }
-        assert _format_licenses_for_table(config) == "cc0-1.0 (Metadata license)"
-
-
 class TestExtractDoi:
     def test_extracts_doi_from_record(self):
         record = {"pids": {"doi": {"identifier": "10.5281/zenodo.12345"}}}
@@ -1569,62 +1462,6 @@ class TestAtomicWriteJson:
         _atomic_write_json(path, [{"new": True}])
         with open(path) as f:
             assert json.load(f) == [{"new": True}]
-
-
-class TestWriteDoiTable:
-    def test_generates_csv_from_drafts(self, tmp_path):
-        config_path = _write_config(tmp_path / "test-raw.yaml")
-        drafts = [
-            {
-                "draft_id": "100",
-                "config_file": str(config_path),
-                "title": "Test",
-                "zenodo_url": "https://sandbox.zenodo.org/api",
-                "access_token": "tok",
-                "user_agent": "ua",
-                "status": "uploaded",
-                "doi": "10.5281/zenodo.100",
-                "record_url": "https://sandbox.zenodo.org/records/100",
-            }
-        ]
-        csv_path = _write_doi_table(drafts, tmp_path)
-        with open(csv_path) as f:
-            rows = list(csv.DictReader(f))
-        assert len(rows) == 1
-        assert rows[0]["DOI"] == "10.5281/zenodo.100"
-        assert rows[0]["Titolo"] == "Test Object - Raw - Aldrovandi Digital Twin"
-
-    def test_skips_failed_entries(self, tmp_path):
-        config_path = _write_config(tmp_path / "test-raw.yaml")
-        drafts = [
-            {
-                "draft_id": "100",
-                "config_file": str(config_path),
-                "title": "Good",
-                "zenodo_url": "",
-                "access_token": "",
-                "user_agent": "",
-                "status": "uploaded",
-                "doi": "10.5281/zenodo.100",
-                "record_url": "https://sandbox.zenodo.org/records/100",
-            },
-            {
-                "draft_id": "",
-                "config_file": str(config_path),
-                "title": "Bad",
-                "zenodo_url": "",
-                "access_token": "",
-                "user_agent": "",
-                "status": "failed",
-                "doi": "",
-                "record_url": "",
-                "error": "boom",
-            },
-        ]
-        csv_path = _write_doi_table(drafts, tmp_path)
-        with open(csv_path) as f:
-            rows = list(csv.DictReader(f))
-        assert len(rows) == 1
 
 
 class TestUploadAllResume:

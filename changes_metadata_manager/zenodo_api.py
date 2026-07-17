@@ -132,14 +132,52 @@ def fetch_record(
     )
     has_edit_draft = response.status_code != 404
     if not has_edit_draft:
-        response = request_with_retry(
-            "GET",
-            f"{zenodo_url}/records/{record_id}",
-            headers=headers,
-            timeout=REQUEST_TIMEOUT,
+        return (
+            fetch_published_record(
+                zenodo_url,
+                record_id,
+                access_token,
+                user_agent,
+            ),
+            False,
         )
     response.raise_for_status()
-    return response.json(), has_edit_draft
+    return response.json(), True
+
+
+def fetch_published_record(
+    zenodo_url: str, record_id: str, access_token: str, user_agent: str
+) -> dict:
+    return _fetch_published_record(
+        f"{zenodo_url}/records/{record_id}",
+        access_token,
+        user_agent,
+    )
+
+
+def fetch_latest_published_record(
+    zenodo_url: str, record_id: str, access_token: str, user_agent: str
+) -> dict:
+    return _fetch_published_record(
+        f"{zenodo_url}/records/{record_id}/versions/latest",
+        access_token,
+        user_agent,
+    )
+
+
+def _fetch_published_record(
+    record_url: str, access_token: str, user_agent: str
+) -> dict:
+    headers = get_headers(access_token, user_agent)
+    headers["Accept"] = "application/vnd.inveniordm.v1+json"
+    response = request_with_retry(
+        "GET",
+        record_url,
+        headers=headers,
+        timeout=REQUEST_TIMEOUT,
+    )
+    response.raise_for_status()
+    return response.json()
 
 
 def create_edit_draft(

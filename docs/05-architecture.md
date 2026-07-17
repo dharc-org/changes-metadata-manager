@@ -35,6 +35,12 @@ morph-kgc-changes-metadata  -->  data/kg.ttl
               |
               v
           zenodo_upload.upload  -->  Zenodo
+                                      |
+                                      v
+                              export_zenodo_csv
+                                      |
+                                      v
+                               doi_table.csv
 ```
 
 ## Modules
@@ -69,6 +75,12 @@ Handles two tasks:
 
 - **prepare**: walks the same folder structure, creates one ZIP per Zenodo group and stage (including data files only when a license exists), and writes a YAML config file for each. Numeric IDs with alphabetic suffixes share the base-number group unless the folder has an explicit mapping. Creators are resolved from every exact entity ID in the group through `data/creators_lookup.yaml`, with roles assigned by step type.
 - **upload**: reads the YAML configs and calls piccione's InvenioRDM module to create records on Zenodo.
+
+### export_zenodo_csv
+
+Uses the record IDs and credentials in `drafts.json` as starting references,
+resolves each one to its latest published Zenodo version, and generates the DMP
+CSV.
 
 ## Key data files
 

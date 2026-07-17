@@ -11,6 +11,13 @@ from typing_extensions import NotRequired
 
 ENTITY_URI_PATTERN = re.compile(r"/itm/([^/]+)/ob\d+/\d+$")
 STAGE_ARCHIVE_PATTERN = re.compile(r"-(raw|rawp|dcho|dchoo)\.zip$")
+LICENSE_URI_TO_ZENODO = {
+    "https://creativecommons.org/publicdomain/zero/1.0/": "cc0-1.0",
+    "https://creativecommons.org/licenses/by/4.0/": "cc-by-4.0",
+    "https://creativecommons.org/licenses/by-nc/4.0/": "cc-by-nc-4.0",
+    "https://creativecommons.org/licenses/by-sa/4.0/": "cc-by-sa-4.0",
+    "https://creativecommons.org/licenses/by-nc-sa/4.0/": "cc-by-nc-sa-4.0",
+}
 
 
 class ZenodoUpdatePayload(TypedDict):

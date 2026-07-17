@@ -12,6 +12,8 @@ from changes_metadata_manager.zenodo_api import (
     MAX_RETRIES,
     ZenodoRecordCache,
     create_edit_draft,
+    fetch_latest_published_record,
+    fetch_published_record,
     fetch_record,
     publish_draft,
     request_with_retry,
@@ -112,6 +114,38 @@ def test_fetches_published_record_when_draft_is_missing(mock_request):
         ("GET", "https://zenodo.org/api/records/123/draft"),
         ("GET", "https://zenodo.org/api/records/123"),
     ]
+
+
+@patch("changes_metadata_manager.zenodo_api.request_with_retry")
+def test_fetches_published_record_without_checking_draft(mock_request):
+    published = MagicMock(status_code=200)
+    published.json.return_value = {"metadata": {"title": "published"}}
+    mock_request.return_value = published
+
+    result = fetch_published_record("https://zenodo.org/api", "123", "token", "agent")
+
+    assert result == {"metadata": {"title": "published"}}
+    assert [item.args[:2] for item in mock_request.call_args_list] == [
+        ("GET", "https://zenodo.org/api/records/123")
+    ]
+    assert published.raise_for_status.call_count == 1
+
+
+@patch("changes_metadata_manager.zenodo_api.request_with_retry")
+def test_fetches_latest_published_version(mock_request):
+    published = MagicMock(status_code=200)
+    published.json.return_value = {"id": "456"}
+    mock_request.return_value = published
+
+    result = fetch_latest_published_record(
+        "https://zenodo.org/api", "123", "token", "agent"
+    )
+
+    assert result == {"id": "456"}
+    assert [item.args[:2] for item in mock_request.call_args_list] == [
+        ("GET", "https://zenodo.org/api/records/123/versions/latest")
+    ]
+    assert published.raise_for_status.call_count == 1
 
 
 @patch("changes_metadata_manager.zenodo_api.request_with_retry")

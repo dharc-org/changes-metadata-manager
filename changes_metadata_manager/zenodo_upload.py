@@ -3,7 +3,6 @@
 # SPDX-License-Identifier: ISC
 
 import argparse
-import csv
 import json
 import os
 import re
@@ -48,6 +47,7 @@ from changes_metadata_manager.folder_metadata_builder import (
     load_kg,
     scan_folder_structure,
 )
+from changes_metadata_manager.zenodo_metadata import LICENSE_URI_TO_ZENODO
 
 
 class LiteralBlockDumper(yaml.SafeDumper):
@@ -414,14 +414,6 @@ def extract_software_for_stage(
                 software.add(_format_slug(slug))
     return sorted(software)
 
-
-LICENSE_URI_TO_ZENODO = {
-    "https://creativecommons.org/publicdomain/zero/1.0/": "cc0-1.0",
-    "https://creativecommons.org/licenses/by/4.0/": "cc-by-4.0",
-    "https://creativecommons.org/licenses/by-nc/4.0/": "cc-by-nc-4.0",
-    "https://creativecommons.org/licenses/by-sa/4.0/": "cc-by-sa-4.0",
-    "https://creativecommons.org/licenses/by-nc-sa/4.0/": "cc-by-nc-sa-4.0",
-}
 
 STAGE_TITLE_NAMES = {
     "raw": "Raw",
@@ -848,48 +840,6 @@ def _extract_record_url(record: Mapping[str, object]) -> str:
     return links["self_html"]
 
 
-LICENSE_TITLE_TO_SHORT: dict[str, str] = {
-    info["title"]: short_name for short_name, info in LICENSE_INFO.items()
-}
-
-
-def _format_creators_for_table(config: dict) -> str:
-    creators = config["creators"]
-    parts: list[str] = []
-    for c in creators:
-        org = c["person_or_org"]
-        orcid = org["identifiers"][0]["identifier"]
-        parts.append(f"{org['family_name']}, {org['given_name']} [orcid:{orcid}]")
-    return "; ".join(parts)
-
-
-def _format_licenses_for_table(config: dict) -> str:
-    parts: list[str] = []
-    for right in config["rights"]:
-        title_en = right["title"]["en"]
-        for full_name, short_name in LICENSE_TITLE_TO_SHORT.items():
-            if title_en.startswith(full_name):
-                context = title_en.removeprefix(full_name).strip(" ()")
-                parts.append(f"{short_name} ({context})")
-                break
-    return "; ".join(parts)
-
-
-DOI_TABLE_FIELDNAMES = [
-    "Numero su DMP",
-    "Caso di studio",
-    "Autore/i",
-    "Tipo",
-    "Titolo",
-    "Data pubblicazione",
-    "DOI",
-    "URL",
-    "Repository",
-    "Licenza",
-    "Note",
-]
-
-
 def _atomic_write_json(path: Path, data: list) -> None:
     fd, tmp_path = tempfile.mkstemp(dir=path.parent, suffix=".tmp")
     with os.fdopen(fd, "w") as f:
@@ -916,37 +866,7 @@ def _graceful_shutdown():
         signal.signal(signal.SIGINT, original)
 
 
-def _write_doi_table(drafts: list[dict], output_dir: Path) -> Path:
-    rows: list[dict[str, str]] = []
-    for draft in drafts:
-        if draft["status"] == "failed":
-            continue
-        with open(draft["config_file"]) as f:
-            config = yaml.safe_load(f)
-        rows.append(
-            {
-                "Numero su DMP": "",
-                "Caso di studio": "Aldrovandi",
-                "Autore/i": _format_creators_for_table(config),
-                "Tipo": "Dataset",
-                "Titolo": config["title"],
-                "Data pubblicazione": config["publication_date"],
-                "DOI": draft["doi"],
-                "URL": draft["record_url"],
-                "Repository": "Zenodo",
-                "Licenza": _format_licenses_for_table(config),
-                "Note": "",
-            }
-        )
-    csv_path = output_dir / "doi_table.csv"
-    with open(csv_path, "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=DOI_TABLE_FIELDNAMES)
-        writer.writeheader()
-        writer.writerows(rows)
-    return csv_path
-
-
-def upload_all(configs_dir: Path, publish: bool = False) -> Path:
+def upload_all(configs_dir: Path, publish: bool = False) -> None:
     config_files = sorted(configs_dir.glob("*.yaml"))
     drafts_path = configs_dir.parent / "drafts.json"
 
@@ -1034,16 +954,13 @@ def upload_all(configs_dir: Path, publish: bool = False) -> Path:
             time.sleep(2)
             progress.advance(task)
 
-    csv_path = _write_doi_table(drafts, configs_dir.parent)
-    print(f"DOI table written to {csv_path}")
     print(f"Drafts saved to {drafts_path}")
     print(
         f"Summary: {uploaded} uploaded, {skipped} skipped, {failed} failed (of {len(config_files)} total)"
     )
-    return csv_path
 
 
-def publish_all_drafts(drafts_path: Path) -> Path:
+def publish_all_drafts(drafts_path: Path) -> None:
     with open(drafts_path) as f:
         drafts: list[dict] = json.load(f)
 
@@ -1091,13 +1008,10 @@ def publish_all_drafts(drafts_path: Path) -> Path:
             progress.advance(task)
 
     skipped = len(drafts) - len(publishable)
-    csv_path = _write_doi_table(drafts, drafts_path.parent)
-    print(f"DOI table written to {csv_path}")
     print(f"Summary: {published} published, {skipped} skipped, {failed} failed")
-    return csv_path
 
 
-def sync_status(drafts_path: Path) -> Path:
+def sync_status(drafts_path: Path) -> None:
     with open(drafts_path) as f:
         drafts: list[dict] = json.load(f)
 
@@ -1138,10 +1052,7 @@ def sync_status(drafts_path: Path) -> Path:
             progress.advance(task)
 
     _atomic_write_json(drafts_path, drafts)
-    csv_path = _write_doi_table(drafts, drafts_path.parent)
     print(f"Updated {updated} of {len(drafts)} entries")
-    print(f"DOI table written to {csv_path}")
-    return csv_path
 
 
 def _normalize_quotes(text: str) -> str:

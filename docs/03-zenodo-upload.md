@@ -147,7 +147,27 @@ uv run python -m changes_metadata_manager.zenodo_upload publish-drafts \
 |----------|----------|-------------|
 | `drafts_file` | Yes | Path to `drafts.json` produced by a previous `upload` run |
 
-This reads the saved draft IDs and publishes each one through the Zenodo API. Already-published records are skipped, and records that failed during a previous publish attempt are retried. On completion, `doi_table.csv` is regenerated with the final DOIs and record URLs.
+This reads the saved draft IDs and publishes each one through the Zenodo API. Already-published records are skipped, and records that failed during a previous publish attempt are retried.
+
+## Exporting the DMP CSV
+
+Generate the CSV table for the Data Management Plan from the current published
+metadata on Zenodo:
+
+```bash
+uv run python -m changes_metadata_manager.export_zenodo_csv \
+    <drafts_file> [--output <csv_file>]
+```
+
+`drafts.json` provides the initial record IDs, Zenodo endpoint, and credentials.
+Each ID is resolved through Zenodo's `versions/latest` endpoint. Titles, creators,
+resource types, publication dates, DOIs, URLs, publishers, and licenses are read
+from the latest published versions. The default output path is `doi_table.csv`
+next to `drafts.json`.
+
+The export stops without replacing an existing CSV if any tracked record cannot
+be retrieved from the public record endpoint. Entries for failed uploads, which
+have no record ID, are skipped.
 
 ## Full workflow
 
@@ -166,6 +186,9 @@ uv run python -m changes_metadata_manager.zenodo_upload upload zenodo_output/con
 
 # 4. Review drafts on Zenodo, then publish
 uv run python -m changes_metadata_manager.zenodo_upload publish-drafts zenodo_output/drafts.json
+
+# 5. Export the published metadata for the DMP
+uv run python -m changes_metadata_manager.export_zenodo_csv zenodo_output/drafts.json
 ```
 
 Alternatively, pass `--publish` at step 3 to upload and publish in one go:
