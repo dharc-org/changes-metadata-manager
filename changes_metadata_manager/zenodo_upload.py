@@ -430,10 +430,10 @@ STAGE_DESCRIPTION_NAMES = {
 }
 
 STAGE_DESCRIPTIONS = {
-    "raw": "This dataset contains the raw material generated during the acquisition phase.",
-    "rawp": "This dataset contains the preliminary output from the photogrammetry or scanner software after initial data processing but without any interpolation or geometry corrections.",
-    "dcho": "This dataset contains the version that includes interpolation, gap filling, and resolution of geometric issues, resulting in a refined and improved model.",
-    "dchoo": "This dataset contains the version optimised for real-time online interaction.",
+    "raw": "the raw material generated during the acquisition phase",
+    "rawp": "the preliminary output from the photogrammetry or scanner software after initial data processing but without any interpolation or geometry corrections",
+    "dcho": "the version that includes interpolation, gap filling, and resolution of geometric issues, resulting in a refined and improved model",
+    "dchoo": "the version optimised for real-time online interaction",
 }
 
 PROPAGATED_FIELDS = (
@@ -528,7 +528,7 @@ def build_enhanced_description(
             keeper_line += f" ({keeper_location})"
         keeper_line += "."
         parts.append(keeper_line)
-    parts.append(STAGE_DESCRIPTIONS[stage])
+    parts.append(f"This dataset contains {STAGE_DESCRIPTIONS[stage]}.")
     parts.append(
         f'Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href="{CHAD_AP_URL}">CHAD-AP</a> ontology.',
     )
@@ -867,7 +867,9 @@ def _graceful_shutdown():
 
 
 def upload_all(configs_dir: Path, publish: bool = False) -> None:
-    config_files = sorted(configs_dir.glob("*.yaml"))
+    config_files = (
+        [configs_dir] if configs_dir.is_file() else sorted(configs_dir.glob("*.yaml"))
+    )
     drafts_path = configs_dir.parent / "drafts.json"
 
     drafts: list[dict] = []
@@ -1153,7 +1155,9 @@ def parse_arguments():  # pragma: no cover
     )
     upload_parser = subparsers.add_parser("upload", help="Upload to Zenodo")
     upload_parser.add_argument(
-        "configs_dir", type=Path, help="Directory containing YAML configs"
+        "configs_dir",
+        type=Path,
+        help="YAML config file or directory containing YAML configs",
     )
     upload_parser.add_argument(
         "--publish", action="store_true", help="Publish after upload"

@@ -112,7 +112,7 @@ uv run python -m changes_metadata_manager.zenodo_upload upload \
 
 | Argument | Required | Description |
 |----------|----------|-------------|
-| `configs_dir` | Yes | Directory containing YAML config files (typically `zenodo_output/configs`) |
+| `configs_dir` | Yes | YAML config file or directory of configs (typically `zenodo_output/configs`) |
 
 ### Options
 
@@ -195,4 +195,33 @@ Alternatively, pass `--publish` at step 3 to upload and publish in one go:
 
 ```bash
 uv run python -m changes_metadata_manager.zenodo_upload upload zenodo_output/configs --publish
+```
+
+## Generating the object index
+
+Generate the index and the metadata for its Zenodo record:
+
+```bash
+uv run python -m changes_metadata_manager.zenodo_index \
+    <drafts_file> --output zenodo_output_index
+```
+
+The script reads the latest published records listed in `drafts.json` and groups
+them by object and stage. It creates these local files:
+
+- `index.csv`: the index to attach to the Zenodo record.
+- `record.yaml`: metadata, upload settings and credentials, with `index.csv` as the only attachment.
+
+The script only writes local files. To upload the index as a draft, run:
+
+```bash
+uv run python -m changes_metadata_manager.zenodo_upload upload \
+    zenodo_output_index/record.yaml
+```
+
+Review the draft on Zenodo, then publish it:
+
+```bash
+uv run python -m changes_metadata_manager.zenodo_upload publish-drafts \
+    zenodo_output_index/drafts.json
 ```
