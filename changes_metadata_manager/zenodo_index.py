@@ -51,8 +51,6 @@ def build_index(records: list[dict]) -> list[dict]:
             raise ValueError(f"Multiple records for object {entity_id}, stage {stage}")
         entry["stages"][stage] = {
             "doi": record["pids"]["doi"]["identifier"],
-            "url": record["links"]["self_html"],
-            "title": metadata["title"],
             "resource_type": metadata["resource_type"]["id"],
         }
     return sorted(
@@ -181,13 +179,11 @@ def generate_index(drafts_path: Path, output_dir: Path) -> Path:
         writer = csv.writer(file)
         writer.writerow(
             [
-                "object_id",
-                "object_uri",
-                "object_title",
+                "id",
+                "uri",
+                "title",
                 "stage",
-                "record_title",
                 "doi",
-                "url",
             ]
         )
         for item in objects:
@@ -200,9 +196,7 @@ def generate_index(drafts_path: Path, output_dir: Path) -> Path:
                             item["uri"],
                             item["title"],
                             stage,
-                            record["title"],
                             record["doi"],
-                            record["url"],
                         ]
                     )
     source = next(draft for draft in drafts if draft["draft_id"])
