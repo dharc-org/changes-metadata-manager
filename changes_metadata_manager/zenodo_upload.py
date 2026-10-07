@@ -333,6 +333,8 @@ def create_stage_zip(
         return None
     sala_slug = slugify(folders[0][0])
     title_slug = slugify(title)
+    while len(title_slug) > 120:
+        title_slug = title_slug.rpartition("-")[0]
     zip_path = output_dir / f"{sala_slug}-{title_slug}-{entity_id}-{stage}.zip"
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         for folder_name, stage_name_in_folder, stage_dir in stage_dirs:
@@ -374,7 +376,7 @@ def extract_entity_title(graph: Graph, entity_ids: list[str]) -> str:
         item_uri = URIRef(f"{BASE_URI}/itm/{entity_id}/ob00/1")
         for _, _, note_value in graph.triples((item_uri, P3_HAS_NOTE, None)):
             note = str(note_value)
-            return re.split(r"\n|\\n", note)[0].strip()
+            return " ".join(note.replace("\\n", "\n").split())
     return f"Entity {entity_ids[0]}"
 
 
@@ -513,15 +515,16 @@ def select_missing_files_notice(
     return EXTERNAL_SOURCE_NOTICE
 
 
+def build_description_intro(stage: str) -> str:
+    return f"{STAGE_DESCRIPTION_NAMES[stage]} from the Aldrovandi Digital Twin."
+
+
 def build_enhanced_description(
     stage: str,
-    title: str,
     keeper_name: str | None = None,
     keeper_location: str | None = None,
 ) -> str:
-    parts = [
-        f'{STAGE_DESCRIPTION_NAMES[stage]} of "{title}" from the Aldrovandi Digital Twin.',
-    ]
+    parts = [build_description_intro(stage)]
     if keeper_name:
         keeper_line = f"The original object is held by {keeper_name}"
         if keeper_location:
@@ -629,7 +632,7 @@ def generate_zenodo_config(
     keeper_location: str | None = None,
     missing_files_notice: str | None = None,
 ) -> dict:
-    description = build_enhanced_description(stage, title, keeper_name, keeper_location)
+    description = build_enhanced_description(stage, keeper_name, keeper_location)
 
     config: dict = {
         "title": f"{title} - {STAGE_TITLE_NAMES[stage]} - Aldrovandi Digital Twin",
@@ -741,8 +744,6 @@ def _process_entity(
     entity_ids = _get_sub_entity_ids(folders)
     title = extract_entity_title(kg, entity_ids)
     keeper_name, keeper_location = extract_keeper_info(kg, entity_ids)
-    sala_slug = slugify(folders[0][0])
-    title_slug = slugify(title)
     metadata_creators = build_metadata_creators(kg, entity_ids, creators_lookup)
     for stage in STAGES:
         result = create_stage_zip(entity_id, stage, folders, root, zips_dir, title)
@@ -771,7 +772,7 @@ def _process_entity(
             keeper_location,
             missing_files_notice,
         )
-        config_path = configs_dir / f"{sala_slug}-{title_slug}-{entity_id}-{stage}.yaml"
+        config_path = configs_dir / zip_path.with_suffix(".yaml").name
         with open(config_path, "w") as f:
             yaml.dump(
                 config,

@@ -13,6 +13,7 @@ import yaml
 import pytest
 from rdflib import Graph, Literal, URIRef
 
+from changes_metadata_manager import zenodo_upload
 from changes_metadata_manager.folder_metadata_builder import load_kg
 from changes_metadata_manager.zenodo_upload import (
     AAT,
@@ -457,19 +458,30 @@ class TestCreateStageZip:
 class TestExtractEntityTitle:
     def test_extracts_title_from_kg(self, real_kg):
         title = extract_entity_title(real_kg, ["1"])
-        assert title == "Carta nautica"
+        assert (
+            title
+            == "Carta nautica Nautical chart Grazioso Benincasa, sec. XV BUB, Rotulo 3"
+        )
 
     def test_returns_default_for_missing(self):
         g = Graph()
         title = extract_entity_title(g, ["nonexistent"])
         assert title == "Entity nonexistent"
 
-    def test_takes_first_line(self):
+    @pytest.mark.parametrize(
+        "note",
+        [
+            "First line\nSecond line",
+            r"First line\nSecond line",
+            "  First line\r\n Second line  ",
+        ],
+    )
+    def test_preserves_full_note(self, note):
         g = Graph()
         item_uri = URIRef(f"{BASE_URI}/itm/42/ob00/1")
-        g.add((item_uri, P3_HAS_NOTE, Literal("First line\nSecond line")))
+        g.add((item_uri, P3_HAS_NOTE, Literal(note)))
         title = extract_entity_title(g, ["42"])
-        assert title == "First line"
+        assert title == "First line Second line"
 
 
 class TestExtractAuthorsForEntityStage:
@@ -861,7 +873,7 @@ class TestGenerateZenodoConfig:
             "access_token": "test_token",
             "user_agent": "piccione/2.1.0",
             "title": "Test Title - Raw - Aldrovandi Digital Twin",
-            "description": 'Raw acquisition data of "Test Title" from the Aldrovandi Digital Twin. This dataset contains the raw material generated during the acquisition phase. Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href="https://w3id.org/dharc/ontology/chad-ap">CHAD-AP</a> ontology.\n',
+            "description": 'Raw acquisition data from the Aldrovandi Digital Twin. This dataset contains the raw material generated during the acquisition phase. Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href="https://w3id.org/dharc/ontology/chad-ap">CHAD-AP</a> ontology.\n',
             "resource_type": {"id": "dataset"},
             "publisher": "Zenodo",
             "access": {"record": "public", "files": "public"},
@@ -1242,50 +1254,47 @@ class TestExtractKeeperInfo:
 
 class TestBuildEnhancedDescription:
     def test_raw_stage_description(self):
-        result = build_enhanced_description("raw", "Test Object")
+        result = build_enhanced_description("raw")
         assert result == (
-            'Raw acquisition data of "Test Object" from the Aldrovandi Digital Twin. '
+            "Raw acquisition data from the Aldrovandi Digital Twin. "
             "This dataset contains the raw material generated during the acquisition phase. "
             'Includes metadata (meta.ttl) and provenance (prov.trig) files following the <a href="https://w3id.org/dharc/ontology/chad-ap">CHAD-AP</a> ontology.\n'
         )
 
     def test_dcho_stage_description(self):
-        result = build_enhanced_description("dcho", "Museum Specimen")
+        result = build_enhanced_description("dcho")
         assert "Digital Cultural Heritage Object" in result
-        assert '"Museum Specimen"' in result
         assert (
             "interpolation, gap filling, and resolution of geometric issues" in result
         )
 
     def test_dchoo_stage_description(self):
-        result = build_enhanced_description("dchoo", "Object Title")
+        result = build_enhanced_description("dchoo")
         assert "Optimized Digital Cultural Heritage Object" in result
         assert "optimised for real-time online interaction" in result
 
     def test_description_never_contains_disclaimer(self):
-        result = build_enhanced_description("dcho", "Test Object")
+        result = build_enhanced_description("dcho")
         assert CC0_DISCLAIMER not in result
 
     def test_includes_keeper_and_location(self):
         result = build_enhanced_description(
-            "raw", "Test Object", keeper_name="Test Museum", keeper_location="Test City"
+            "raw", keeper_name="Test Museum", keeper_location="Test City"
         )
         assert "The original object is held by Test Museum (Test City)." in result
 
     def test_includes_keeper_without_location(self):
-        result = build_enhanced_description(
-            "raw", "Test Object", keeper_name="Test Museum"
-        )
+        result = build_enhanced_description("raw", keeper_name="Test Museum")
         assert "The original object is held by Test Museum." in result
         assert "Test Museum (" not in result
 
     def test_no_keeper_line_when_none(self):
-        result = build_enhanced_description("raw", "Test Object")
+        result = build_enhanced_description("raw")
         assert "held by" not in result
 
     def test_description_is_single_paragraph(self):
         result = build_enhanced_description(
-            "raw", "Test Object", keeper_name="Museum", keeper_location="City"
+            "raw", keeper_name="Museum", keeper_location="City"
         )
         assert "\n" not in result.rstrip("\n")
 
@@ -1819,3 +1828,47 @@ class TestPublishAllDraftsResume:
             drafts = json.load(f)
         assert drafts[0]["status"] == "published"
         assert drafts[1]["status"] == "failed"
+
+
+@pytest.mark.parametrize(
+    ("title", "filename_title"),
+    [
+        ("alpha " * 50 + "& <end>", "-".join(["alpha"] * 20)),
+        ("a " + "word " * 23 + "end suffix", "a" + "-word" * 23 + "-end"),
+        ("a " + "word " * 23 + "end", "a" + "-word" * 23 + "-end"),
+    ],
+)
+def test_package_keeps_full_title_with_short_file_names(
+    tmp_path, monkeypatch, title, filename_title
+):
+    kg = Graph()
+    kg.add((URIRef(f"{BASE_URI}/itm/42/ob00/1"), P3_HAS_NOTE, Literal(title)))
+    monkeypatch.setattr(zenodo_upload, "_worker_kg", kg, raising=False)
+    monkeypatch.setattr(
+        zenodo_upload,
+        "_worker_base_config",
+        {"notes": "Note", "locations": []},
+        raising=False,
+    )
+    monkeypatch.setattr(zenodo_upload, "_worker_creators_lookup", {}, raising=False)
+    stage = tmp_path / "Sala1/S1-42-Test/raw"
+    stage.mkdir(parents=True)
+    (stage / "meta.ttl").write_text("")
+    zips = tmp_path / "zips"
+    configs = tmp_path / "configs"
+    zips.mkdir()
+    configs.mkdir()
+    zenodo_upload._process_entity(
+        "42", [("Sala1", "S1-42-Test", {"raw": {}})], tmp_path, zips, configs
+    )
+    stem = "sala1-" + filename_title + "-42-raw"
+    assert sorted(path.name for path in zips.iterdir()) == [stem + ".zip"]
+    assert sorted(path.name for path in configs.iterdir()) == [stem + ".yaml"]
+    config = yaml.safe_load((configs / (stem + ".yaml")).read_text())
+    assert config["title"] == title + " - Raw - Aldrovandi Digital Twin"
+    assert config["description"] == (
+        "Raw acquisition data from the Aldrovandi Digital Twin. "
+        "This dataset contains the raw material generated during the acquisition phase. "
+        "Includes metadata (meta.ttl) and provenance (prov.trig) files following the "
+        '<a href="https://w3id.org/dharc/ontology/chad-ap">CHAD-AP</a> ontology.\n'
+    )
